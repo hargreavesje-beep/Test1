@@ -1,0 +1,1072 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>James · Power Baseline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single column coaching sheet with hash-routed detail views (#d-20m, #w-3, #f-2, #h-4) */
+:root{
+  --bg:#f5f5f8; --surface:#ffffff; --ink:#1b1a24; --muted:#636176; --line:#e2e0ea; --hover:#f0eef7;
+  --now:#d6339a; --now-soft:rgba(214,51,154,.18);
+  --best:#6a3fc2; --best-soft:rgba(106,63,194,.14);
+  --good:#1f8a5b; --warn:#c07a12; --bad:#c23a3a;
+  --z1:#8fa3b8; --z2:#3d9be0; --z3:#1f8a5b; --z4:#c07a12; --z5:#c23a3a;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121118; --surface:#1b1a24; --ink:#efedf6; --muted:#a29fb5; --line:#2e2c3b; --hover:#24222f;
+  --now:#ef6cc0; --now-soft:rgba(239,108,192,.22); --best:#9b7bf0; --best-soft:rgba(155,123,240,.18);
+  --good:#4cc28c; --warn:#e3a847; --bad:#ef7171; --z1:#8a9bb0; --z2:#5fb0f0; --z3:#4cc28c; --z4:#e3a847; --z5:#ef7171; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121118; --surface:#1b1a24; --ink:#efedf6; --muted:#a29fb5; --line:#2e2c3b; --hover:#24222f;
+  --now:#ef6cc0; --now-soft:rgba(239,108,192,.22); --best:#9b7bf0; --best-soft:rgba(155,123,240,.18);
+  --good:#4cc28c; --warn:#e3a847; --bad:#ef7171; --z1:#8a9bb0; --z2:#5fb0f0; --z3:#4cc28c; --z4:#e3a847; --z5:#ef7171; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;padding-inline:16px;padding-block:20px 48px;margin:0}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.wrap[hidden]{display:none}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;text-wrap:balance;margin:0;line-height:1.05}
+h1{font-size:clamp(34px,7vw,52px);text-transform:uppercase}
+h2{font-size:26px;text-transform:uppercase}
+h3{font-size:19px;text-transform:uppercase;font-weight:600}
+p{margin:0;max-width:65ch}
+a{color:inherit}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+header{display:flex;flex-direction:column;gap:10px}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:13px;padding:5px 10px;border-radius:999px;border:1px solid var(--good);color:var(--good);width:fit-content}
+.verdict::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.hint{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile .big{font-family:var(--f-display);font-size:40px;font-weight:700;line-height:1}
+.tile .big small{font-size:18px;font-weight:600;color:var(--muted);margin-left:3px}
+.tile .sub{font-size:13px;color:var(--muted)}
+.delta{font-family:var(--f-mono);font-size:12px}
+.delta.down{color:var(--bad)} .delta.up{color:var(--good)} .delta.flat{color:var(--warn)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.radar-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:center}
+@media (max-width:680px){.radar-wrap{grid-template-columns:1fr}}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--muted);font-family:var(--f-mono);font-size:11px}
+.hit{cursor:pointer}
+.hit:hover circle.dot,.hit:focus circle.dot{r:6}
+.hit:hover rect,.hit:focus rect{opacity:1!important;stroke:var(--ink);stroke-width:1.5}
+.hit:focus{outline:none}
+.ladder{display:flex;flex-direction:column;gap:3px}
+.rung{display:grid;grid-template-columns:42px 1fr 108px 12px;gap:10px;align-items:center;font-size:13px;text-decoration:none;padding:3px 6px;margin:0 -6px;border-radius:6px}
+.rung:hover,.rung:focus-visible{background:var(--hover)}
+.rung .d{font-family:var(--f-mono);color:var(--muted)}
+.rung .go{color:var(--muted);font-family:var(--f-mono)}
+.bar{position:relative;height:16px;background:var(--best-soft);border-radius:4px;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--now);border-radius:4px}
+.bar b{position:absolute;right:6px;top:0;font-family:var(--f-mono);font-size:11px;line-height:16px;font-weight:500;color:var(--ink)}
+.rung .w{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.rung .w em{font-style:normal;color:var(--muted)}
+.flag{font-size:12.5px;color:var(--muted);border-left:3px solid var(--warn);padding-left:10px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.two>*{min-width:0}
+ul.clean{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+ul.clean li{display:grid;grid-template-columns:auto 1fr;gap:10px;font-size:14px}
+.chip{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid currentColor;height:fit-content;white-space:nowrap}
+.chip.hi{color:var(--bad)} .chip.md{color:var(--warn)} .chip.lo{color:var(--muted)} .chip.gd{color:var(--good)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px}
+table.narrow{min-width:0}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+td .tgt{font-family:var(--f-mono);font-size:12.5px;color:var(--now);white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--hover)}
+.wk{font-family:var(--f-display);font-size:18px;font-weight:600;text-transform:uppercase}
+.zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.zone{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface);border-left-width:4px}
+.zone .n{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.zone .r{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:14px}
+.zone .u{font-size:12px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;width:fit-content}
+.seg button{font:inherit;font-family:var(--f-mono);font-size:12px;background:none;color:var(--muted);border:0;padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.row-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+footer{font-size:12px;color:var(--muted)}
+/* detail view */
+.back{font:inherit;font-family:var(--f-mono);font-size:13px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;width:fit-content;text-decoration:none}
+.back:hover{background:var(--hover)}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--best);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.card.now{border-top-color:var(--now)}
+.card .big{font-family:var(--f-display);font-size:48px;font-weight:700;line-height:1}
+.card .big small{font-size:20px;color:var(--muted);margin-left:3px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px}
+.kv dt{color:var(--muted);font-family:var(--f-mono);font-size:12px;padding-top:1px}
+.kv dd{margin:0}
+.ext{font-family:var(--f-mono);font-size:12.5px;color:var(--best)}
+.card.now .ext{color:var(--now)}
+.unk{font-size:13.5px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:10px}
+.gapbar{position:relative;height:22px;background:var(--best-soft);border-radius:5px;overflow:hidden}
+.gapbar i{position:absolute;inset:0 auto 0 0;background:var(--now);border-radius:5px}
+.gapbar b{position:absolute;right:8px;top:0;line-height:22px;font-family:var(--f-mono);font-size:12px}
+.coach{border-left:3px solid var(--good);padding-left:12px;font-size:14.5px}
+:root{--c1:#9aa9bb;--c2:#3d8fd6;--c3:#1f8a5b;--c4:#8aa832;--c5:#d99a17;--c6:#e0662b;--c7:#c23a3a}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#7d8ca0;--c2:#5aa8ee;--c3:#45bd86;--c4:#a9c651;--c5:#ebb43f;--c6:#f08551;--c7:#ef7171}}
+:root[data-theme="dark"]{--c1:#7d8ca0;--c2:#5aa8ee;--c3:#45bd86;--c4:#a9c651;--c5:#ebb43f;--c6:#f08551;--c7:#ef7171}
+.zkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+.zkey span{display:inline-flex;align-items:center;gap:6px}
+.stack{display:flex;height:18px;border-radius:5px;overflow:hidden;background:var(--line)}
+.stack i{display:block;height:100%}
+.zrow{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center;font-size:13px}
+.zrow .l{font-family:var(--f-mono);color:var(--muted);font-size:12px}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+/* list rows: chip + text aligned in one column */
+ul.clean li{display:grid;grid-template-columns:112px minmax(0,1fr);gap:12px;align-items:baseline;font-size:14px}
+ul.clean li>.chip{justify-self:start;max-width:112px;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:600px){
+  ul.clean li{display:block;line-height:1.55}
+  ul.clean li>.chip{display:inline-block;max-width:none;margin-right:8px;vertical-align:1px}
+  ul.clean li>span:last-child{display:inline}
+  .panel{padding:16px 14px}
+  h2{font-size:23px}
+  .tile .big{font-size:34px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+}
+.jump{position:sticky;top:0;z-index:5;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 16px;margin:-8px -16px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+.jump::-webkit-scrollbar{display:none}
+.jump button{font:inherit;font-family:var(--f-mono);font-size:12px;white-space:nowrap;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.jump button:hover{background:var(--hover)}
+section[id]{scroll-margin-top:56px}
+ul.tl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14.5px}
+ul.tl li{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;align-items:baseline;padding-left:12px;border-left:3px solid var(--now)}
+ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now);white-space:nowrap}
+.alpe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.alpe-card{display:flex;flex-direction:column;gap:12px;min-width:0}
+.alpe-nums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.alpe-nums>div{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.alpe-nums .big{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1}
+.alpe-nums .sub{font-size:11.5px;color:var(--muted);line-height:1.3}
+.alpe-ctl{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.alpe-ctl label{display:flex;align-items:center;gap:8px}
+.alpe-ctl input[type=range]{width:140px;accent-color:var(--now)}
+.alpe-ctl b{font-family:var(--f-mono);font-size:13px;min-width:56px}
+@media (max-width:600px){.alpe-nums .big{font-size:24px}.alpe-ctl input[type=range]{width:120px}}
+</style>
+
+<div class="wrap" id="main">
+
+<header>
+  <span class="eyebrow">Coaching baseline · updated 25 October 2026 (monthly review) · Strava, all-time</span>
+  <h1>Where you are vs where you were</h1>
+  <span class="verdict">October: progressing on quality, flat on riding volume</span>
+  <ul class="tl">
+    <li><b>6 Oct</b><span>Won Tour of Watopia Stage 1. <b>301 W for 30 min</b> (within 4 W of your all-time best) and <b>311 W for 20 min</b>.</span></li>
+    <li><b>15 Oct</b><span><b>297 W for 24.5 min at 167 bpm</b>: the most power per heartbeat since 2020.</span></li>
+    <li><b>21 Oct</b><span><b>60 min of sweet spot</b> with under 1% heart-rate drift.</span></li>
+    <li><b>24 Oct</b><span><b>2nd</b> in Tour of Watopia Stage 3.</span></li>
+  </ul>
+  <p class="flag"><b>Main limiters:</b> volume (about 2.1 hours a week) and the 45 to 60 minute end of the curve. Your all-time 10 to 60 minute bests come from the summer 2020 lockdown racing season.</p>
+  <span class="hint">Tap any duration, week, FTP point or heart-rate point to open the detail.</span>
+</header>
+
+<nav class="jump" aria-label="Jump to section"><button type="button" data-to="s-alpe">Alpe</button><button type="button" data-to="s-week">This week</button><button type="button" data-to="s-month">Month</button><button type="button" data-to="s-plan">Plan</button><button type="button" data-to="pmc-panel">Fitness</button><button type="button" data-to="s-load">Load</button><button type="button" data-to="s-power">Power</button><button type="button" data-to="s-fixed">HR at power</button><button type="button" data-to="s-races">Races</button><button type="button" data-to="s-drift">Drift</button><button type="button" data-to="s-padel">Padel & weight</button><button type="button" data-to="s-vo2">VO2 & resting HR</button><button type="button" data-to="s-hr">HR zones</button><button type="button" data-to="s-ftp">FTP</button><button type="button" data-to="s-tests">Tests</button><button type="button" data-to="history">History</button></nav>
+
+<section class="panel" id="s-alpe" style="border-left:4px solid var(--best)">
+  <div class="row-head"><h2>The Alpe challenge</h2><span class="hint">Every ascent on Strava vs what today's legs would do</span></div>
+  <div class="alpe-grid">
+    <div class="alpe-card">
+      <div class="row-head"><h3>Alpe du Zwift</h3><span class="hint">7.6 mi · 3,398 ft · 8.5%</span></div>
+      <div class="alpe-nums">
+        <div><span class="eyebrow">Your PB</span><span class="big num">57:58</span><span class="sub">29 Jun 2020 · 280 W</span></div>
+        <div><span class="eyebrow">Today</span><span class="big num" id="az-now" style="color:var(--now)">–</span><span class="sub" id="az-now-d"></span></div>
+        <div><span class="eyebrow">July 2027 trend</span><span class="big num" id="az-tr" style="color:var(--good)">–</span><span class="sub" id="az-tr-d"></span></div>
+      </div>
+      <div id="az-chart" role="img" aria-label="Alpe du Zwift times by date with predicted times"></div>
+    </div>
+    <div class="alpe-card">
+      <div class="row-head"><h3>Alpe d'Huez</h3><span class="hint">Strava segment · 7.5 mi · 3,435 ft · 8.7%</span></div>
+      <div class="alpe-nums">
+        <div><span class="eyebrow">Your PB</span><span class="big num">1:13:39</span><span class="sub">24 Jun 2022 · 272 W</span></div>
+        <div><span class="eyebrow">Today</span><span class="big num" id="ah-now" style="color:var(--now)">–</span><span class="sub" id="ah-now-d"></span></div>
+        <div><span class="eyebrow">July 2027 trend</span><span class="big num" id="ah-tr" style="color:var(--good)">–</span><span class="sub" id="ah-tr-d"></span></div>
+      </div>
+      <div id="ah-chart" role="img" aria-label="Alpe d'Huez times by date with predicted times"></div>
+    </div>
+  </div>
+  <div class="alpe-ctl">
+    <label><span class="eyebrow">FTP</span><input type="range" id="al-ftp" min="270" max="340" step="1"><b class="num" id="al-ftp-v"></b></label>
+    <label><span class="eyebrow">Weight</span><input type="range" id="al-kg" min="80" max="96" step="0.1"><b class="num" id="al-kg-v"></b></label>
+    <div class="seg" role="group" aria-label="Preset"><button type="button" data-al="now" aria-pressed="true">Today</button><button type="button" data-al="tr" aria-pressed="false">July 2027 trend</button></div>
+    <span class="hint" id="al-what"></span>
+  </div>
+  <ul class="clean">
+    <li><span class="chip gd">Target</span><span><b>Alpe du Zwift: today's legs are about 20 s off your 2020 PB.</b> At 297 W and 91.2 kg the model gives 58:19 against 57:58. A new PB needs about 3.3 W/kg for the hour, for example 300 W at 91 kg or 297 W at 90 kg.</span></li>
+    <li><span class="chip gd">Target</span><span><b>Alpe d'Huez: today's fitness is about 4 minutes faster than your 2022 best,</b> if you rode it fresh and paced it evenly. The 2022 times came on holiday, on consecutive mountain days, at 257 to 272 W.</span></li>
+    <li><span class="chip lo">Trend</span><span>The July 2027 line assumes +1 W of FTP and −0.35 kg a month from here: about 306 W and 88 kg. That is slower than Block 1's pace, so it is a realistic line, not a best case. Drag the sliders to try your own.</span></li>
+  </ul>
+</section>
+
+<section id="s-tiles">
+  <div class="tiles">
+    <div class="tile"><span class="eyebrow">FTP</span><span class="big num">297<small>W</small></span><span class="delta up">+6 W on 6 Oct</span><span class="sub">Auto-set by Zwift from the race. 2020 data implies about 302 W then</span></div>
+    <div class="tile"><span class="eyebrow">Watts per kilo</span><span class="big num">3.26<small>W/kg</small></span><span class="delta down">−0.18 vs ~3.44 recalled 2022 peak</span><span class="sub">At 91.2 kg (14 st 5 lb, 7 Oct)</span></div>
+    <div class="tile"><span class="eyebrow">Best 20 min, 8 weeks</span><span class="big num">311<small>W</small></span><span class="delta up">98% of all-time 318 W (Sep 2020)</span><span class="sub">6 Oct race; 303 W in the 15 Oct group ride and the 24 Oct race</span></div>
+    <div class="tile"><span class="eyebrow">Riding volume, 8 weeks</span><span class="big num">2.1<small>h/wk</small></span><span class="delta up">3.2 h this week, 215 TSS</span><span class="sub">18 rides, 16.6 h since 31 Aug. Average 152 TSS a week</span></div>
+  </div>
+</section>
+
+<section id="s-week" class="panel" style="border-left:4px solid var(--now)">
+  <div class="row-head"><h2>This week · 19 to 25 Oct</h2><span class="hint">Weekly review (Sat 24 Oct) · Sunday check: nothing new recorded · Block 1, week 3</span></div>
+  <p><b>The best week of the block: 60 minutes of sweet spot with no heart-rate drift, then 2nd in Stage 3.</b> Foundation, 3x20min SST Low and the Stage 3 race: 3 rides, 3.2 h, 48.3 mi, <b>215 TSS</b> (just under the 220 to 280 build target, and the highest since August). Padel twice (Mon, Thu), legs on Saturday. 7-day resting HR 54, back on baseline.</p>
+  <h3>Wins this week</h3>
+  <ul class="clean">
+    <li><span class="chip gd">Durability</span><span><b>60 min of sweet spot at 265 W with 0.9% heart-rate drift</b> (21 Oct): blocks at 149, 151 and 148 bpm. The previous sweet spot session (14 Oct) drifted 5.5% over 40 min. The limiter is moving.</span></li>
+    <li><span class="chip gd">Matched</span><span><b>30 min 301 W</b> in the Stage 3 race equals the 8-week best (6 Oct win), with 15 min 309 and 20 min 303.</span></li>
+    <li><span class="chip gd">Race</span><span><b>Tour of Watopia Stage 3: 2nd.</b> In the four-rider break, 10 s behind a rider at about 69 kg. Final Mayan Mountainside 4:10 at 356 W, 12 s faster than the first ascent. 14 Strava segment PRs, gold on Itza KOM (314 W) and Mayan Mountainside.</span></li>
+    <li><span class="chip gd">Efficiency</span><span>1.77 W per beat over the 24 min Coastal Crown loop (300 W at 169 bpm), and 1.78 across the SST blocks: two more points at the top of the 2020 band.</span></li>
+    <li><span class="chip gd">Cadence</span><span>84 to 85 rpm through the SST blocks on a 10% virtual gradient (70 to 75 last week); 89 to 91 on every race climb.</span></li>
+    <li><span class="chip gd">Recovery</span><span>7-day resting HR 54, down from 58 and 55 over the previous two weeks while load went up.</span></li>
+  </ul>
+  <p class="hint">No new all-time bests this week.</p>
+  <ul class="clean">
+    <li><span class="chip md">Watch</span><span>Volume is still the limiter: 3.2 h this week, 2.1 h a week over 8 weeks. The block ends at the right time; Block 2 should add one more riding hour a week.</span></li>
+    <li><span class="chip lo">Window</span><span>The 8-week 60 minute best drops from 247 W to 237 W: the 27 Aug 2x20 has rolled out of the window. Not a loss of fitness; a full 60 minute effort is still missing from this block.</span></li>
+    <li><span class="chip lo">Context</span><span>The Stage 3 winner rode 3.6 W/kg at 249 W. Following his 0.7 mile attack would have needed about 560 to 600 W for 2 minutes. W/kg on climbs is where weight matters most.</span></li>
+    <li><span class="chip lo">Window</span><span>Next Sunday the 8-week window moves to 7 Sep: the 5 Sep Half Hour of Power (5 s 1,529 W, 15 s 1,162 W) drops out, so those two 8-week values will fall unless you sprint this week. Not a fitness change.</span></li>
+    <li><span class="chip lo">Next</span><span>Week 4 (26 Oct to 1 Nov) is the absorb week: 10/8/4min Threshold at 297 W to check heart-rate response, 60 min Z2, and an optional Stage 4 race or 45 min easy. Legs once, away from padel; upper body twice.</span></li>
+  </ul>
+</section>
+
+<section id="s-month" class="panel" style="border-left:4px solid var(--best)">
+  <div class="row-head"><h2>Month in review · October 2026</h2><span class="hint">1 to 25 Oct vs September · reviewed Sun 25 Oct</span></div>
+  <p><b>Verdict: progressing in quality, plateauing in riding volume.</b> Every intensity and efficiency marker improved: FTP 291 to 297 W, 20 and 30 minute power the highest since 2020, 7 bpm less heart rate at 265 W, sweet spot drift down from 5.5% to 0.9%, and four races for a 1st and a 2nd. But you rode <b>less</b> than in September (6.9 h vs 9.8 h, 557 vs 658 TSS). Fitness rose mainly because padel went from 2 to 8 recordings; ride-only fitness moved just 18.4 to 20.4.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Measure</th><th>September</th><th>October (to 25th)</th><th>Read</th></tr></thead>
+    <tbody>
+      <tr><td><b>Fitness / fatigue / form</b></td><td class="mono">26.8 / 16.6 / +8 (30 Sep)</td><td class="mono">33.5 / 43.8 / −17</td><td>Up 6.7 in the month; last 7 days +2.5, just under the 3 to 5 a week range</td></tr>
+      <tr><td>Ride-only fitness</td><td class="mono">18.4</td><td class="mono">20.4</td><td>Flat: the bike load has not grown</td></tr>
+      <tr><td><b>HR at 265 W</b> (indoor)</td><td class="mono">151 to 157 bpm</td><td class="mono">150 bpm (58 min, 21 Oct)</td><td>−7 bpm vs Sweet Spot Anchor (15 Sep), like for like</td></tr>
+      <tr><td><b>Fatigue resistance</b> (5 min after 1,000 kJ)</td><td class="mono">72 to 90% (outdoor)</td><td class="mono">99%, workout-capped</td><td>Still not properly measured: no hard effort late in a long ride</td></tr>
+      <tr><td><b>Races</b></td><td>None</td><td>4: <b>1st</b>, 5th, 20th of ~240, <b>2nd</b></td><td>Podiums on flat and drag finishes; places lost on steeper climbs</td></tr>
+      <tr><td>FTP</td><td class="mono">291 W</td><td class="mono">297 W</td><td>+6 W (+2%); 30 min 301 W twice suggests a little more</td></tr>
+      <tr><td>Power curve (month best)</td><td>Long outdoor rides, no maximal efforts</td><td class="mono">5 min 350 · 10 min 325 · 20 min 311 · 30 min 301 · 45 min 267</td><td>2026 bests at 5, 10, 20, 30 min; 20 and 30 min highest since 2020</td></tr>
+      <tr><td>Watts per beat (hard)</td><td class="mono">1.73 (27 Aug 2x20)</td><td class="mono">1.73 to 1.78</td><td>Top of the 2020 band (1.70 to 1.81)</td></tr>
+      <tr><td>Sweet spot drift</td><td class="mono">7.4% (15 Sep)</td><td class="mono">5.5% → 0.9%</td><td>Clear improvement</td></tr>
+      <tr><td>VO2max</td><td class="mono">–</td><td class="mono">Garmin 52 · power 48.4</td><td>Flat: no new 5 min best since 4 Oct</td></tr>
+      <tr><td>Resting HR (7-day)</td><td class="mono">54</td><td class="mono">58 → 55 → 54</td><td>Stable at baseline under higher load</td></tr>
+      <tr><td>Weight · W/kg</td><td class="mono">–</td><td class="mono">91.2 kg · 3.26 (7 Oct)</td><td>No weigh-in since: trend unknown</td></tr>
+      <tr><td>Riding</td><td class="mono">9 rides · 9.8 h · 173 mi · 658 TSS</td><td class="mono">9 rides · 6.9 h · 129 mi · 557 TSS</td><td>Down, though rising week on week (0.6, 1.9, 3.2 h)</td></tr>
+      <tr><td>Padel</td><td class="mono">2 · 2.8 h</td><td class="mono">8 recordings · 11.3 h · ~440 load</td><td>Now 44% of total load</td></tr>
+      <tr><td>Strava segment PRs</td><td class="mono">–</td><td class="mono">58</td><td>No all-time power bests this month</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="clean">
+    <li><span class="chip gd">Progress</span><span>The engine is moving the right way: same or better power for less heart rate, and 60 minutes of sweet spot with no drift. That is the 45 to 60 minute limiter starting to move.</span></li>
+    <li><span class="chip md">Risk</span><span><b>Riding volume is the plateau.</b> The July mountains need hours on the bike, and padel load does not build climbing durability. Block 2's +1 riding hour a week is the single most important change.</span></li>
+    <li><span class="chip lo">Gap</span><span>Mountain readiness: the July 2027 climbs are not known yet. Once named, a monthly predicted climb time at current 20 and 60 minute power and weight goes here.</span></li>
+  </ul>
+</section>
+
+<section id="s-plan">
+  <h2>Block 1: 6 Oct to 1 Nov</h2>
+  <p style="color:var(--muted);font-size:14px">Winter format: mostly Zwift, 45 to 60 minute weekday sessions and one 75 to 105 minute weekend ride, with padel 2 to 3 times a week. Each Sunday James sends his padel and riding days and the week's sessions are slotted around them. Targets use FTP 297 W. Rule: padel counts as a hard day, so never put a quality ride the day after padel.</p>
+  <div class="zones" id="zones"></div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Week</th><th>Zwift 1 · threshold (60 min)</th><th>Zwift 2 · VO2 / climbing (45–50 min)</th><th>Weekend (75–105 min)</th></tr></thead>
+    <tbody>
+      <tr><td><span class="wk">W1 Test</span><br><span class="eyebrow">6–12 Oct</span></td><td>Tue: race win (done)</td><td>Wed: easy, Foundation or Renewal (not logged)</td><td>Sun: 60 min easy, Giza or 60min Riders Choice (not on Strava at review). Padel Thu and Sat done</td></tr>
+      <tr><td><span class="wk">W2 Build</span><br><span class="eyebrow">13–19 Oct</span></td><td>Done as Mon Stage 2 race (5th) and Wed SST (Short): 40 min at <span class="tgt">274 W</span></td><td>Done as Thu race-pace group ride: Tick Tock 24.5 min at <span class="tgt">297 W</span> (on a padel day)</td><td>Not ridden. Padel Thu, Fri and Sat. 184 TSS</td></tr>
+      <tr><td><span class="wk">W3 Build</span><br><span class="eyebrow">19–25 Oct</span></td><td>Done as Sat Stage 3 race (2nd): 24 min at <span class="tgt">300 W</span>, 30 min 301 W</td><td>Dropped: padel Mon and Thu; VO2 covered by the race climbs (3 min 384 W)</td><td>Done Wed: 3x20min SST Low, 60 min at <span class="tgt">265 W</span>, drift 0.9%. Tue Foundation 49 min easy. Legs Sat. 215 TSS</td></tr>
+      <tr><td><span class="wk">W4 Absorb</span><br><span class="eyebrow">26 Oct–1 Nov</span></td><td>Thu 29 AM: 10/8/4min Threshold (61 min) at <span class="tgt">297 W</span>, to check HR response (vs 174 bpm on 6 Oct), then legs. Short: Lactate Shuttle Short (30)</td><td>Sat 31: ToW Stage 4 race, California Dreamin' (11.9 mi, 502 ft). Heavy legs: Foundation (48) instead</td><td>Tue Z2 moved to Wed 28 PM (optional, after morning padel): Giza or 60min Riders Choice at <span class="tgt">200–215 W</span>. Padel Mon PM and Wed AM. Upper body Wed and Fri. Rest Sun</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:13.5px;color:var(--muted)">If a weekend is dry, ride outdoors: sweet spot on a steady road or long drag, VO2 reps on a 3 to 5 minute climb. Longer outdoor endurance rides for the July 2027 mountains start building from February. Strength stays twice a week on a quality day after the ride, or on an easy day, never the day before a quality ride.</p>
+</section>
+
+<section class="panel" id="pmc-panel">
+  <div class="row-head"><h2>Fitness, fatigue and form</h2><span class="hint">Daily load: rides (power TSS) + padel (estimated from wrist HR)</span></div>
+  <div class="tiles">
+    <div class="tile"><span class="eyebrow">Fitness (42-day)</span><span class="big num" id="pmc-ctl">–</span><span class="delta up" id="pmc-ramp"></span><span class="sub">Long-term load you are adapted to</span></div>
+    <div class="tile"><span class="eyebrow">Fatigue (7-day)</span><span class="big num" id="pmc-atl">–</span><span class="sub">Recent load</span></div>
+    <div class="tile"><span class="eyebrow">Form</span><span class="big num" id="pmc-tsb">–</span><span class="sub" id="pmc-tsb-note"></span></div>
+  </div>
+  <div id="pmc" role="img" aria-label="Fitness, fatigue and form since July"></div>
+  <div class="legend"><span><i class="sw" style="background:var(--best)"></i>Fitness</span><span><i class="sw" style="background:var(--now)"></i>Fatigue</span><span><i class="sw" style="background:var(--good)"></i>Form (fitness minus fatigue)</span><span><i class="sw" style="background:var(--c1)"></i>Ride load</span><span><i class="sw" style="background:var(--warn)"></i>Padel load</span></div>
+  <ul class="clean">
+    <li><span class="chip md">Watch</span><span><b>Fitness fell from about 50 to 27 over the August break</b> and stayed flat at 26 to 28 through September: enough riding to hold, not to build.</span></li>
+    <li><span class="chip gd">Good</span><span><b>Block 1 is building it:</b> 26.6 on 12 Oct to 33.5 on 25 Oct. The last 7 days added +2.5, just under the safe 3 to 5 a week. Ride-only fitness is 20.4 (18.4 on 30 Sep): most of October's rise is padel.</span></li>
+    <li><span class="chip lo">Plan</span><span>Form is −17 on Sunday: normal after a build week. With padel twice and the absorb sessions, it should recover to about −5 to −9 by 1 Nov, not to zero; padel keeps fatigue up. Race on form of +5 to +15; build in the −10 to −30 range.</span></li>
+  </ul>
+  <p class="flag">Padel load is estimated from average wrist heart rate (hours × (avg HR ÷ 174)² × 100), so it may under-read; it is included because padel is real training stress. Swims, hikes and paddleboarding are left out. Fitness starts from an estimate on 1 Jun, so July values are approximate.</p>
+</section>
+
+<section id="s-load" class="panel">
+  <div class="row-head"><h3>Last 8 weeks: training load</h3>
+    <div class="seg" role="group" aria-label="Weekly metric"><button type="button" aria-pressed="true" data-m="h">Hours</button><button type="button" aria-pressed="false" data-m="tss">TSS</button><button type="button" aria-pressed="false" data-m="hz">HR zones</button><button type="button" aria-pressed="false" data-m="pz">Power zones</button></div></div>
+  <div id="weeks" role="img" aria-label="Weekly training chart with padel sessions"></div>
+  <div class="zkey" id="wkey"></div>
+  <div class="stat" id="zstat"></div>
+  <ul class="clean">
+    <li><span class="chip md">Watch</span><span><b>Sweet spot is rising, slowly.</b> In 8 weeks you spent 86 minutes at sweet spot and 111 at threshold, against 80 minutes above 357 W. This week alone added 20 minutes of sweet spot and 26 of threshold. The 45 to 60 minute gap is built here, so Block 1 keeps shifting time to it.</span></li>
+    <li><span class="chip gd">Good</span><span><b>Easy really is easy by heart rate.</b> About 74% of tracked time sits in HR zone 1, padel included.</span></li>
+    <li><span class="chip md">Watch</span><span><b>Load is low and uneven:</b> 69 to 291 TSS a week, average 161; 184 in week 2. On your time budget, 220 to 280 a week in build weeks is a realistic target.</span></li>
+  </ul>
+  <p class="flag">Tap a week for its sessions and zones. The 1 Oct Garmin duplicate is removed. The 12 Oct race has about 7 minutes of zero heart rate, so its HR zones under-count. TSS uses FTP 297 W for every ride.</p>
+</section>
+
+<section id="s-power" class="panel">
+  <h2>Power skills</h2>
+  <div class="legend"><span><i class="sw" style="background:var(--now)"></i>Last 8 weeks</span><span><i class="sw" style="background:var(--best)"></i>All time</span><span class="hint">Tap a duration for the rides</span></div>
+  <div class="radar-wrap">
+    <div id="radar" role="img" aria-label="Radar chart of last 8 weeks power as a share of all-time best across 13 durations"></div>
+    <div class="ladder" id="ladder"></div>
+  </div>
+  <p class="flag">All thirteen all-time bests are matched to a ride; 5 s is a new all-time best from this block, from a scan of every ride with power since 2020 (524 rides). The 10 to 60 minute bests are 2020 Zwift races; 2, 3 and 5 minutes come from outdoor rides in 2022 and 2024.</p>
+</section>
+
+<section id="s-fixed" class="two">
+  <div class="panel">
+    <div class="row-head"><h3>Heart rate at fixed power</h3><span class="hint">Zwift workouts · lower is fitter</span></div>
+    <div id="hr265" role="img" aria-label="Average heart rate at 265 W in Zwift workouts"></div>
+    <div class="tablewrap"><table class="narrow"><thead><tr><th>At 215 W (endurance)</th><th class="n">HR</th><th class="n">Minutes</th></tr></thead><tbody id="hr215t"></tbody></table></div>
+    <p style="font-size:13.5px;color:var(--muted)"><b>265 W:</b> 157 bpm in Sweet Spot Anchor (15 Sep), 150 in the 21 Oct SST Low: about 7 bpm lower for the same power. 166 on 14 Oct is inflated by its 285 W blocks. <b>215 W:</b> one indoor reading so far (127 bpm, 20 Oct Foundation); outdoor readings run lower because of cooling, so they are shown separately.</p>
+    <p class="flag">Method: average HR whenever the 30 s power sits within 10 W of the target, after the first 10 minutes, with at least 5 minutes of qualifying time. Best compared like for like: same workout type, indoors.</p>
+  </div>
+  <div class="panel">
+    <div class="row-head"><h3>Fatigue resistance</h3><span class="hint">Best power after 1,000 kJ of work</span></div>
+    <div class="tablewrap"><table class="narrow"><thead><tr><th>Ride</th><th class="n">kJ</th><th class="n">Best 5 min late</th><th class="n">% fresh</th></tr></thead><tbody id="frt"></tbody></table></div>
+    <p style="font-size:13.5px;color:var(--muted)">Only four rides in the last 10 weeks passed 1,000 kJ (about 75 to 90 minutes in), and none had a hard effort late on, so these are not yet a true measure. The July mountains will ask for 3,000 kJ or more in a day.</p>
+    <p class="flag">To measure it properly: the outdoor fatigue check in the testing plan (3 × 1 min all-out after 2 hours), or a hard 5 minutes in the last 20 minutes of a long weekend ride. Target: within 90% of fresh 5 minute power.</p>
+  </div>
+</section>
+
+<section id="s-races" class="panel">
+  <div class="row-head"><h2>Race log</h2><span class="hint">Block 1 races</span></div>
+  <div class="tablewrap"><table><thead><tr><th>Date</th><th>Race</th><th>Finish</th><th>Result</th><th>Deciding moment</th><th>Your power</th><th>Lesson</th></tr></thead><tbody id="racelog"></tbody></table></div>
+  <ul class="clean">
+    <li><span class="chip gd">Pattern</span><span><b>You win or podium when the finish is flat or a gentle drag and you are in the group.</b> You lose places when a lighter rider attacks on a steeper climb, which is a W/kg limit, not tactics.</span></li>
+    <li><span class="chip md">Lesson</span><span>Never bridge a gap alone on a climb (Stage 2). Go with moves under about 3 seconds immediately.</span></li>
+  </ul>
+</section>
+
+<section id="s-drift" class="panel">
+  <div class="row-head"><h3>Durability: heart-rate drift on longer rides</h3><span class="hint">Tap a bar</span></div>
+  <div id="drift" role="img" aria-label="Aerobic decoupling percentage for rides of 45 minutes or more"></div>
+  <ul class="clean">
+    <li><span class="chip gd">Good</span><span>The long outdoor rides (2 h 10 to 2 h 25) drifted only 0.3 to 4.6%. Under 5% means your aerobic base holds at endurance pace for well over two hours.</span></li>
+    <li><span class="chip md">Watch</span><span>At sweet spot and threshold the drift appears sooner: 4.5% on the 2×20, 7.4% in Sweet Spot Anchor (57 min) and 10.6% in SST (Short) on 14 Oct. That last figure includes the cool-down in the second half; the 40 minute work block alone drifted 5.5% as cadence fell to 70 to 75 rpm. This is the 45 to 60 minute gap again, seen through heart rate.</span></li>
+    <li><span class="chip gd">Good</span><span><b>21 Oct, 3x20min SST Low: 0.9% drift</b> across the 60 minutes of work (264 W at 148.5 bpm in the first half, 264 W at 150 in the second). The first sweet spot session of the block to stay under 5%. The bar uses the work blocks only; the whole-ride figure (10.9%) is distorted by the recoveries and cool-down. The 20 Oct Foundation ride is left off the chart for the same reason (structured blocks, 11.6% whole-ride).</span></li>
+    <li><span class="chip lo">Context</span><span>A negative value (11 Sep) means the second half was harder, so they are not comparable. 16 Sep (14.5%) was a very easy ride where HR barely moved from 117 to 123 bpm; the percentage looks large but the data are thin.</span></li>
+  </ul>
+  <p class="flag">Method: drop the first 10 minutes, split the rest in half, compare watts per beat. Under 5% is good. The test to repeat monthly: a 60 to 90 minute steady Zwift ride at 210 to 225 W.</p>
+</section>
+
+<section id="s-padel" class="two">
+  <div class="panel">
+    <div class="row-head"><h3>Padel</h3><span class="hint">Tap a month</span></div>
+    <div id="padel" role="img" aria-label="Padel sessions per month in 2026"></div>
+    <p style="font-size:13.5px;color:var(--muted)">49 recordings this year, peaking at 9 to 10 a month in June and July, then 2 a month in August and September, and 8 in October (8, 10, 15, 16 twice, 17, 19 and 22 Oct, 11.3 h; the 16 Oct evening is two recordings, 81 and 27 min, counted as two until confirmed). Padel is now 3 days a week. Recent sessions averaged 88 to 124 bpm with peaks of 152 or lower, so by recorded heart rate padel is easy. The cost is in the legs: lunges, lateral pushes and braking. That is why the rule of no quality ride the morning after padel stays.</p>
+    <p class="flag">Relative effort for June and July padel was 2 to 5 times higher (up to 116). If you wear the watch on your playing wrist, optical HR is unreliable in racket sports. A chest strap for 2 or 3 sessions would show the true load. Early October sessions read 88 and 97 bpm; 15 to 17 Oct read 108 to 124 average, max 150, still with samples up to 2 minutes apart.</p>
+  </div>
+  <div class="panel">
+    <h3>Weight and W/kg</h3>
+    <div id="weight" role="img" aria-label="Body weight and watts per kilo over time"></div>
+    <div class="tablewrap"><table class="narrow"><thead><tr><th>Weight</th><th class="n">W/kg at 297 W</th><th class="n">W/kg at 306 W</th></tr></thead><tbody id="wkgt"></tbody></table></div>
+    <p class="flag">Two points so far: the InBody scan (15 Apr) and your weigh-in (7 Oct). Monday weigh-ins sent in the Sunday review are added here.</p>
+  </div>
+</section>
+
+<section id="s-vo2" class="panel">
+  <div class="row-head"><h2>VO2max</h2><span class="hint">Three estimates · tap a point</span></div>
+  <div class="tiles">
+    <div class="tile" style="border-color:var(--good)"><span class="eyebrow">Best estimate</span><span class="big num">~51<small>ml/kg/min</small></span><span class="delta up">Excellent, top 10 to 20% for men 30–39</span><span class="sub">Three methods agree on 48 to 55</span></div>
+    <div class="tile"><span class="eyebrow">Garmin, 6 Oct</span><span class="big num">52</span><span class="sub">Watch estimate, "top 10%" (Garmin's own norms)</span></div>
+    <div class="tile"><span class="eyebrow">From power</span><span class="big num">48</span><span class="delta up">+2 since March</span><span class="sub">350 W for 5 min at 91.2 kg. The trend line to watch</span></div>
+    <div class="tile"><span class="eyebrow">From heart rate</span><span class="big num">55</span><span class="sub">15.3 × max HR 196 ÷ resting HR 54. Tends to read high</span></div>
+  </div>
+  <div id="vo2" role="img" aria-label="VO2max estimate against age-group rating bands"></div>
+  <div class="tablewrap"><table class="narrow"><thead><tr><th>Best 5 min power</th><th class="n">at 91 kg</th><th class="n">at 88 kg</th><th class="n">at 85 kg</th></tr></thead><tbody id="vo2t"></tbody></table></div>
+  <ul class="clean">
+    <li><span class="chip gd">Good</span><span>All three methods put you in Excellent for men aged 30 to 39 (48.3 to 54), and Garmin's 52 sits near the top of it. In large cohort studies, the top fitness bands are linked with the lowest long-term health risk.</span></li>
+    <li><span class="chip lo">Why they differ</span><span>The power estimate assumes typical pedalling efficiency and is the most conservative; the heart-rate ratio tends to over-read. The truth is most likely 50 to 52. Use the power estimate for the trend, because it moves with your training data.</span></li>
+    <li><span class="chip md">Lever</span><span><b>Superior (54+) is reachable</b> at about 385 W for 5 minutes at 88 kg, or 370 W at 85 kg. You have held 385 W before. The 5 and 6 × 3 min at 350 W sessions in Block 1 are the direct VO2 work; weight is the second lever.</span></li>
+    <li><span class="chip lo">Method</span><span>ACSM cycling equation: VO2 = 10.8 × watts ÷ kg + 7, using your best 5 minute power, which is close to power at VO2max. It is an estimate, not a lab test, and assumes a typical efficiency. The trend is more reliable than the absolute number.</span></li>
+  </ul>
+  <div class="row-head"><h3>Resting heart rate, last 12 months</h3><span class="hint">Garmin weekly averages, read from your screenshot (±1 bpm)</span></div>
+  <div id="rhr" role="img" aria-label="Resting heart rate by month"></div>
+  <ul class="clean">
+    <li><span class="chip gd">Good</span><span>Year average 54 bpm. Lowest (about 50) in February, during Tour de Zwift and the build to the March race win: fitness shows up here.</span></li>
+    <li><span class="chip gd">Good</span><span>Week of 19 Oct averaged <b>54 bpm</b>, back on baseline (daily 49 to 56) despite the 60 min sweet spot session and a big padel game. Week of 12 Oct averaged <b>55 bpm</b>, down from 58. Daily readings: about 49 on Monday (fresh after six days off the bike), rising to about 60 by Thursday after the race, legs, SST and the race-pace group ride, then settling to 53 to 55 by the weekend. That is a normal load-and-recover pattern, so week 3 runs as planned.</span></li>
+  </ul>
+  <p class="flag">Rule of thumb: a 7-day resting HR 5 bpm or more above your 54 baseline means ease off. Send the 7-day figure with your Monday weight.</p>
+</section>
+
+<section id="s-hr" class="panel">
+  <h2>Heart rate</h2>
+  <div class="row-head"><h3>Zones from threshold HR 174 bpm</h3><span class="hint">Friel cycling model · max 196</span></div>
+  <div class="zones" id="hrzones"></div>
+  <div class="row-head"><h3>Watts per heartbeat on hard sustained efforts</h3><span class="hint">Tap a point</span></div>
+  <div id="eff" role="img" aria-label="Scatter of watts per beat on 20 to 67 minute hard efforts from 2020 to 2026"></div>
+  <ul class="clean">
+    <li><span class="chip gd">Good</span><span>The engine is as efficient as it was in 2020. On 15 Oct you made 1.78 W per beat (297 W for 24.5 min), up from 1.73 on 6 Oct; the 2020 peak-season races were 1.70 to 1.81. The heart is not the limiter.</span></li>
+    <li><span class="chip gd">Good</span><span>Threshold HR is stable at 171 to 176 bpm across six years, so 174 is a reliable anchor for zones.</span></li>
+    <li><span class="chip md">Watch</span><span>The difference from 2020 is duration. Then you held 289 to 298 W for 54 to 67 minutes; now the best 45 minutes is 267 W and the best 60 minutes 237 W. The 21 Oct SST Low was the first step: 60 minutes of sweet spot with no drift.</span></li>
+    <li><span class="chip md">Watch</span><span>The two 2024 points (1.55 to 1.59) were the low-volume years. If efficiency drops below about 1.65 in a test or race, take it as fatigue or lost fitness, not a bad day.</span></li>
+    <li><span class="chip lo">Context</span><span>12 Mar 2026 (1.90) is the outlier: a 53 minute race at 151 bpm. Treat it as best-case, not the norm.</span></li>
+  </ul>
+</section>
+
+<section id="s-ftp" class="two">
+  <div class="panel">
+    <h3>FTP history</h3>
+    <div id="ftp" role="img" aria-label="FTP history line chart"></div>
+    <p class="flag">Hollow points are not Zwift-set FTPs. 2020 is estimated from Strava data (95% of the 318 W 20 minute best). 2022 is your recollection. Strava still has FTP at 280 W and weight at 88 kg; set them to 297 W and 91 kg.</p>
+  </div>
+  <div class="panel">
+    <h3>Highest heart rate seen</h3>
+    <div id="maxhr" role="img" aria-label="Highest heart rate recorded by year"></div>
+    <p style="font-size:13.5px;color:var(--muted)">Your ceiling has barely moved in six years: 200 bpm in 2020, 196 bpm on 6 Oct. Values are the highest seen in the rides checked, not every ride. Strava's age formula puts you at about 182, which makes every Strava HR zone wrong. Use 196 max and 174 threshold.</p>
+  </div>
+</section>
+
+<section id="s-tests">
+  <h2>Testing plan</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Test</th><th>When</th><th>Protocol</th><th>What it sets</th></tr></thead>
+    <tbody>
+      <tr><td><b>20-min FTP test</b></td><td>Optional. Next natural slot: start of Block 2 in early November</td><td>Zwift "FTP Test [Standard]". The 6 Oct race already gave 311 W for 20 min and 301 W for 30 min.</td><td>FTP = 95% of 20 min. Threshold HR = average HR of the 20 min.</td></tr>
+      <tr><td><b>Fatigue check</b></td><td>When a dry weekend allows, before end of November</td><td>2 h outdoor at 166 to 223 W. In the last 25 min: 3×1 min all-out, 4 min easy between.</td><td>Compare against the fresh 1 min. Under 90% means fatigue resistance is a limiter.</td></tr>
+      <tr><td><b>Weigh-in</b></td><td>Every Monday</td><td>Morning, after toilet, before food. Update Strava and Zwift.</td><td>Real W/kg.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s-missing" class="panel">
+  <h3>What is missing</h3>
+  <ul class="clean">
+    <li><span class="chip md">Med</span><span>A long hard effort. 45 and 60 minute power is 86% of best; a 75 to 105 minute weekend ride with sweet spot is the fix.</span></li>
+    <li><span class="chip md">Med</span><span>Set HR zones in Strava and Zwift to max 196 and threshold 174.</span></li>
+    <li><span class="chip md">Med</span><span>Strength sessions on Strava (padel is already complete), so weekly load includes the gym. None logged in weeks 1 or 2.</span></li>
+    <li><span class="chip lo">Low</span><span>A formal FTP test. 297 W comes from a race; a test is optional.</span></li>
+    <li><span class="chip md">Med</span><span>Weight: last weigh-in 91.2 kg on 7 Oct; none for 18 days, so the W/kg trend is unknown. Resting HR is up to date (54, week of 19 Oct).</span></li>
+    
+  </ul>
+</section>
+
+<section class="panel" id="history">
+  <div class="row-head"><h2>All-time history, 2013 to 2026</h2><span class="hint">Tap a year</span></div>
+  <div class="tiles">
+    <div class="tile"><span class="eyebrow">Rides</span><span class="big num">1,500</span><span class="sub">Since 26 Dec 2013 (Malvern Hills)</span></div>
+    <div class="tile"><span class="eyebrow">Distance</span><span class="big num">28,948<small>mi</small></span><span class="sub">Outdoor and Zwift</span></div>
+    <div class="tile"><span class="eyebrow">Time</span><span class="big num">1,809<small>h</small></span></div>
+    <div class="tile"><span class="eyebrow">Climbing</span><span class="big num">1.31<small>m ft</small></span><span class="sub">About 45 Everests</span></div>
+  </div>
+  <div class="row-head"><h3>Year on year</h3>
+    <div class="seg" id="yseg" role="group" aria-label="Yearly metric"><button type="button" aria-pressed="true" data-y="mi">Miles</button><button type="button" aria-pressed="false" data-y="h">Hours</button><button type="button" aria-pressed="false" data-y="n">Rides</button><button type="button" aria-pressed="false" data-y="ft">Climbing</button></div></div>
+  <div id="years" role="img" aria-label="Riding per year, outdoor and Zwift"></div>
+  <div class="legend"><span><i class="sw" style="background:var(--best)"></i>Outdoor</span><span><i class="sw" style="background:var(--now)"></i>Zwift</span><span class="hint">2026 is to 18 Oct</span></div>
+  <div class="row-head"><h3>Same point in the year: 1 Jan to 7 Oct</h3></div>
+  <div class="tablewrap"><table class="narrow"><thead><tr><th>Year</th><th class="n">Rides</th><th class="n">Miles</th><th class="n">Hours</th><th style="width:40%%">Miles vs best year</th></tr></thead><tbody id="ytd"></tbody></table></div>
+  <div class="row-head"><h3>Best power by year</h3><span class="hint">Shaded by % of all-time best · tap a year</span></div>
+  <div class="tablewrap"><table class="narrow" id="pyear"></table></div>
+  <ul class="clean">
+    <li><span class="chip gd">Good</span><span><b>2026 is already your best power year since 2020,</b> and an all-time best at 5 s, 30 s and 1 min. 20 and 30 minute power are the highest since 2020, on far less volume than 2018 to 2022.</span></li>
+    <li><span class="chip md">Watch</span><span><b>Volume is a third of your peak.</b> 2018 was 3,872 miles and 246 hours; 2026 to date is 1,415 miles and 76 hours. Outdoor riding has fallen from 205 rides in 2018 to 23 this year. The engine is there; the hours are not.</span></li>
+    <li><span class="chip lo">Context</span><span>Power data starts in 2020 (Zwift) and outdoor power from 2021. Rides from 2013 to 2019 have no power meter, so they count for volume only.</span></li>
+  </ul>
+  <div class="row-head"><h3>Records</h3></div>
+  <div class="tablewrap"><table class="narrow"><tbody id="recs"></tbody></table></div>
+  <p class="flag">12 Zwift sessions with a matching Garmin "Ride" recorded at the same time (2024 to 2026, the same pattern as 1 Oct) are excluded. Seven outdoor rides look recorded twice (two devices, same start time) and are still counted until you confirm: 29 Jan 2020, 6 Feb 2020, 22 May 2023, 6 Jun 2024, 7 Jul 2024, 14 Apr 2025, 30 Jun 2025. They add about 105 miles in total.</p>
+</section>
+
+<section id="s-long" class="panel">
+  <h3>Long view</h3>
+  <ul class="clean">
+    <li><span class="chip lo">2014–19</span><span>Outdoor only, mostly Warwick and Coventry. Volume builds to a peak in 2018: 205 rides, 3,872 miles, 246 hours, including 598 miles in June 2018. Longest ride ever: the M25 loop, 135 miles, 16 Jul 2016.</span></li>
+    <li><span class="chip lo">2020</span><span>Lockdown Zwift racing, 2 to 3 races a week. This is where your all-time 10 to 60 minute power comes from: 335 W for 10 min and 296 W for 45 min (5 Jul), 289 W for an hour (14 Jul), 318 W for 20 min (30 Sep). Max HR 200.</span></li>
+    <li><span class="chip lo">2021–22</span><span>Highest outdoor volume: 3 to 4 rides a week, 50 to 85 mile rides, Alps in June 2022. FTP recalled at about 306 W. 303 W for 20 min in the 22 Jan 2022 test.</span></li>
+    <li><span class="chip lo">2023–24</span><span>Lighter: group rides, bikepacking, Tour de Zwift. Efficiency at its lowest.</span></li>
+    <li><span class="chip lo">2025</span><span>Very little riding until October. Zwift rebuild from November, FTP test on 24 Dec.</span></li>
+    <li><span class="chip lo">Jan–Mar 26</span><span>Tour de Zwift, then the 46-rider race win on 12 Mar. FTP climbs to 291 W. 30 s and 1 min all-time bests on 17 May.</span></li>
+    <li><span class="chip lo">Apr–Sep 26</span><span>Padel takes the training time; about 2 rides a week, August holiday, partial rebuild late August to mid-September.</span></li>
+    <li><span class="chip lo">Oct 26</span><span>Winter block starts with a race win on 6 Oct; Zwift FTP 291 to 297 W. 15 Oct: 1.78 W per beat, best since 2020.</span></li>
+  </ul>
+</section>
+
+<footer>Sources: complete Strava activity history (1,660 activities, Dec 2013 to Oct 2026), power bests for all 524 rides with a power meter (2020 onwards), per-activity power bests, HR and laps for about 80 rides, second-by-second HR and power for every session in the last 8 weeks, Strava Power Skills screenshot, InBody scan 15 Apr 2026, weigh-in 7 Oct 2026, padel heart-rate streams 15 to 17 Oct. Weekly review 24 Oct 2026; October monthly review 25 Oct 2026. Ride links open Strava.</footer>
+</div>
+
+<div class="wrap" id="detail" hidden></div>
+
+<script>
+(function(){
+  var NS="http://www.w3.org/2000/svg";
+  function el(t,a,txt){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function go(h){location.hash=h;}
+  function hit(g,h,label){g.setAttribute("class","hit");g.setAttribute("tabindex","0");g.setAttribute("role","link");g.setAttribute("aria-label",label);
+    g.addEventListener("click",function(){go(h);});g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go(h);}});}
+  var KG=91.2, SL="https://www.strava.com/activities/";
+
+  // ---------- Ride library ----------
+  var RIDES={
+    "3719027841":{n:"L'Etape du Tour Stage 1, Open (Zwift)",d:"5 Jul 2020",t:"54 min · avg 298 W",hr:"164.5 avg · 187 max",b:"10 min 335 · 15 min 322 · 20 min 311 · 30 min 304 · 45 min 296"},
+    "3760181003":{n:"Virtual Tour de France Stage 3, Open (Zwift)",d:"14 Jul 2020",t:"67 min · avg 291 W",hr:"171 avg · 189 max",b:"5 min 349 · 10 min 332 · 15 min 320 · 20 min 314 · 30 min 298 · 45 min 292 · 60 min 289"},
+    "4134256051":{n:"ZHR Hare & Hounds Race (B) (Zwift)",d:"30 Sep 2020",t:"59 min · avg 286 W",hr:"165 avg · 191 max",b:"5 s 1,241 · 10 min 323 · 15 min 320 · 20 min 318 · 30 min 305"},
+    "18538425636":{n:"Zwift: Wave Rider",d:"17 May 2026",b:"30 s 999 · 1 min 604"},
+    "17752033307":{n:"Ride on 17 Mar 2026",d:"17 Mar 2026",b:"2 min 471 · 3 min 419"},
+    "4110038965":{n:"DIRT Sprintapalooza (Zwift)",d:"25 Sep 2020",b:"15 s 1,172"},
+    "7056785585":{n:"Evening Ride (outdoor, Warwick)",d:"28 Apr 2022",t:"47.6 mi · 2 h 55 · 2,382 ft",hr:"131 avg · 175 max",b:"1 min 596 · 2 min 490 · 3 min 401"},
+    "12453436841":{n:"Evening Ride (outdoor, Warwick)",d:"19 Sep 2024",t:"27.6 mi · 1 h 43 · 1,451 ft",hr:"135 avg · 184 max",b:"30 s 657 · 1 min 520 · 2 min 453 · 3 min 422"},
+    "7132594857":{n:"Super Cheeky Thursday Thursday Ride (outdoor)",d:"12 May 2022",t:"60.4 mi · 3 h 54 · 3,821 ft",hr:"141 avg · 178 max",b:"3 min 402 · 5 min 385 · 8 min 354 · 10 min 328"},
+    "9704382569":{n:"Zwift: Two Bridges Loop in Watopia",d:"23 Aug 2023",t:"25 min · 7.7 mi · avg 215 W",hr:"144.5 avg · 180 max",b:"5 s 1,492 · 15 s 1,211 · 30 s 739 · 1 min 509"},
+    "20042084240":{n:"Zwift: Half Hour of Power",d:"5 Sep 2026",t:"36 min · 13.0 mi",b:"5 s 1,529 · 15 s 1,162 (end-of-session sprint)"},
+    "20479666897":{n:"Zwift Race: Tour of Watopia Stage 1 (1st)",d:"6 Oct 2026",t:"36 min · 15.0 mi",hr:"174 avg over the 29 min Sand and Sequoias section · 196 max",b:"30 s 748 · 1 min 535 · 2 min 425 · 10 min 325 · 15 min 310 · 20 min 311 · 30 min 301 · final 500 m in 33 s at 710 W"},
+    "20450456035":{n:"Zwift: Alpha",d:"4 Oct 2026",t:"38 min · 11.1 mi",b:"3 min 398 · 5 min 350"},
+    "20559048199":{n:"Zwift Race: Tour of Watopia Stage 2 (5th)",d:"12 Oct 2026",t:"34 min · 12.7 mi · 909 ft",hr:"172 avg on valid samples (about 7 min of zero HR) · 193 max",b:"5 s 784 · 2 min 398 · 5 min 346 · 10 min 324 · 15 min 310 · 20 min 304 · 30 min 294 · Volcano KOM 8:12 at 334 W · Hilly KOM 2:26 at 393 W"},
+    "20579546415":{n:"Zwift: SST (Short)",d:"14 Oct 2026",t:"51 min · 17.6 mi · 705 ft",hr:"158 avg · 177 max · 165 avg over the 40 min work block",b:"40 min work block 274 W · 20 min 275 · 30 min 275 · 45 min 267"},
+    "20598720337":{n:"Zwift Group Ride: Tour of Watopia Stage 2 (race pace)",d:"15 Oct 2026",t:"29 min · 12.4 mi",hr:"164 avg · 191 max",b:"5 s 1,033 · 15 s 909 · 30 s 646 · 1 min 498 · 20 min 303 · Tick Tock 24.5 min at 297 W, 167 bpm, 89 rpm"},
+    "20672678058":{n:"Zwift: 3x20min SST Low (La Reine)",d:"21 Oct 2026",t:"103 min · 17.5 mi · 3,934 ft",hr:"149, 151 and 148 avg across the three blocks · 163 max",b:"3 × 20 min at 265 W · 20 min 265 · 45 min 246 · 60 min 237 · work-block drift 0.9%"},
+    "20708266675":{n:"Zwift Race: Tour of Watopia Stage 3 (2nd)",d:"24 Oct 2026",t:"40 min · 14.9 mi · 899 ft",hr:"162 avg · 184 max · 169 over the 24 min loop",b:"5 s 732 · 3 min 384 · 10 min 317 · 15 min 309 · 20 min 303 · 30 min 301 · Itza KOM 7:27 at 314 W · Mayan Mountainside 4:10 at 356 W"},
+    "19926190788":{n:"Zwift: 2x20 FTP Intervals",d:"27 Aug 2026",t:"81 min · 17.0 mi",hr:"168 avg on the first 20 min block",b:"First block 290 W · 45 min 254 · 60 min 247"}
+  };
+
+  // ---------- Power durations ----------
+  // key, label, all-time W, 8-week W, all-time ride id (null = not located), 8-week ride id, closest-found note, coaching note
+  var D=[
+    ["5s","5 second",1529,1529,"20042084240","20042084240","","100%: a new all-time best on 5 Sep 2026, 1,529 W at the end of Half Hour of Power. It beats 1,492 W (23 Aug 2023) and 1,434 W (Sep 2020). Peak neuromuscular power is the best it has ever been, so in a sprint finish the jump is not the limiter; holding 700 to 800 W behind it is."],
+    ["15s","15 second",1211,1162,"9704382569","20042084240","","96% of best from a sprint at the end of a session. Your sprint is intact. Keep 2 to 3 all-out 10 to 15 s efforts at the end of one session a week."],
+    ["30s","30 second",999,748,"18538425636","20479666897","","75%: the biggest short-end gap. The 748 W came at the end of a 36 min race; 999 W was fresh. Race finishes are where 30 s matters, so the W2 weekend 30 s efforts are worth doing properly."],
+    ["1m","1 minute",604,535,"18538425636","20479666897","","89%. Same story as 30 s: fresh vs end-of-race. Not a priority this block."],
+    ["2m","2 minute",490,425,"7056785585","20479666897","","87%. Two-minute power will rise with the W2 and W3 VO2 sessions."],
+    ["3m","3 minute",422,398,"12453436841","20450456035","","94%. The 5 and 6 × 3 min at 350 W sessions in W2 and W3 target exactly this. Expect a new 8-week best by the end of W3."],
+    ["5m","5 minute",385,350,"7132594857","20450456035","","91%. The 385 W came on a hilly 60 mile group ride in May 2022, the month before the Alps. Outdoor climbs bring out more 5 minute power than Zwift; expect the gap to close when you ride hills outdoors again."],
+    ["10m","10 minute",335,325,"3719027841","20479666897","","97%. Threshold is close to its all-time level."],
+    ["15m","15 minute",322,310,"3719027841","20479666897","","96%. Matched on 12 Oct: 310 W in the Stage 2 race."],
+    ["20m","20 minute",318,311,"4134256051","20479666897","","98%. Within 7 W of your 2020 best at 38 and about 91 kg. A real result."],
+    ["30m","30 minute",305,301,"4134256051","20479666897","","99%. Essentially back to all-time."],
+    ["45m","45 minute",296,267,"3719027841","20579546415","","90%. New 8-week best on 14 Oct: 267 W inside SST (Short), +13 W on the 254 W of 27 Aug. Still a gap; the 85 to 105 minute sweet spot weekend rides are the fix, and they matter most for the July mountains."],
+    ["60m","60 minute",289,237,"3760181003","20672678058","","82%. The 8-week window has moved past 27 Aug (247 W), so the best is now 237 W from the 21 Oct SST Low, which was 60 min of sweet spot plus recoveries, not a 60 minute maximal effort. In 2020 you raced over 60 minutes at 289 W. The mountains need 60 to 90 minute climbs, so this is the gap to close by spring."]
+  ];
+
+  // ---------- Radar ----------
+  var S=420,C=S/2,R=140,svg=el("svg",{viewBox:"0 0 "+S+" "+S});
+  [25,50,75,100].forEach(function(p){svg.appendChild(el("circle",{cx:C,cy:C,r:R*p/100,fill:"none",stroke:"var(--line)","stroke-width":1}));});
+  [50,75].forEach(function(p){svg.appendChild(el("text",{x:C+4,y:C-R*p/100-3,"font-size":10},p+"%"));});
+  var n=D.length,best=[],now=[],pts=[];
+  D.forEach(function(d,i){
+    var a=-Math.PI/2+i*2*Math.PI/n,cx=Math.cos(a),cy=Math.sin(a);
+    svg.appendChild(el("line",{x1:C,y1:C,x2:C+cx*R,y2:C+cy*R,stroke:"var(--line)","stroke-width":1}));
+    best.push((C+cx*R)+","+(C+cy*R));
+    var f=d[3]/d[2];now.push((C+cx*R*f)+","+(C+cy*R*f));pts.push([C+cx*R*f,C+cy*R*f,cx,cy]);
+  });
+  svg.appendChild(el("polygon",{points:best.join(" "),fill:"var(--best-soft)",stroke:"var(--best)","stroke-width":2}));
+  svg.appendChild(el("polygon",{points:now.join(" "),fill:"var(--now-soft)",stroke:"var(--now)","stroke-width":2.2}));
+  D.forEach(function(d,i){
+    var p=pts[i],g=el("g",{}),lx=C+p[2]*(R+30),ly=C+p[3]*(R+30),anc=Math.abs(p[2])<.2?"middle":(p[2]>0?"start":"end");
+    g.appendChild(el("line",{x1:C+p[2]*R*.35,y1:C+p[3]*R*.35,x2:C+p[2]*(R+40),y2:C+p[3]*(R+40),stroke:"transparent","stroke-width":26}));
+    g.appendChild(el("circle",{"class":"dot",cx:p[0],cy:p[1],r:4,fill:"var(--now)"}));
+    g.appendChild(el("text",{x:lx,y:ly-3,"text-anchor":anc,"font-weight":"500",style:"fill:var(--ink)"},d[0]));
+    g.appendChild(el("text",{x:lx,y:ly+11,"text-anchor":anc,"font-size":10},d[2]+" W"));
+    hit(g,"#d-"+d[0],d[1]+" power detail");svg.appendChild(g);
+  });
+  document.getElementById("radar").appendChild(svg);
+
+  // ---------- Ladder ----------
+  var L=document.getElementById("ladder");
+  D.forEach(function(d){
+    var p=Math.round(d[3]/d[2]*100),r=document.createElement("a");r.className="rung";r.href="#d-"+d[0];
+    r.innerHTML='<span class="d">'+d[0]+'</span><span class="bar"><i style="width:'+p+'%"></i><b>'+p+'%</b></span><span class="w">'+d[3]+' <em>/ '+d[2]+' W</em></span><span class="go">›</span>';
+    L.appendChild(r);
+  });
+
+  // ---------- FTP history ----------
+  var FP=[
+    ["2020",302,true,"Estimated, not a Zwift-set FTP: 95% of the 318 W 20 minute best in the ZHR Hare & Hounds race on 30 Sep 2020. You also held 289 W for an hour on 14 Jul 2020, which supports about 295 to 302 W.","4134256051"],
+    ["2022",306,true,"Your recollection of FTP in 2022; not set from a Strava test. The 22 Jan 2022 FTP test gave 303 W for 20 minutes at 168.7 bpm, which implies about 288 W on the 95% rule, so 306 W probably came from a later Zwift auto-update or ramp test.","6562595236"],
+    ["Dec 25",274,false,"Zwift FTP test on 24 Dec 2025: 285 W for 20 minutes at 170 bpm. Start of the rebuild after a light 2025.","16826139219"],
+    ["Jan 26",285,false,"Raised by Zwift during Tour de Zwift racing and group rides.",null],
+    ["Feb 26",288,false,"Raised by Zwift during Tour de Zwift (best TdZ 20 min 295 W on 29 Jan).","17219688996"],
+    ["Mar 26",291,false,"Set after the Peaky Pavé race win on 12 Mar 2026: 300 W for 20 min, 293 W for 45 min.","17697152085"],
+    ["Oct 26",297,false,"Auto-raised by Zwift after the Tour of Watopia Stage 1 win on 6 Oct 2026: 311 W for 20 min, 301 W for 30 min at 174 bpm.","20479666897"]
+  ];
+  (function(){
+    var W=420,H=230,pl=40,pr=14,pt=18,pb=34,y0=260,y1=315;
+    var s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function X(i){return pl+i*(W-pl-pr)/(FP.length-1);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [260,280,300].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    s.appendChild(el("path",{d:"M"+X(0)+" "+Y(302)+"L"+X(1)+" "+Y(306)+"L"+X(2)+" "+Y(274),fill:"none",stroke:"var(--best)","stroke-width":2,"stroke-dasharray":"4 4"}));
+    var d="";for(var i=2;i<6;i++)d+=(i==2?"M":"L")+X(i)+" "+Y(FP[i][1]);
+    s.appendChild(el("path",{d:d,fill:"none",stroke:"var(--best)","stroke-width":2.2}));
+    s.appendChild(el("line",{x1:X(5),y1:Y(291),x2:X(6),y2:Y(297),stroke:"var(--now)","stroke-width":2.2}));
+    FP.forEach(function(p,i){
+      var c=i==6?"var(--now)":"var(--best)",g=el("g",{});
+      g.appendChild(el("circle",{cx:X(i),cy:Y(p[1]),r:16,fill:"transparent"}));
+      g.appendChild(el("circle",{"class":"dot",cx:X(i),cy:Y(p[1]),r:i==6?5.5:4,fill:p[2]?"var(--surface)":c,stroke:c,"stroke-width":2}));
+      g.appendChild(el("text",{x:X(i),y:Y(p[1])-10,"text-anchor":"middle",style:"fill:var(--ink)","font-weight":"500"},(p[2]?"~":"")+p[1]));
+      g.appendChild(el("text",{x:X(i),y:H-pb+14,"text-anchor":"middle","font-size":10},p[0]));
+      hit(g,"#f-"+i,"FTP "+p[0]+" detail");s.appendChild(g);
+    });
+    document.getElementById("ftp").appendChild(s);
+  })();
+
+  // ---------- Max HR ----------
+  (function(){
+    var M=[["2020",200,"Tour for All Stage 1, 5 May 2020"],["2021",192,"KISS race, 11 Mar 2021"],["2024",195,"Tour de Zwift race, 8 Feb 2024"],["2026",196,"Tour of Watopia Stage 1, 6 Oct 2026"]];
+    var W=420,H=200,pl=40,pr=14,pt=18,pb=30,y0=170,y1=205,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [170,180,190,200].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(182),y2:Y(182),stroke:"var(--warn)","stroke-dasharray":"3 4"}));
+    s.appendChild(el("text",{x:W-pr,y:Y(182)+13,"text-anchor":"end","font-size":10,style:"fill:var(--warn)"},"Strava age estimate ~182"));
+    var bw=(W-pl-pr)/M.length;
+    M.forEach(function(m,i){var x=pl+i*bw+bw*.25,last=i==M.length-1;
+      var r=el("rect",{x:x,y:Y(m[1]),width:bw*.5,height:Y(y0)-Y(m[1]),rx:3,fill:last?"var(--now)":"var(--best)",opacity:last?1:.7});
+      var t=el("title",{},m[2]+": "+m[1]+" bpm");r.appendChild(t);s.appendChild(r);
+      s.appendChild(el("text",{x:x+bw*.25,y:Y(m[1])-5,"text-anchor":"middle",style:"fill:var(--ink)","font-size":10},m[1]));
+      s.appendChild(el("text",{x:x+bw*.25,y:H-pb+15,"text-anchor":"middle","font-size":10},m[0]));});
+    document.getElementById("maxhr").appendChild(s);
+  })();
+
+  // ---------- HR zones ----------
+  (function(){
+    var Zs=[["Z1 Recovery","<141","--z1","Spin-outs, warm-up"],["Z2 Aerobic","141–155","--z2","Endurance rides, most outdoor miles"],["Z3 Tempo","156–162","--z3","Sweet spot settles here"],["Z4 Sub-threshold","163–172","--z4","Threshold reps"],["Z5a Threshold","173–177","--z5","Race pace for 20 to 60 min"],["Z5b VO2","178–184","--z5","End of 3 to 5 min reps"],["Z5c Anaerobic","185–196","--z5","Sprints, finishes"]];
+    var c=document.getElementById("hrzones");
+    Zs.forEach(function(z){var d=document.createElement("div");d.className="zone";d.style.borderLeftColor="var("+z[2]+")";
+      d.innerHTML='<div class="n">'+z[0]+'</div><div class="r">'+z[1]+' bpm</div><div class="u">'+z[3]+'</div>';c.appendChild(d);});
+  })();
+
+  // ---------- VO2max ----------
+  (function(){
+    function v(w,kg){return 10.8*w/kg+7;}
+    var P=[["12 Mar 2026",347,95.8,"Peaky Pavé race win, 5 min 347 W. Weight assumed 95.8 kg from the 15 Apr InBody scan.","#h-8"],["4 Oct 2026",350,91.2,"Zwift Alpha, 5 min 350 W, at 91.2 kg (7 Oct weigh-in).","#a-20450456035"]];
+    var B=[["Poor",30,40.5,"--c7"],["Fair",40.5,44,"--c6"],["Good",44,48.3,"--c5"],["Excellent",48.3,54,"--c3"],["Superior",54,60,"--c2"]];
+    var W=560,H=150,pl=16,pr=16,x0=38,x1=58,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function X(x){return pl+(Math.max(x0,Math.min(x1,x))-x0)/(x1-x0)*(W-pl-pr);}
+    B.forEach(function(b){var r=el("rect",{x:X(b[1]),y:56,width:X(b[2])-X(b[1]),height:16,fill:"var("+b[3]+")",opacity:.35});s.appendChild(r);
+      s.appendChild(el("text",{x:(X(b[1])+X(b[2]))/2,y:88,"text-anchor":"middle","font-size":10},b[0]));});
+    [40,44,48,52,56].forEach(function(t){s.appendChild(el("text",{x:X(t),y:104,"text-anchor":"middle","font-size":9.5},t));});
+    var tg=el("g",{});tg.appendChild(el("line",{x1:X(54),x2:X(54),y1:48,y2:80,stroke:"var(--ink)","stroke-dasharray":"3 3"}));
+    var tt=el("text",{x:W-pr,y:124,"text-anchor":"end","font-size":10},"Superior from 54: ~385 W for 5 min at 88 kg");tt.style.fill="var(--muted)";s.appendChild(tt);s.appendChild(tg);
+    P.forEach(function(p,i){var val=v(p[1],p[2]),last=i==P.length-1,g=el("g",{});
+      g.appendChild(el("circle",{cx:X(val),cy:64,r:14,fill:"transparent"}));
+      g.appendChild(el("circle",{"class":"dot",cx:X(val),cy:64,r:last?7:5,fill:last?"var(--now)":"var(--best)",stroke:"var(--surface)","stroke-width":2}));
+      var t=el("text",{x:X(val),y:last?38:24,"text-anchor":"middle","font-size":10.5},(last?"Now ":"Mar ")+val.toFixed(1));t.style.fill="var(--ink)";g.appendChild(t);
+      hit(g,p[4],p[3]);s.appendChild(g);});
+    [[52,"Garmin 52"],[55.5,"HR 55"]].forEach(function(g){var c=el("circle",{cx:X(g[0]),cy:64,r:5,fill:"var(--surface)",stroke:"var(--ink)","stroke-width":1.5});s.appendChild(c);
+      var t=el("text",{x:X(g[0]),y:g[0]>54?24:38,"text-anchor":"middle","font-size":10.5},g[1]);t.style.fill="var(--muted)";s.appendChild(t);});
+    document.getElementById("vo2").appendChild(s);
+    document.getElementById("vo2t").innerHTML=[350,370,385,400].map(function(w){return '<tr><td>'+w+' W'+(w==350?' (now)':w==385?' (all-time)':'')+'</td>'+[91.2,88,85].map(function(kg){var x=v(w,kg);return '<td class="n" style="color:'+(x>=54?'var(--good)':x>=48.3?'var(--ink)':'var(--muted)')+'">'+x.toFixed(1)+'</td>';}).join("")+'</tr>';}).join("");
+  })();
+
+  // ---------- Resting HR ----------
+  (function(){
+    var M=[["Oct",55],["Nov",57],["Dec",57],["Jan",53],["Feb",50],["Mar",51],["Apr",53],["May",54],["Jun",57],["Jul",55],["Aug",56],["Sep",54],["5/10",58],["12/10",55],["19/10",54]];
+    var W=560,H=170,pl=32,pr=10,pt=16,pb=28,y0=46,y1=62,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function X(i){return pl+i*(W-pl-pr)/(M.length-1);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [48,52,56,60].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    s.appendChild(el("rect",{x:pl,y:Y(59),width:W-pl-pr,height:Y(54)-Y(59),fill:"var(--now-soft)",opacity:.25}));
+    s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(54),y2:Y(54),stroke:"var(--good)","stroke-dasharray":"4 4"}));
+    var t=el("text",{x:W-pr,y:Y(54)+13,"text-anchor":"end","font-size":10},"baseline 54");t.style.fill="var(--good)";s.appendChild(t);
+    var t2=el("text",{x:pl+6,y:Y(59)-4,"font-size":10},"59+: ease off");t2.style.fill="var(--now)";s.appendChild(t2);
+    var d="";M.forEach(function(m,i){d+=(i?"L":"M")+X(i)+" "+Y(m[1]);});
+    s.appendChild(el("path",{d:d,fill:"none",stroke:"var(--best)","stroke-width":2}));
+    M.forEach(function(m,i){var last=i==M.length-1;s.appendChild(el("circle",{cx:X(i),cy:Y(m[1]),r:last?5:3,fill:last?"var(--now)":"var(--best)"}));
+      s.appendChild(el("text",{x:X(i),y:H-pb+16,"text-anchor":"middle","font-size":10},m[0]));
+      if(last||m[1]==50){var l=el("text",{x:X(i)+(last?-8:0),y:Y(m[1])-8,"text-anchor":last?"end":"middle","font-size":10},m[1]+(last?" last week":""));l.style.fill="var(--ink)";s.appendChild(l);}});
+    document.getElementById("rhr").appendChild(s);
+  })();
+
+  // ---------- History ----------
+  var YR=[[2014, 64, 1502, 92.9, 74088, 0, 0, 64, 92.9, 100.4, ["194377215", "2014-09-14", "First century ride - Shakespeare 100!"], 0, 3, 1200, 73.6, 57, 34], [2015, 141, 2285, 145.1, 92253, 0, 0, 141, 145.1, 80.8, ["245945347", "2015-01-25", "The Cotswolds are hilly (with Rew)"], 0, 1, 1661, 104.5, 90, 39], [2016, 92, 1870, 120.5, 77825, 0, 0, 92, 120.5, 135.4, ["643023393", "2016-07-16", "M25!"], 0, 0, 1597, 103.1, 75, 30], [2017, 110, 1907, 121.6, 80759, 0, 0, 110, 121.6, 99.9, ["1200019468", "2017-09-24", "Velo Birmingham"], 0, 2, 1414, 89.1, 73, 35], [2018, 205, 3872, 245.7, 162613, 0, 0, 205, 245.7, 78.7, ["1655496153", "2018-06-22", "Magical Mystery Tour of the Cotswolds"], 0, 5, 3154, 199.9, 165, 47], [2019, 155, 3361, 212.5, 156301, 0, 0, 155, 212.5, 111.0, ["2272406223", "2019-04-07", "Sunday Funday"], 0, 1, 2699, 171.8, 115, 49], [2020, 178, 3127, 183.3, 143190, 76, 52.0, 102, 131.3, 63.1, ["3643664268", "2020-06-20", "Ride out to see Dan Everesting "], 0, 0, 2772, 164.7, 158, 45], [2021, 106, 2071, 123.4, 104908, 44, 35.7, 62, 87.7, 61.3, ["5691956294", "2021-07-26", "Magic Monday with Dan"], 0, 11, 1604, 96.3, 84, 46], [2022, 114, 3134, 200.6, 166247, 29, 24.9, 85, 175.7, 85.0, ["7003518718", "2022-04-18", "Back home via the Malverns"], 0, 3, 2688, 166.6, 96, 47], [2023, 95, 1997, 137.0, 86340, 31, 17.6, 64, 119.4, 56.8, ["9030193699", "2023-05-06", "Bikepacking the Warwickshire Ring - Part 1"], 0, 5, 1764, 123.6, 79, 46], [2024, 87, 1325, 88.2, 64634, 49, 29.7, 38, 58.5, 54.0, ["12340525024", "2024-09-06", "Morning Ride"], 0, 4, 1068, 74.9, 66, 42], [2025, 72, 1079, 61.3, 38633, 48, 26.5, 24, 34.8, 50.3, ["15056235975", "2025-07-09", "Morning Ride"], 0, 42, 753, 45.1, 48, 36], [2026, 80, 1415, 76.4, 59072, 57, 37.6, 23, 38.8, 50.2, ["19021311450", "2026-06-22", "Morning Ride"], 47, 33, 1372, 74.5, 77, 37]],MON={"2013": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5], "2014": [32, 25, 97, 144, 10, 262, 150, 227, 193, 163, 46, 153], "2015": [175, 113, 145, 158, 39, 295, 37, 325, 327, 329, 226, 114], "2016": [118, 71, 281, 145, 106, 210, 396, 167, 105, 118, 88, 67], "2017": [202, 166, 91, 101, 142, 56, 130, 158, 343, 232, 165, 121], "2018": [72, 366, 223, 339, 418, 598, 334, 500, 221, 255, 359, 189], "2019": [262, 137, 186, 393, 465, 271, 312, 227, 333, 480, 170, 124], "2020": [250, 201, 272, 57, 416, 457, 342, 280, 438, 362, 0, 52], "2021": [123, 186, 172, 0, 72, 199, 234, 248, 321, 178, 187, 149], "2022": [240, 210, 266, 370, 374, 465, 192, 308, 187, 219, 152, 152], "2023": [229, 163, 195, 135, 332, 267, 122, 191, 119, 72, 120, 53], "2024": [96, 85, 40, 150, 157, 148, 78, 82, 179, 159, 90, 62], "2025": [67, 45, 34, 57, 98, 172, 71, 23, 173, 94, 109, 137], "2026": [164, 110, 182, 127, 100, 163, 196, 120, 173, 81, 0, 0]},YC={"2020": {"5 sec": [1434, "4110038965", "2020-09-25"], "15 sec": [1172, "4110038965", "2020-09-25"], "30 sec": [819, "3584552311", "2020-06-08"], "1 min": [539, "4134256051", "2020-09-30"], "2 min": [417, "3584552311", "2020-06-08"], "3 min": [402, "3584552311", "2020-06-08"], "5 min": [362, "3584552311", "2020-06-08"], "10 min": [335, "3719027841", "2020-07-05"], "20 min": [318, "4134256051", "2020-09-30"], "30 min": [305, "4134256051", "2020-09-30"], "45 min": [296, "3719027841", "2020-07-05"], "1 hr": [289, "3760181003", "2020-07-14"]}, "2021": {"5 sec": [1200, "5028036831", "2021-03-28"], "15 sec": [911, "6179939042", "2021-10-28"], "30 sec": [745, "5560484863", "2021-07-01"], "1 min": [548, "5724956546", "2021-08-02"], "2 min": [452, "6021711349", "2021-09-26"], "3 min": [378, "5691956294", "2021-07-26"], "5 min": [347, "6127114216", "2021-10-17"], "10 min": [300, "4876968088", "2021-03-02"], "20 min": [293, "5932446729", "2021-09-09"], "30 min": [283, "4930970713", "2021-03-11"], "45 min": [272, "4769975329", "2021-02-11"], "1 hr": [243, "6240215494", "2021-11-10"]}, "2022": {"5 sec": [1200, "6554784553", "2022-01-20"], "15 sec": [909, "6644046094", "2022-02-07"], "30 sec": [795, "6644046094", "2022-02-07"], "1 min": [596, "7056785585", "2022-04-28"], "2 min": [490, "7056785585", "2022-04-28"], "3 min": [420, "7171229902", "2022-05-19"], "5 min": [385, "7132594857", "2022-05-12"], "10 min": [328, "7132594857", "2022-05-12"], "20 min": [303, "6562595236", "2022-01-22"], "30 min": [284, "7361817259", "2022-06-24"], "45 min": [276, "7361817259", "2022-06-24"], "1 hr": [270, "7361817259", "2022-06-24"]}, "2023": {"5 sec": [1492, "9704382569", "2023-08-23"], "15 sec": [1211, "9704382569", "2023-08-23"], "30 sec": [744, "9860459638", "2023-09-16"], "1 min": [525, "9490247499", "2023-07-20"], "2 min": [429, "9316376157", "2023-06-22"], "3 min": [374, "9490247499", "2023-07-20"], "5 min": [330, "9691289291", "2023-08-21"], "10 min": [293, "8692657050", "2023-03-10"], "20 min": [271, "9761370897", "2023-09-01"], "30 min": [265, "8718653270", "2023-03-15"], "45 min": [258, "8718653270", "2023-03-15"], "1 hr": [216, "9171654780", "2023-05-30"]}, "2024": {"5 sec": [1263, "12623680146", "2024-10-10"], "15 sec": [1149, "12623680146", "2024-10-10"], "30 sec": [935, "12623680146", "2024-10-10"], "1 min": [549, "12623680146", "2024-10-10"], "2 min": [453, "12453436841", "2024-09-19"], "3 min": [422, "12453436841", "2024-09-19"], "5 min": [339, "12453436841", "2024-09-19"], "10 min": [300, "10769410351", "2024-02-15"], "20 min": [292, "10723610083", "2024-02-08"], "30 min": [284, "10723610083", "2024-02-08"], "45 min": [283, "10723610083", "2024-02-08"], "1 hr": [259, "10769410351", "2024-02-15"]}, "2025": {"5 sec": [1074, "15809728938", "2025-09-14"], "15 sec": [782, "15809728938", "2025-09-14"], "30 sec": [647, "15809728938", "2025-09-14"], "1 min": [489, "16147822047", "2025-10-15"], "2 min": [388, "16147822047", "2025-10-15"], "3 min": [346, "14420411474", "2025-05-08"], "5 min": [319, "16826139219", "2025-12-24"], "10 min": [302, "14321699693", "2025-04-29"], "20 min": [290, "14321699693", "2025-04-29"], "30 min": [263, "16826139219", "2025-12-24"], "45 min": [253, "15856319960", "2025-09-18"], "1 hr": [208, "14763701603", "2025-06-11"]}, "2026": {"5 sec": [1529, "20042084240", "2026-09-05"], "15 sec": [1162, "20042084240", "2026-09-05"], "30 sec": [999, "18538425636", "2026-05-17"], "1 min": [604, "18538425636", "2026-05-17"], "2 min": [471, "17752033307", "2026-03-17"], "3 min": [419, "17752033307", "2026-03-17"], "5 min": [350, "20450456035", "2026-10-04"], "10 min": [325, "20479666897", "2026-10-06"], "20 min": [311, "20479666897", "2026-10-06"], "30 min": [301, "20479666897", "2026-10-06"], "45 min": [293, "17697152085", "2026-03-12"], "1 hr": [259, "17120266733", "2026-01-20"]}};
+  var PK=["5 sec","15 sec","30 sec","1 min","2 min","3 min","5 min","10 min","20 min","30 min","45 min","1 hr"],ATB={};PK.forEach(function(k){ATB[k]=0;Object.keys(YC).forEach(function(y){var c=YC[y][k];if(c&&c[0]>ATB[k])ATB[k]=c[0];});});
+  function yv(r,m){return {mi:[r[2]-0,0],h:[r[8],r[6]],n:[r[7],r[5]],ft:[r[4]/1000,0]}[m];}
+  var ym="mi";
+  function drawYears(){
+    var box=document.getElementById("years");box.innerHTML="";
+    var W=560,H=230,pl=40,pr=8,pt=18,pb=30,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    var ZMI={"2020": 1034, "2021": 599, "2022": 419, "2023": 341, "2024": 563, "2025": 535, "2026": 770};var data=YR.map(function(r){var zmi=ZMI[r[0]]||0;
+      return ym=="mi"?[r[2]-Math.round(zmi),Math.round(zmi)]:ym=="h"?[r[8],r[6]]:ym=="n"?[r[7],r[5]]:[r[4]/1000,0];});
+    var max=Math.max.apply(null,data.map(function(d){return d[0]+d[1];}))*1.12;
+    function Y(v){return pt+(max-v)/max*(H-pt-pb);}
+    var raw=max/1.12/4,mag=Math.pow(10,Math.floor(Math.log10(raw))),stp=[1,2,2.5,5,10].map(function(m){return m*mag;}).filter(function(x){return x>=raw;})[0];
+    for(var v=0;v<=max;v+=stp){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},ym=="ft"?Math.round(v)+"k":Math.round(v).toLocaleString("en-GB")));}
+    var bw=(W-pl-pr)/YR.length;
+    YR.forEach(function(r,i){var d=data[i],x=pl+i*bw+bw*.15,g=el("g",{});
+      g.appendChild(el("rect",{x:pl+i*bw,y:pt,width:bw,height:H-pt-pb+20,fill:"transparent"}));
+      g.appendChild(el("rect",{x:x,y:Y(d[0]),width:bw*.7,height:Math.max(Y(0)-Y(d[0]),0),fill:"var(--best)",opacity:.8}));
+      if(d[1])g.appendChild(el("rect",{x:x,y:Y(d[0]+d[1]),width:bw*.7,height:Y(d[0])-Y(d[0]+d[1]),fill:"var(--now)"}));
+      var tot=d[0]+d[1];g.appendChild(el("text",{x:x+bw*.35,y:Y(tot)-4,"text-anchor":"middle",style:"fill:var(--ink)","font-size":9},ym=="ft"?Math.round(tot)+"k":ym=="h"?Math.round(tot):tot>=1000?(tot/1000).toFixed(1)+"k":Math.round(tot)));
+      g.appendChild(el("text",{x:x+bw*.35,y:H-pb+14,"text-anchor":"middle","font-size":9.5},"'"+String(r[0]).slice(2)));
+      hit(g,"#y-"+r[0],"Year "+r[0]);s.appendChild(g);});
+    box.appendChild(s);
+  }
+  drawYears();
+  Array.prototype.forEach.call(document.querySelectorAll("#yseg button"),function(b){b.addEventListener("click",function(){ym=b.getAttribute("data-y");
+    Array.prototype.forEach.call(document.querySelectorAll("#yseg button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});drawYears();});});
+  (function(){var mx=Math.max.apply(null,YR.map(function(r){return r[13];}));
+    document.getElementById("ytd").innerHTML=YR.slice().reverse().map(function(r){var cur=r[0]==2026;return '<tr'+(cur?' style="font-weight:600"':'')+'><td><a href="#y-'+r[0]+'">'+r[0]+'</a></td><td class="n">'+r[15]+'</td><td class="n">'+r[13].toLocaleString("en-GB")+'</td><td class="n">'+r[14]+'</td><td><div class="bar"><i style="width:'+(r[13]/mx*100)+'%;background:'+(cur?'var(--now)':'var(--best)')+'"></i></div></td></tr>';}).join("");
+    var ys=Object.keys(YC).sort(),h='<thead><tr><th>Duration</th>'+ys.map(function(y){return '<th class="n"><a href="#y-'+y+'">'+y+'</a></th>';}).join("")+'</tr></thead><tbody>';
+    PK.forEach(function(k){h+='<tr><td class="mono">'+k+'</td>'+ys.map(function(y){var c=YC[y][k];if(!c)return '<td class="n">–</td>';var q=c[0]/ATB[k],best=c[0]==ATB[k];
+      return '<td class="n" style="background:color-mix(in srgb,var(--best) '+Math.round(Math.max(0,(q-.7)/.3)*45)+'%,transparent);'+(best?'font-weight:700;color:var(--ink)':'')+'">'+c[0]+'</td>';}).join("")+'</tr>';});
+    document.getElementById("pyear").innerHTML=h+'</tbody>';
+    var RC=[["Longest ride","135.4 mi · 8 h 36","M25!","16 Jul 2016","643023393"],["Most climbing in a ride","11,408 ft · 71.6 mi","Croix de Fer, Glandon and Alpe d'Huez","25 Jun 2022","7366952157"],["Biggest week","186 mi","Alps trip","w/c 20 Jun 2022",null],["Biggest month","598 mi","","Jun 2018",null],["Biggest year","3,872 mi · 246 h · 205 rides","","2018",null],["Most rides in a year (incl. Zwift)","178","Lockdown racing","2020",null]];
+    document.getElementById("recs").innerHTML=RC.map(function(r){return '<tr><td>'+r[0]+'</td><td class="mono">'+r[1]+'</td><td>'+(r[4]?'<a class="ext" href="'+SL+r[4]+'" target="_blank" rel="noopener">'+esc(r[2])+' ↗</a>':esc(r[2]))+'</td><td class="n">'+r[3]+'</td></tr>';}).join("");
+  })();
+  function yearPage(y){
+    var r=YR.filter(function(x){return x[0]==y;})[0];if(!r)return null;var i=YR.indexOf(r),h=nav("y-",0,1);
+    h=h.replace('</span></div>',(i>0?'<a class="back" href="#y-'+YR[i-1][0]+'">‹ '+YR[i-1][0]+'</a>':'')+(i<YR.length-1?'<a class="back" href="#y-'+YR[i+1][0]+'">'+YR[i+1][0]+' ›</a>':'')+'</span></div>');
+    h+='<header><span class="eyebrow">Year in review'+(y==2026?' · to 18 Oct':'')+'</span><h1>'+y+'</h1></header>';
+    h+='<div class="tiles"><div class="tile"><span class="eyebrow">Rides</span><span class="big num">'+r[1]+'</span><span class="sub">'+r[7]+' outdoor · '+r[5]+' Zwift</span></div><div class="tile"><span class="eyebrow">Distance</span><span class="big num">'+r[2].toLocaleString("en-GB")+'<small>mi</small></span></div><div class="tile"><span class="eyebrow">Time</span><span class="big num">'+r[3]+'<small>h</small></span><span class="sub">'+(r[3]/52).toFixed(1)+' h a week on average</span></div><div class="tile"><span class="eyebrow">Climbing</span><span class="big num">'+Math.round(r[4]/1000)+'k<small>ft</small></span></div>';
+    h+='<div class="tile"><span class="eyebrow">Weeks with a ride</span><span class="big num">'+r[16]+'<small>/ 52</small></span></div>'+(r[10]?'<div class="tile"><span class="eyebrow">Longest outdoor ride</span><span class="big num">'+r[9]+'<small>mi</small></span><span class="sub"><a href="'+SL+r[10][0]+'" target="_blank" rel="noopener">'+esc(r[10][2])+'</a>, '+fd(r[10][1])+'</span></div>':'')+'<div class="tile"><span class="eyebrow">Other sessions</span><span class="big num">'+(r[11]+r[12])+'</span><span class="sub">'+(r[11]?r[11]+' padel · ':'')+r[12]+' other (swim, hike, run, SUP)</span></div></div>';
+    var m=MON[y]||[],mm=Math.max.apply(null,[600].concat(m));
+    h+='<section class="panel"><h3>Miles by month</h3><div class="ladder">'+MN.map(function(n,k){var v=m[k]||0;return '<div class="rung" style="grid-template-columns:42px 1fr 70px 0"><span class="d">'+n+'</span><span class="bar"><i style="width:'+(v/mm*100)+'%"></i></span><span class="w">'+v+' mi</span><span></span></div>';}).join("")+'</div></section>';
+    var c=YC[y];
+    if(c){h+='<section class="panel"><h3>Best power this year vs all time</h3><div class="ladder">'+PK.map(function(k){var v=c[k];if(!v)return '';var q=Math.round(v[0]/ATB[k]*100),rid=v[1];
+      return '<a class="rung" href="'+(ACT[rid]?'#a-'+rid:SL+rid)+'"'+(ACT[rid]?'':' target="_blank" rel="noopener"')+'><span class="d">'+k.replace(" sec","s").replace(" min","m").replace("1 hr","60m")+'</span><span class="bar"><i style="width:'+q+'%"></i><b>'+q+'%</b></span><span class="w">'+v[0]+' <em>'+fd(v[2])+'</em></span><span class="go">›</span></a>';}).join("")+'</div><p class="hint">Tap a duration to open the ride.</p></section>';}
+    else h+='<section class="panel"><p>No power meter this year, so no power curve. Volume only.</p></section>';
+    return h;
+  }
+
+  // ---------- Efficiency ----------
+  var EF=[
+    ["5 Jul 2020","L'Etape du Tour Stage 1 (Zwift race)",54,298,164.5,"3719027841","All-time best 10, 15 and 45 minutes. Summer 2020 lockdown racing."],
+    ["14 Jul 2020","Virtual TdF Stage 3 (Zwift race)",67,291,171.3,"3760181003","All-time best 60 minutes."],
+    ["30 Sep 2020","ZHR Hare & Hounds (B) (Zwift race)",59,286,165.0,"4134256051","All-time best 20 and 30 minutes."],
+    ["9 Sep 2021","Threshold interval session, Sep 2021",20,293,174,null,"Threshold HR in line with today."],
+    ["22 Jan 2022","FTP test (Zwift)",20,303,168.7,"6562595236","20 minute test. 15 min 306 W, 10 min 309 W."],
+    ["8 Feb 2024","Tour de Zwift race, Big Flat 8",42,281,176.9,"10723610083","Lower-volume year. High HR for the power."],
+    ["15 Feb 2024","Alpe du Zwift climb, Road to Sky meetup",64,261,167.9,"10769410351","64 minute climb at 84 rpm. Low cadence and long duration push HR up, so not a like-for-like."],
+    ["24 Dec 2025","FTP test (Zwift)",20,285,170,"16826139219","Start of the rebuild."],
+    ["12 Mar 2026","Peaky Pavé race win (Zwift)",53,287,151,"17697152085","Outlier: unusually low HR for the power. Best-case day."],
+    ["27 Aug 2026","2x20 FTP Intervals, first block",20,290,168,"19926190788","Structured interval, controlled conditions."],
+    ["6 Oct 2026","Tour of Watopia Stage 1 race win",29,301,174,"20479666897","Highest power at threshold HR since 2020 at the time."],
+    ["12 Oct 2026","Tour of Watopia Stage 2 race (5th)",26,292,172.1,"20559048199","Valid heart-rate samples only: about 7 minutes of zero HR, so this covers 26 of the 32 race minutes. Includes the Volcano KOM bridge, 334 W for 8:12."],
+    ["14 Oct 2026","SST (Short), 40 min work block",40,274.5,165.4,"20579546415","Sweet spot, not threshold: 274 W (92% of FTP). First half 1.71, second half 1.61 W per beat as cadence fell to 70 to 75 rpm."],
+    ["15 Oct 2026","Tour of Watopia group ride, Tick Tock at race pace",25,297,166.8,"20598720337","Best since 2020: 297 W for 24.5 min at 167 bpm and 89 rpm, above the 1.73 of the 6 Oct win."],
+    ["21 Oct 2026","3x20min SST Low, three 20 min blocks",60,264.9,149.2,"20672678058","Sweet spot, not threshold: 265 W (89% of FTP) for 60 min. Blocks 1.78, 1.76 and 1.79 W per beat; work-block drift 0.9%, against 5.5% on 14 Oct."],
+    ["24 Oct 2026","Tour of Watopia Stage 3 race (2nd), Coastal Crown loop",24,300,169.5,"20708266675","300 W for 24 min at 169 bpm in a race, then 356 W up the final Mayan Mountainside."]
+  ];
+  (function(){
+    var W=560,H=240,pl=40,pr=16,pt=16,pb=34,y0=1.5,y1=1.95,x0=2020.3,x1=2026.95,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    var MO={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+    function yr(d){var p=d.split(" ");return +p[2]+(MO[p[1]]+(+p[0])/31)/12;}
+    function X(v){return pl+(v-x0)/(x1-x0)*(W-pl-pr);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [1.5,1.6,1.7,1.8,1.9].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v.toFixed(1)));});
+    [2021,2022,2023,2024,2025,2026].forEach(function(v){s.appendChild(el("text",{x:X(v),y:H-pb+16,"text-anchor":"middle","font-size":10},v));});
+    s.appendChild(el("rect",{x:X(2020.4),y:Y(1.81),width:X(2020.8)-X(2020.4),height:Y(1.70)-Y(1.81),fill:"var(--best-soft)"}));
+    s.appendChild(el("text",{x:X(2020.9),y:Y(1.83),"font-size":10},"2020 peak band"));
+    EF.forEach(function(e,i){
+      var v=e[3]/e[4],last=i==EF.length-1,g=el("g",{});
+      g.appendChild(el("circle",{cx:X(yr(e[0])),cy:Y(v),r:14,fill:"transparent"}));
+      g.appendChild(el("circle",{"class":"dot",cx:X(yr(e[0])),cy:Y(v),r:last?6:4.5,fill:last?"var(--now)":"var(--best)",stroke:"var(--surface)","stroke-width":1.5}));
+      if(last||i==8||i==6)g.appendChild(el("text",{x:X(yr(e[0]))+(last?-8:8),y:Y(v)+(i==6?14:-8),"text-anchor":last?"end":"start","font-size":10,style:"fill:var(--ink)"},v.toFixed(2)));
+      hit(g,"#h-"+i,e[1]+" "+e[0]);s.appendChild(g);
+    });
+    document.getElementById("eff").appendChild(s);
+  })();
+
+  // ---------- Weeks ----------
+  var WK=[["2026-08-31",[["20002866642","Zwift: Resilience Ride","VirtualRide","2026-09-02",9.7,28,177,12],["20042084240","Zwift: Half Hour of Power","VirtualRide","2026-09-05",13.0,36,108,35],["20061476964","Zwift: Resilience Ride","VirtualRide","2026-09-06",9.6,28,249,26]]],["2026-09-07",[["20090063077","Morning Hike","Hike","2026-09-08",5.5,94,223,12],["20100312674","Morning Ride","Ride","2026-09-09",37.0,131,1841,74],["20127434726","Morning Ride","Ride","2026-09-11",15.4,49,486,78]]],["2026-09-14",[["20182138802","Zwift: Sweet Spot Anchor","VirtualRide","2026-09-15",13.9,57,1663,66],["20196883491","Morning Ride","Ride","2026-09-16",21.5,78,623,22],["20216494693","Zwift: Elevate and Escalate","VirtualRide","2026-09-17",12.6,35,341,28],["20236722993","Morning Padel","Padel","2026-09-19",0,83,0,27]]],["2026-09-21",[["20279566174","Morning Ride","Ride","2026-09-22",40.0,145,1408,90],["20293370210","Morning Hike","Hike","2026-09-23",4.8,83,299,12],["20332487102","Morning Padel","Padel","2026-09-26",0,86,0,14]]],["2026-09-28",[["20405080870","Zwift: Lactate Shuttle Short","VirtualRide","2026-10-01",11.6,31,95,48],["20450456035","Zwift: Alpha","VirtualRide","2026-10-04",11.1,38,1040,27]]],["2026-10-05",[["20479666897","Zwift Race: Tour of Watopia Stage 1 (1st)","VirtualRide","2026-10-06",15.0,36,594,117],["20498977530","Morning Padel","Padel","2026-10-08",0,95,0,12],["20523550272","Morning Padel","Padel","2026-10-10",0,84,0,12]]],["2026-10-12",[["20559048199","Zwift Race: Tour of Watopia Stage 2 (5th)","VirtualRide","2026-10-12",12.7,34,909,76],["20579546415","Zwift: SST (Short)","VirtualRide","2026-10-14",17.6,51,705,129],["20591969082","Morning Padel","Padel","2026-10-15",0,89,0,31],["20598720337","Zwift Group Ride: Tour of Watopia Stage 2 (race pace)","VirtualRide","2026-10-15",12.4,29,194,88],["20612039423","Evening Padel","Padel","2026-10-16",0,81,0,22],["20612273424","Evening Padel (second recording)","Padel","2026-10-16",0,27,0,6],["20617641035","Morning Padel","Padel","2026-10-17",0,121,0,23]]],["2026-10-19",[["20651760840","Evening Padel","Padel","2026-10-19",0,93,0,16],["20658874430","Zwift: Foundation","VirtualRide","2026-10-20",15.9,49,623,15],["20672678058","Zwift: 3x20min SST Low","VirtualRide","2026-10-21",17.5,103,3934,101],["20687001786","Morning Padel","Padel","2026-10-22",0,88,0,23],["20708266675","Zwift Race: Tour of Watopia Stage 3 (2nd)","VirtualRide","2026-10-24",14.9,40,899,115]]]];
+  var MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],DN=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  function fd(iso,day){var d=new Date(iso+"T12:00:00");return (day?DN[d.getDay()]+" ":"")+d.getDate()+" "+MN[d.getMonth()];}
+  function wsum(w){var h=0,re=0,mi=0,pd=0,r=0;w[1].forEach(function(a){if(a[2].indexOf("Ride")>-1){h+=a[5];mi+=a[4];r++;}if(a[2]=="Padel")pd++;re+=a[7]||0;});return{h:h/60,re:re,mi:mi,pd:pd,r:r};}
+  var ACT={};[["19819441959", "2026-08-20", "Padel", 82, 120.7, 143, [82, 0, 0, 0, 0, 0, 0], null, null, null, null], ["19876670308", "2026-08-24", "Ride", 141, 138.9, 176, [75, 49, 10, 6, 1, 0, 0], [46, 40, 19, 7, 10, 7, 12], 243, 157, {"pct": 4.6, "w1": 210.9, "hr1": 143.1, "w2": 195.9, "hr2": 139.3}], ["19905135991", "2026-08-26", "Padel", 62, 115.7, 140, [62, 0, 0, 0, 0, 0, 0], null, null, null, null], ["19926190788", "2026-08-27", "Zwift", 80, 148.9, 181, [36, 4, 3, 27, 10, 2, 0], [20, 19, 9, 9, 18, 5, 2], 248, 94, {"pct": 4.54, "w1": 235.8, "hr1": 153.0, "w2": 227.2, "hr2": 154.5}], ["19944431092", "2026-08-29", "Zwift", 32, 136.2, 176, [18, 7, 3, 4, 1, 0, 0], [8, 13, 2, 1, 2, 3, 3], 258, 40, null], ["20002866642", "2026-09-02", "Zwift", 27, 123.2, 155, [23, 4, 0, 0, 0, 0, 0], [9, 7, 5, 4, 2, 1, 0], 219, 25, null], ["20042084240", "2026-09-05", "Zwift", 36, 135.8, 184, [19, 10, 3, 2, 1, 0, 0], [19, 4, 1, 1, 2, 4, 5], 283, 54, null], ["20061476964", "2026-09-06", "Zwift", 28, 134.1, 164, [14, 10, 4, 0, 0, 0, 0], [8, 5, 6, 5, 2, 0, 0], 230, 28, null], ["20100312674", "2026-09-09", "Ride", 132, 128.0, 182, [112, 11, 3, 4, 1, 1, 0], [43, 33, 18, 8, 10, 8, 11], 249, 155, {"pct": 0.34, "w1": 212.0, "hr1": 135.1, "w2": 196.4, "hr2": 125.6}], ["20127434726", "2026-09-11", "Ride", 49, 145.2, 189, [14, 18, 7, 7, 2, 1, 1], [12, 13, 6, 3, 4, 4, 6], 283, 74, {"pct": -2.4, "w1": 222.4, "hr1": 149.3, "w2": 239.8, "hr2": 157.3}], ["20182138802", "2026-09-15", "Zwift", 57, 139.2, 169, [28, 8, 12, 9, 0, 0, 0], [13, 15, 8, 11, 8, 1, 0], 235, 60, {"pct": 7.4, "w1": 234.2, "hr1": 145.7, "w2": 220.1, "hr2": 147.8}], ["20196883491", "2026-09-16", "Ride", 78, 117.2, 145, [76, 2, 0, 0, 0, 0, 0], [35, 18, 9, 4, 5, 3, 5], 224, 74, {"pct": 14.54, "w1": 190.7, "hr1": 116.9, "w2": 170.8, "hr2": 122.5}], ["20216494693", "2026-09-17", "Zwift", 35, 131.7, 165, [23, 11, 1, 0, 0, 0, 0], [4, 14, 11, 3, 2, 0, 0], 227, 34, null], ["20236722993", "2026-09-19", "Padel", 83, 122.4, 152, [80, 3, 0, 0, 0, 0, 0], null, null, null, null], ["20279566174", "2026-09-22", "Ride", 146, 130.2, 168, [115, 24, 6, 1, 0, 0, 0], [66, 35, 13, 5, 8, 6, 12], 237, 154, {"pct": 2.25, "w1": 188.1, "hr1": 132.6, "w2": 181.3, "hr2": 130.7}], ["20332487102", "2026-09-26", "Padel", 86, 100.1, 133, [86, 0, 0, 0, 0, 0, 0], null, null, null, null], ["20405080870", "2026-10-01", "Zwift", 30, 138.7, 178, [9, 6, 6, 8, 1, 0, 0], [5, 12, 2, 0, 3, 6, 3], 270, 42, null], ["20450456035", "2026-10-04", "Zwift", 38, 129.4, 184, [27, 6, 2, 0, 0, 3, 0], [17, 9, 3, 1, 3, 3, 3], 256, 47, null], ["20479666897", "2026-10-06", "Zwift", 36, 167.5, 196, [3, 4, 2, 8, 4, 11, 4], [4, 4, 7, 4, 6, 5, 6], 318, 69, null], ["20498977530", "2026-10-08", "Padel", 95, 88.2, 114, [95, 0, 0, 0, 0, 0, 0], null, null, null, null], ["20523550272", "2026-10-10", "Padel", 84, 97.2, 118, [84, 0, 0, 0, 0, 0, 0], null, null, null, null], ["20559048199", "2026-10-12", "Zwift", 34, 172.3, 193, [1, 2, 1, 6, 7, 8, 2], [2, 5, 6, 3, 5, 6, 7], 313, 63, null], ["20579546415", "2026-10-14", "Zwift", 51, 157.7, 177, [7, 6, 8, 24, 6, 0, 0], [4, 7, 11, 11, 15, 2, 1], 263, 67, {"pct": 10.57, "w1": 273.8, "hr1": 165.3, "w2": 242.6, "hr2": 163.8}], ["20591969082", "2026-10-15", "Padel", 89, 123.5, 146, [84, 5, 0, 0, 0, 0, 0], null, null, null, null], ["20598720337", "2026-10-15", "Zwift", 29, 164.0, 191, [1, 6, 4, 10, 4, 3, 1], [1, 1, 8, 6, 6, 3, 4], 312, 54, null], ["20612039423", "2026-10-16", "Padel", 81, 118.3, 150, [77, 4, 0, 0, 0, 0, 0], null, null, null, null], ["20612273424", "2026-10-16", "Padel", 27, 118.5, 130, [27, 0, 0, 0, 0, 0, 0], null, null, null, null], ["20617641035", "2026-10-17", "Padel", 121, 107.6, 140, [121, 0, 0, 0, 0, 0, 0], null, null, null, null], ["20651760840", "2026-10-19", "Padel", 93, 102.6, 132, [93, 0, 0, 0, 0, 0, 0], null, null, null, null], ["20658874430", "2026-10-20", "Zwift", 49, 118.7, 139, [49, 0, 0, 0, 0, 0, 0], [16, 25, 7, 0, 0, 0, 0], 194, 35, null], ["20672678058", "2026-10-21", "Zwift", 103, 135.5, 163, [45, 51, 7, 0, 0, 0, 0], [29, 15, 22, 21, 13, 2, 1], 237, 109, {"pct": 0.87, "w1": 264.0, "hr1": 148.5, "w2": 264.4, "hr2": 150.0}], ["20687001786", "2026-10-22", "Padel", 88, 116.5, 153, [83, 4, 0, 0, 0, 0, 0], null, null, null, null], ["20708266675", "2026-10-24", "Zwift", 40, 162.3, 184, [3, 9, 4, 14, 7, 4, 0], [2, 6, 10, 4, 6, 6, 7], 305, 71, null]].forEach(function(a){ACT[a[0]]={id:a[0],date:a[1],type:a[2],min:a[3],ahr:a[4],mhr:a[5],hz:a[6],pz:a[7],np:a[8],tss:a[9],dc:a[10]};});
+  var PH=[["17539013185", "2026-02-27", 54, 10], ["17705491340", "2026-03-13", 54, 8], ["17788822603", "2026-03-20", 71, 13], ["17824765180", "2026-03-23", 86, 13], ["17862189711", "2026-03-26", 72, 8], ["18037241399", "2026-04-09", 69, 12], ["18082793822", "2026-04-12", 111, 15], ["18128301522", "2026-04-16", 42, 8], ["18141548959", "2026-04-17", 81, 15], ["18180800597", "2026-04-20", 91, 14], ["18235664156", "2026-04-24", 78, 13], ["18421836347", "2026-05-08", 88, 12], ["18502737812", "2026-05-14", 81, 28], ["18520128951", "2026-05-15", 90, null], ["18551516361", "2026-05-18", 92, 16], ["18566267131", "2026-05-19", 86, 17], ["18604857827", "2026-05-22", 64, 13], ["18620093074", "2026-05-23", 61, 18], ["18780095863", "2026-06-04", 96, 20], ["18793395940", "2026-06-05", 90, 19], ["18829509796", "2026-06-07", 101, 60], ["18874625193", "2026-06-11", 88, 17], ["18887269386", "2026-06-12", 84, 16], ["18934189032", "2026-06-15", 92, 40], ["18976789743", "2026-06-18", 82, 31], ["18980446468", "2026-06-19", 81, 50], ["19058622921", "2026-06-25", 86, 43], ["19070801950", "2026-06-26", 87, 116], ["19148537370", "2026-07-01", 101, 98], ["19148543582", "2026-07-02", 90, 16], ["19206062607", "2026-07-06", 94, 39], ["19252534625", "2026-07-10", 88, 42], ["19278741284", "2026-07-12", 93, 77], ["19333000811", "2026-07-16", 89, 14], ["19346355003", "2026-07-17", 90, 24], ["19441895510", "2026-07-24", 94, 22], ["19454794808", "2026-07-25", 115, 35], ["19819441959", "2026-08-20", 82, 21], ["19905135991", "2026-08-26", 62, 13], ["20236722993", "2026-09-19", 83, 27], ["20332487102", "2026-09-26", 86, 14], ["20498977530", "2026-10-08", 95, 12], ["20523550272", "2026-10-10", 84, 12], ["20591969082", "2026-10-15", 89, 31], ["20612039423", "2026-10-16", 81, 22], ["20612273424", "2026-10-16", 27, 6], ["20617641035", "2026-10-17", 121, 23], ["20651760840", "2026-10-19", 93, 16], ["20687001786", "2026-10-22", 88, 23]];
+  var HZN=["Z1 <141","Z2 141–155","Z3 156–162","Z4 163–172","Z5a 173–177","Z5b 178–184","Z5c 185+"],PZN=["Z1 <164","Z2 164–223","Z3 224–258","SS 259–276","Z4 277–312","Z5 313–356","Z6 357+"];
+  function wz(w){var hz=[0,0,0,0,0,0,0],pz=[0,0,0,0,0,0,0],t=0;w[1].forEach(function(a){var x=ACT[a[0]];if(!x)return;x.hz.forEach(function(v,i){hz[i]+=v;});if(x.pz)x.pz.forEach(function(v,i){pz[i]+=v;});t+=x.tss||0;});return{hz:hz,pz:pz,tss:t};}
+  function stackHTML(arr){var tot=arr.reduce(function(a,b){return a+b;},0);if(!tot)return '<div class="stack"></div>';return '<div class="stack">'+arr.map(function(v,i){return v?'<i style="width:'+(v/tot*100)+'%;background:var(--c'+(i+1)+')" title="'+v+' min"></i>':'';}).join("")+'</div>';}
+  var metric="h";
+  function drawWeeks(){
+    var box=document.getElementById("weeks");box.innerHTML="";
+    var zone=metric=="hz"||metric=="pz",max={h:5,tss:300,hz:450,pz:300}[metric],step={h:1,tss:50,hz:75,pz:50}[metric];
+    var W=560,H=210,pl=36,pr=8,pt=22,pb=42,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function Y(v){return pt+(max-Math.min(v,max))/max*(H-pt-pb);}
+    for(var v=0;v<=max;v+=step){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},metric=="h"?v+"h":(zone?v+"m":v)));}
+    var bw=(W-pl-pr)/WK.length;
+    WK.forEach(function(w,i){
+      var m=wsum(w),z=wz(w),x=pl+i*bw+bw*.18,last=i==WK.length-1,g=el("g",{}),val;
+      g.appendChild(el("rect",{x:pl+i*bw,y:pt,width:bw,height:H-pt-pb+30,fill:"transparent"}));
+      if(zone){var arr=metric=="hz"?z.hz:z.pz,acc=0;arr.forEach(function(v,k){if(!v)return;g.appendChild(el("rect",{x:x,y:Y(acc+v),width:bw*.64,height:Y(acc)-Y(acc+v),fill:"var(--c"+(k+1)+")"}));acc+=v;});val=acc;}
+      else{val=metric=="h"?m.h:z.tss;g.appendChild(el("rect",{x:x,y:Y(val),width:bw*.64,height:Math.max(Y(0)-Y(val),1),rx:3,fill:last?"var(--now)":"var(--best)",opacity:last?1:.75}));}
+      g.appendChild(el("text",{x:x+bw*.32,y:Y(val)-5,"text-anchor":"middle",style:"fill:var(--ink)","font-size":10},metric=="h"?val.toFixed(1):Math.round(val)));
+      g.appendChild(el("text",{x:x+bw*.32,y:H-pb+15,"text-anchor":"middle","font-size":10},fd(w[0])));
+      for(var k=0;k<m.pd;k++)g.appendChild(el("circle",{cx:x+bw*.32+(k-(m.pd-1)/2)*10,cy:H-pb+28,r:4,fill:"var(--warn)"}));
+      hit(g,"#w-"+i,"Week of "+fd(w[0])+" detail");s.appendChild(g);
+    });
+    var t=el("text",{x:W-pr,y:12,"text-anchor":"end","font-size":10},"● padel session");t.style.fill="var(--warn)";s.appendChild(t);
+    var cap={h:"Riding hours",tss:"Training Stress Score (rides, FTP 297)",hz:"Minutes in HR zone, rides and padel",pz:"Minutes in power zone, rides"}[metric];
+    s.appendChild(el("text",{x:pl,y:12,"font-size":10},cap));
+    box.appendChild(s);
+    var key=document.getElementById("wkey"),st=document.getElementById("zstat");key.innerHTML="";st.innerHTML="";
+    if(zone){var N=metric=="hz"?HZN:PZN,tot=[0,0,0,0,0,0,0];WK.forEach(function(w){var z=wz(w),a=metric=="hz"?z.hz:z.pz;a.forEach(function(v,k){tot[k]+=v;});});var T=tot.reduce(function(a,b){return a+b;},0);
+      key.innerHTML=N.map(function(n,k){return '<span><i class="sw" style="background:var(--c'+(k+1)+')"></i>'+n+' · '+tot[k]+' min ('+Math.round(tot[k]/T*100)+'%)</span>';}).join("");}
+  }
+  drawWeeks();
+  Array.prototype.forEach.call(document.querySelectorAll(".seg button"),function(b){b.addEventListener("click",function(){metric=b.getAttribute("data-m");
+    Array.prototype.forEach.call(document.querySelectorAll(".seg button"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});drawWeeks();});});
+
+  // ---------- Drift ----------
+  var NAME={};WK.forEach(function(w){w[1].forEach(function(a){NAME[a[0]]=a[1];});});
+  (function(){
+    var L=Object.keys(ACT).map(function(k){return ACT[k];}).filter(function(a){return a.dc;}).sort(function(a,b){return a.date<b.date?-1:1;});
+    var W=560,H=220,pl=36,pr=8,pt=18,pb=46,y0=-4,y1=16,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [-4,0,4,8,12,16].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v+"%"));});
+    s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(5),y2:Y(5),stroke:"var(--warn)","stroke-dasharray":"4 4"}));
+    var t=el("text",{x:W-pr,y:Y(5)-5,"text-anchor":"end","font-size":10},"5% line");t.style.fill="var(--warn)";s.appendChild(t);
+    var bw=(W-pl-pr)/L.length;
+    L.forEach(function(a,i){var v=a.dc.pct,x=pl+i*bw+bw*.2,g=el("g",{}),c=v>5?"var(--warn)":"var(--good)";
+      g.appendChild(el("rect",{x:pl+i*bw,y:pt,width:bw,height:H-pt-pb+36,fill:"transparent"}));
+      g.appendChild(el("rect",{x:x,y:Math.min(Y(v),Y(0)),width:bw*.6,height:Math.max(Math.abs(Y(v)-Y(0)),1),rx:3,fill:c,opacity:.85}));
+      g.appendChild(el("text",{x:x+bw*.3,y:v>=0?Y(v)-5:Y(v)+12,"text-anchor":"middle",style:"fill:var(--ink)","font-size":10},v.toFixed(1)));
+      g.appendChild(el("text",{x:x+bw*.3,y:H-pb+16,"text-anchor":"middle","font-size":10},fd(a.date)));
+      g.appendChild(el("text",{x:x+bw*.3,y:H-pb+29,"text-anchor":"middle","font-size":9.5},(a.type=="Zwift"?"Zwift ":"Out ")+a.min+"m"));
+      hit(g,"#a-"+a.id,"Ride "+fd(a.date)+" detail");s.appendChild(g);});
+    document.getElementById("drift").appendChild(s);
+  })();
+
+  // ---------- Padel ----------
+  var PM=[];["2026-02","2026-03","2026-04","2026-05","2026-06","2026-07","2026-08","2026-09","2026-10"].forEach(function(k){PM.push([k,PH.filter(function(x){return x[1].slice(0,7)==k;})]);});
+  (function(){
+    var W=420,H=200,pl=30,pr=8,pt=16,pb=30,max=12,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function Y(v){return pt+(max-v)/max*(H-pt-pb);}
+    [0,4,8,12].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    var bw=(W-pl-pr)/PM.length;
+    PM.forEach(function(m,i){var n=m[1].length,x=pl+i*bw+bw*.2,g=el("g",{});
+      g.appendChild(el("rect",{x:pl+i*bw,y:pt,width:bw,height:H-pt-pb+20,fill:"transparent"}));
+      g.appendChild(el("rect",{x:x,y:Y(n),width:bw*.6,height:Math.max(Y(0)-Y(n),1),rx:3,fill:"var(--warn)",opacity:.85}));
+      g.appendChild(el("text",{x:x+bw*.3,y:Y(n)-5,"text-anchor":"middle",style:"fill:var(--ink)","font-size":10},n));
+      g.appendChild(el("text",{x:x+bw*.3,y:H-pb+15,"text-anchor":"middle","font-size":10},MN[+m[0].slice(5)-1]));
+      hit(g,"#p-"+i,"Padel "+m[0]);s.appendChild(g);});
+    document.getElementById("padel").appendChild(s);
+  })();
+
+  // ---------- Weight ----------
+  var WT=[["2026-04-15",95.8,291,"InBody scan"],["2026-10-07",91.2,297,"Weigh-in, 14 st 5 lb"]];
+  (function(){
+    var W=420,H=190,pl=36,pr=40,pt=20,pb=30,y0=86,y1=98,t0=new Date("2026-04-01").getTime(),t1=new Date("2026-12-31").getTime(),s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function X(d){return pl+(new Date(d).getTime()-t0)/(t1-t0)*(W-pl-pr);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [86,90,94,98].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    ["2026-04-01","2026-06-01","2026-08-01","2026-10-01","2026-12-01"].forEach(function(d){s.appendChild(el("text",{x:X(d),y:H-pb+16,"text-anchor":"middle","font-size":10},MN[+d.slice(5,7)-1]));});
+    var d="";WT.forEach(function(w,i){d+=(i?"L":"M")+X(w[0])+" "+Y(w[1]);});
+    s.appendChild(el("path",{d:d,fill:"none",stroke:"var(--best)","stroke-width":2}));
+    WT.forEach(function(w,i){var last=i==WT.length-1;s.appendChild(el("circle",{cx:X(w[0]),cy:Y(w[1]),r:last?5.5:4.5,fill:last?"var(--now)":"var(--best)"}));
+      var tx=el("text",{x:X(w[0]),y:last?Y(w[1])+18:Y(w[1])-10,"text-anchor":last?"middle":"start","font-size":10.5},w[1]+" kg · "+(w[2]/w[1]).toFixed(2)+" W/kg");tx.style.fill="var(--ink)";s.appendChild(tx);});
+    s.appendChild(el("text",{x:pl,y:12,"font-size":10},"kg · W/kg uses the FTP at the time"));
+    document.getElementById("weight").appendChild(s);
+    document.getElementById("wkgt").innerHTML=[91.2,89,87,85].map(function(k){return '<tr><td>'+k+' kg'+(k==91.2?' (now)':'')+'</td><td class="n">'+(297/k).toFixed(2)+'</td><td class="n">'+(306/k).toFixed(2)+'</td></tr>';}).join("");
+  })();
+
+
+  // ---------- Fitness, fatigue, form ----------
+  var PMC=[["2026-07-01", 0, 105, 45.8, 48.3, 5.5, 18.8], ["2026-07-02", 142, 49, 49.2, 68.6, -2.5, 21.7], ["2026-07-03", 0, 0, 48.1, 58.8, -19.4, 21.2], ["2026-07-04", 0, 0, 46.9, 50.4, -10.8, 20.7], ["2026-07-05", 65, 0, 47.4, 52.6, -3.5, 21.8], ["2026-07-06", 0, 78, 48.1, 56.2, -5.2, 21.3], ["2026-07-07", 156, 0, 50.7, 70.6, -8.2, 24.5], ["2026-07-08", 21, 0, 50.0, 63.5, -19.9, 24.4], ["2026-07-09", 92, 0, 51.0, 67.6, -13.5, 26.0], ["2026-07-10", 0, 80, 51.7, 69.4, -16.6, 25.4], ["2026-07-11", 0, 0, 50.4, 59.5, -17.7, 24.8], ["2026-07-12", 0, 88, 51.3, 63.6, -9.0, 24.2], ["2026-07-13", 0, 0, 50.1, 54.5, -12.2, 23.6], ["2026-07-14", 0, 0, 48.9, 46.7, -4.4, 23.1], ["2026-07-15", 0, 0, 47.8, 40.0, 2.2, 22.5], ["2026-07-16", 76, 48, 49.6, 52.0, 7.7, 23.8], ["2026-07-17", 0, 67, 50.0, 54.1, -2.5, 23.2], ["2026-07-18", 0, 0, 48.8, 46.4, -4.1, 22.7], ["2026-07-19", 0, 0, 47.6, 39.8, 2.4, 22.1], ["2026-07-20", 58, 0, 47.9, 42.4, 7.9, 23.0], ["2026-07-21", 0, 0, 46.7, 36.3, 5.5, 22.4], ["2026-07-22", 0, 0, 45.6, 31.1, 10.4, 21.9], ["2026-07-23", 178, 0, 48.8, 52.1, 14.5, 25.6], ["2026-07-24", 0, 59, 49.0, 53.1, -3.3, 25.0], ["2026-07-25", 0, 95, 50.1, 59.1, -4.1, 24.4], ["2026-07-26", 0, 0, 48.9, 50.6, -9.0, 23.8], ["2026-07-27", 0, 0, 47.7, 43.4, -1.7, 23.2], ["2026-07-28", 0, 0, 46.6, 37.2, 4.3, 22.7], ["2026-07-29", 0, 0, 45.5, 31.9, 9.4, 22.2], ["2026-07-30", 0, 0, 44.4, 27.3, 13.6, 21.6], ["2026-07-31", 0, 0, 43.4, 23.4, 17.1, 21.1], ["2026-08-01", 0, 0, 42.3, 20.1, 19.9, 20.6], ["2026-08-02", 0, 0, 41.3, 17.2, 22.2, 20.1], ["2026-08-03", 0, 0, 40.3, 14.8, 24.1, 19.6], ["2026-08-04", 0, 0, 39.4, 12.6, 25.6, 19.2], ["2026-08-05", 0, 0, 38.4, 10.8, 26.7, 18.7], ["2026-08-06", 0, 0, 37.5, 9.3, 27.6, 18.3], ["2026-08-07", 0, 0, 36.6, 8.0, 28.2, 17.8], ["2026-08-08", 0, 0, 35.8, 6.8, 28.7, 17.4], ["2026-08-09", 0, 0, 34.9, 5.9, 28.9, 17.0], ["2026-08-10", 0, 0, 34.1, 5.0, 29.1, 16.6], ["2026-08-11", 0, 0, 33.3, 4.3, 29.1, 16.2], ["2026-08-12", 0, 0, 32.5, 3.7, 29.0, 15.8], ["2026-08-13", 0, 0, 31.7, 3.2, 28.8, 15.4], ["2026-08-14", 0, 0, 30.9, 2.7, 28.5, 15.1], ["2026-08-15", 0, 0, 30.2, 2.3, 28.2, 14.7], ["2026-08-16", 0, 0, 29.5, 2.0, 27.9, 14.4], ["2026-08-17", 0, 0, 28.8, 1.7, 27.5, 14.0], ["2026-08-18", 0, 0, 28.1, 1.5, 27.1, 13.7], ["2026-08-19", 0, 0, 27.4, 1.3, 26.6, 13.4], ["2026-08-20", 0, 66, 28.3, 10.5, 26.2, 13.0], ["2026-08-21", 0, 0, 27.7, 9.0, 17.9, 12.7], ["2026-08-22", 0, 0, 27.0, 7.7, 18.7, 12.4], ["2026-08-23", 0, 0, 26.4, 6.6, 19.3, 12.1], ["2026-08-24", 157, 0, 29.5, 28.1, 19.8, 15.6], ["2026-08-25", 0, 0, 28.8, 24.1, 1.4, 15.2], ["2026-08-26", 0, 46, 29.2, 27.2, 4.7, 14.8], ["2026-08-27", 94, 0, 30.7, 36.7, 2.0, 16.7], ["2026-08-28", 0, 0, 30.0, 31.5, -6.0, 16.3], ["2026-08-29", 40, 0, 30.2, 32.7, -1.5, 16.9], ["2026-08-30", 0, 0, 29.5, 28.0, -2.5, 16.5], ["2026-08-31", 0, 0, 28.8, 24.0, 1.5, 16.1], ["2026-09-01", 0, 0, 28.1, 20.6, 4.8, 15.7], ["2026-09-02", 25, 0, 28.0, 21.2, 7.5, 15.9], ["2026-09-03", 0, 0, 27.4, 18.2, 6.8, 15.6], ["2026-09-04", 0, 0, 26.7, 15.6, 9.2, 15.2], ["2026-09-05", 54, 0, 27.4, 21.1, 11.1, 16.1], ["2026-09-06", 28, 0, 27.4, 22.1, 6.3, 16.4], ["2026-09-07", 0, 0, 26.7, 18.9, 5.3, 16.0], ["2026-09-08", 0, 0, 26.1, 16.2, 7.8, 15.6], ["2026-09-09", 155, 0, 29.2, 36.0, 9.9, 18.9], ["2026-09-10", 0, 0, 28.5, 30.9, -6.9, 18.5], ["2026-09-11", 74, 0, 29.6, 37.0, -2.4, 19.8], ["2026-09-12", 0, 0, 28.9, 31.8, -7.5, 19.3], ["2026-09-13", 0, 0, 28.2, 27.2, -2.9, 18.9], ["2026-09-14", 0, 0, 27.5, 23.3, 1.0, 18.4], ["2026-09-15", 60, 0, 28.3, 28.6, 4.2, 19.4], ["2026-09-16", 74, 0, 29.4, 35.1, -0.3, 20.7], ["2026-09-17", 34, 0, 29.5, 34.9, -5.7, 21.0], ["2026-09-18", 0, 0, 28.8, 29.9, -5.4, 20.5], ["2026-09-19", 0, 68, 29.7, 35.4, -1.2, 20.0], ["2026-09-20", 0, 0, 29.0, 30.4, -5.7, 19.6], ["2026-09-21", 0, 0, 28.3, 26.0, -1.4, 19.1], ["2026-09-22", 154, 0, 31.3, 44.3, 2.3, 22.3], ["2026-09-23", 0, 0, 30.6, 38.0, -13.0, 21.8], ["2026-09-24", 0, 0, 29.8, 32.6, -7.4, 21.3], ["2026-09-25", 0, 0, 29.1, 27.9, -2.7, 20.8], ["2026-09-26", 0, 47, 29.6, 30.7, 1.2, 20.3], ["2026-09-27", 0, 0, 28.9, 26.3, -1.1, 19.8], ["2026-09-28", 0, 0, 28.2, 22.6, 2.5, 19.3], ["2026-09-29", 0, 0, 27.5, 19.3, 5.6, 18.9], ["2026-09-30", 0, 0, 26.8, 16.6, 8.2, 18.4], ["2026-10-01", 42, 0, 27.2, 20.2, 10.3, 19.0], ["2026-10-02", 0, 0, 26.6, 17.3, 7.0, 18.5], ["2026-10-03", 0, 0, 25.9, 14.8, 9.2, 18.1], ["2026-10-04", 47, 0, 26.4, 19.4, 11.1, 18.8], ["2026-10-05", 0, 0, 25.8, 16.7, 7.0, 18.3], ["2026-10-06", 69, 0, 26.8, 24.1, 9.1, 19.5], ["2026-10-07", 0, 0, 26.2, 20.7, 2.7, 19.1], ["2026-10-08", 0, 41, 26.5, 23.5, 5.5, 18.6], ["2026-10-09", 0, 0, 25.9, 20.2, 3.0, 18.2], ["2026-10-10", 0, 44, 26.3, 23.5, 5.7, 17.7], ["2026-10-11", 0, 0, 25.7, 20.2, 2.8, 17.3], ["2026-10-12", 63, 0, 26.6, 26.3, 5.5, 18.4], ["2026-10-13", 0, 0, 26.0, 22.5, 0.3, 18.0], ["2026-10-14", 67, 0, 26.9, 28.9, 3.4, 19.1], ["2026-10-15", 54, 75, 29.4, 43.2, -2.0, 20.0], ["2026-10-16", 0, 83, 30.6, 48.9, -13.8, 19.5], ["2026-10-17", 0, 77, 31.7, 52.9, -18.2, 19.0], ["2026-10-18", 0, 0, 31.0, 45.4, -21.2, 18.6], ["2026-10-19", 0, 54, 31.5, 46.6, -14.4, 18.1], ["2026-10-20", 35, 0, 31.6, 44.9, -15.0, 18.5], ["2026-10-21", 109, 0, 33.5, 54.1, -13.3, 20.7], ["2026-10-22", 0, 66, 34.2, 55.7, -20.6, 20.2], ["2026-10-23", 0, 0, 33.4, 47.8, -21.5, 19.7], ["2026-10-24", 71, 0, 34.3, 51.1, -14.4, 20.9], ["2026-10-25", 0, 0, 33.5, 43.8, -16.8, 20.4]];
+  (function(){
+    var last=PMC[PMC.length-1],wk=PMC[PMC.length-8];
+    document.getElementById("pmc-ctl").textContent=last[3].toFixed(0);
+    document.getElementById("pmc-atl").textContent=last[4].toFixed(0);
+    document.getElementById("pmc-tsb").textContent=(last[5]>0?"+":"")+last[5].toFixed(0);
+    var r=last[3]-wk[3];document.getElementById("pmc-ramp").textContent=(r>=0?"+":"")+r.toFixed(1)+" in the last 7 days";
+    document.getElementById("pmc-tsb-note").textContent=last[5]<-10?"Tired: building. Absorb week next":last[5]<5?"Neutral":"Fresh: good to race";
+    var W=560,H=240,pl=34,pr=10,pt=14,pb=28,y0=-30,y1=70,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function X(i){return pl+i*(W-pl-pr)/(PMC.length-1);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [-20,0,20,40,60].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:v==0?"var(--muted)":"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    var bw=(W-pl-pr)/PMC.length;
+    function Yl(v){return Y(0)-Math.min(v,200)/200*(Y(0)-Y(60));}
+    PMC.forEach(function(p,i){var x=X(i)-bw*.4;
+      if(p[1])s.appendChild(el("rect",{x:x,y:Yl(p[1]),width:bw*.8,height:Y(0)-Yl(p[1]),fill:"var(--c1)",opacity:.55}));
+      if(p[2])s.appendChild(el("rect",{x:x,y:Yl(p[1]+p[2]),width:bw*.8,height:Yl(p[1])-Yl(p[1]+p[2]),fill:"var(--warn)",opacity:.55}));
+      s.appendChild(el("rect",{x:x,y:Math.min(Y(p[5]),Y(0)),width:bw*.8,height:Math.abs(Y(p[5])-Y(0)),fill:"var(--good)",opacity:.35}));
+      if(p[0].slice(8)=="01")s.appendChild(el("text",{x:X(i),y:H-pb+16,"text-anchor":"start","font-size":10},MN[+p[0].slice(5,7)-1]));});
+    [[3,"var(--best)"],[4,"var(--now)"]].forEach(function(c){var d="";PMC.forEach(function(p,i){d+=(i?"L":"M")+X(i)+" "+Y(p[c[0]]);});s.appendChild(el("path",{d:d,fill:"none",stroke:c[1],"stroke-width":2.2}));});
+    var t=el("text",{x:W-pr,y:Y(last[3])-6,"text-anchor":"end","font-size":10.5},"Fitness "+last[3].toFixed(0));t.style.fill="var(--best)";s.appendChild(t);
+    var gi=PMC.findIndex(function(p){return p[0]=="2026-08-10";});var g=el("text",{x:X(gi),y:Y(60),"text-anchor":"middle","font-size":10},"August break");g.style.fill="var(--muted)";s.appendChild(g);
+    var bi=PMC.findIndex(function(p){return p[0]=="2026-10-06";});s.appendChild(el("line",{x1:X(bi),x2:X(bi),y1:pt,y2:Y(-30),stroke:"var(--muted)","stroke-dasharray":"3 3"}));
+    var b=el("text",{x:X(bi)+4,y:pt+10,"font-size":10},"Block 1");b.style.fill="var(--muted)";s.appendChild(b);
+    document.getElementById("pmc").appendChild(s);
+  })();
+
+  // ---------- Fixed-power HR ----------
+  var HR265=[["2026-09-06","Resilience Ride",151.4,8,"20061476964"],["2026-09-15","Sweet Spot Anchor",157.4,22,"20182138802"],["2026-09-17","Elevate and Escalate",152.1,5,"20216494693"],["2026-10-14","SST (Short), alternating 264/285 W",166.4,20,"20579546415"],["2026-10-21","3x20min SST Low",149.8,58,"20672678058"]];
+  var HR215=[["2026-10-20","Zwift: Foundation (indoor)",126.7,23,"20658874430"],["2026-08-24","Outdoor ride",141.1,16,"19876670308"],["2026-09-09","Outdoor ride",131.2,14,"20100312674"],["2026-09-16","Outdoor ride (easy)",115.5,7,"20196883491"],["2026-09-22","Outdoor ride",133.4,11,"20279566174"]];
+  (function(){
+    var W=420,H=190,pl=34,pr=14,pt=16,pb=30,y0=140,y1=172,t0=new Date("2026-09-01").getTime(),t1=new Date("2026-11-15").getTime(),s=el("svg",{viewBox:"0 0 "+W+" "+H});
+    function X(d){return pl+(new Date(d).getTime()-t0)/(t1-t0)*(W-pl-pr);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
+    [145,155,165].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    ["2026-09-01","2026-10-01","2026-11-01"].forEach(function(d){s.appendChild(el("text",{x:X(d),y:H-pb+16,"text-anchor":"middle","font-size":10},MN[+d.slice(5,7)-1]));});
+    s.appendChild(el("text",{x:pl,y:10,"font-size":10},"Avg HR at 265 W (bpm)"));
+    HR265.forEach(function(h,i){var last=i==HR265.length-1,g=el("g",{}),infl=h[0]=="2026-10-14";
+      g.appendChild(el("circle",{cx:X(h[0]),cy:Y(h[2]),r:14,fill:"transparent"}));
+      g.appendChild(el("circle",{"class":"dot",cx:X(h[0]),cy:Y(h[2]),r:last?6:4.5,fill:infl?"var(--surface)":last?"var(--now)":"var(--best)",stroke:last?"var(--now)":"var(--best)","stroke-width":1.5}));
+      var t=el("text",{x:X(h[0])+(last?-8:7),y:Y(h[2])+(last?4:-6),"text-anchor":last?"end":"start","font-size":10},Math.round(h[2]));t.style.fill="var(--ink)";g.appendChild(t);
+      hit(g,"#a-"+h[4],h[1]+" "+h[0]);s.appendChild(g);});
+    document.getElementById("hr265").appendChild(s);
+    document.getElementById("hr215t").innerHTML=HR215.map(function(h){return '<tr><td><a href="'+(ACT[h[4]]?'#a-'+h[4]:SL+h[4])+'">'+fd(h[0])+'</a> · '+esc(h[1])+'</td><td class="n">'+h[2]+'</td><td class="n">'+h[3]+'</td></tr>';}).join("");
+  })();
+
+  // ---------- Fatigue resistance ----------
+  var FR=[["19876670308", "2026-08-24", "Outdoor, 2 h 21", 1716, 245, 275], ["20100312674", "2026-09-09", "Outdoor, 2 h 12", 1626, 261, 290], ["20279566174", "2026-09-22", "Outdoor, 2 h 26", 1611, 236, 326], ["20672678058", "2026-10-21", "3x20min SST Low (workout-capped)", 1331, 265, 266]];
+  document.getElementById("frt").innerHTML=FR.map(function(f){return '<tr><td><a href="#a-'+f[0]+'">'+fd(f[1])+'</a> · '+f[2]+'</td><td class="n">'+f[3].toLocaleString("en-GB")+'</td><td class="n">'+f[4]+' W</td><td class="n">'+Math.round(f[4]/f[5]*100)+'%</td></tr>';}).join("");
+
+  // ---------- Race log ----------
+  var RL=[
+    ["12 Mar 2026","Peaky Pavé race (Zwift)","Rolling","<b>1st</b> of 46","Held the group, won the finish","53 min 287 W at 151 bpm","Best-case day: efficient and fresh","17697152085"],
+    ["6 Oct 2026","Tour of Watopia Stage 1 · Sand and Sequoias, 13.9 mi","Flat-ish sprint","<b>1st</b>","Sprint from 0.3 mi","30 min 301 W · 20 min 311 W · last 500 m 710 W","Late, committed sprint wins flat finishes","20479666897"],
+    ["12 Oct 2026","Tour of Watopia Stage 2 · Downtown Eruption, 12.4 mi, 902 ft","Uphill (0.56 mi at 5.5%)","<b>5th</b> of about 40","Front 5 went on the Volcano KOM; solo bridge, dropped at the crest","Volcano 8:12 at 334 W · finish 2:26 at 393 W","Never bridge alone on a climb; ride through the line","20559048199"],
+    ["15 Oct 2026","Tour of Watopia Stage 2 group ride (raced) · Tick Tock, 12.4 mi","Flat sprint","<b>20th</b> of about 240","Raced on a padel morning","24.5 min 297 W · 600 W for 36 s","Good engine; don't race on padel days","20598720337"],
+    ["24 Oct 2026","Tour of Watopia Stage 3 · Coastal Crown Loop, 14.9 mi, 899 ft","Drag (1.24 mi at 3.1%)","<b>2nd</b>, 10 s down","4-rider break; winner (3.6 W/kg, ~69 kg) went at 0.7 mi at 6+ W/kg","Loop 24 min 300 W · finish 4:10 at 356 W","Right tactics; beaten on W/kg, not timing","20708266675"]
+  ];
+  document.getElementById("racelog").innerHTML=RL.slice().reverse().map(function(r){return '<tr><td class="mono" style="white-space:nowrap">'+r[0]+'</td><td><a class="ext" href="'+SL+r[7]+'" target="_blank" rel="noopener">'+r[1]+' ↗</a></td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td class="mono" style="font-size:12.5px">'+r[5]+'</td><td>'+r[6]+'</td></tr>';}).join("");
+
+  // ---------- Power zones ----------
+  var F=297,Z=[["Z1 Recovery",0,.55],["Z2 Endurance",.56,.75],["Z3 Tempo",.76,.87],["Sweet spot",.88,.93],["Z4 Threshold",.94,1.05],["Z5 VO2",1.06,1.2],["Z6 Anaerobic",1.21,1.5]];
+  var zc=document.getElementById("zones");
+  Z.forEach(function(z){var d=document.createElement("div");d.className="zone";d.style.borderLeftColor="var(--best)";
+    d.innerHTML='<div class="n">'+z[0]+'</div><div class="r">'+(z[1]?Math.round(F*z[1]):0)+'–'+Math.round(F*z[2])+' W</div>';zc.appendChild(d);});
+
+  // ---------- Detail views ----------
+  var main=document.getElementById("main"),det=document.getElementById("detail");
+  function rideCard(id,cls,label,w,fallback){
+    var r=id&&RIDES[id],h='<div class="card '+cls+'"><span class="eyebrow">'+label+'</span><span class="big num">'+w.toLocaleString("en-GB")+'<small>W</small></span>';
+    h+='<span class="mono" style="font-size:13px;color:var(--muted)">'+(w/KG).toFixed(2)+' W/kg at today’s 91.2 kg</span>';
+    if(r){h+='<dl class="kv"><dt>Ride</dt><dd><b>'+esc(r.n)+'</b></dd><dt>Date</dt><dd>'+r.d+'</dd>'+(r.t?'<dt>Length</dt><dd>'+r.t+'</dd>':'')+(r.hr?'<dt>Heart rate</dt><dd>'+r.hr+'</dd>':'')+'<dt>Bests</dt><dd>'+r.b+'</dd></dl>';
+      h+='<a class="ext" href="'+SL+id+'" target="_blank" rel="noopener">Open in Strava ↗</a>';}
+    else h+='<div class="unk"><b>Ride not located yet.</b> '+esc(fallback)+' In Strava, open Power Curve and tap this duration to see the ride.</div>';
+    return h+'</div>';
+  }
+  function nav(prefix,i,len,lab){
+    var h='<div class="nav"><a class="back" href="#">‹ Dashboard</a><span style="display:flex;gap:8px">';
+    if(i>0)h+='<a class="back" href="#'+prefix+(lab?lab(i-1):i-1)+'">‹ Prev</a>';
+    if(i<len-1)h+='<a class="back" href="#'+prefix+(lab?lab(i+1):i+1)+'">Next ›</a>';
+    return h+'</span></div>';
+  }
+  function dur(i){
+    var d=D[i],p=d[3]/d[2]*100,gap=d[3]-d[2];
+    var h=nav("d-",i,D.length,function(j){return D[j][0];});
+    h+='<header><span class="eyebrow">Power skills · '+d[0]+'</span><h1>'+d[1]+' power</h1></header>';
+    h+='<section class="panel"><div class="row-head"><h3>8 weeks vs all time</h3><span class="mono">'+(gap>=0?"+":"−")+Math.abs(gap)+' W · '+Math.round(p)+'%</span></div><div class="gapbar"><i style="width:'+Math.min(p,100)+'%"></i><b>'+d[3]+' / '+d[2]+' W</b></div></section>';
+    h+='<div class="pair">'+rideCard(d[4],"","All time",d[2],d[6])+rideCard(d[5],"now","Last 8 weeks",d[3],"")+'</div>';
+    h+='<section class="panel"><h3>What it means</h3><p class="coach">'+esc(d[7])+'</p></section>';
+    h+='<section class="panel"><h3>All durations</h3><div class="ladder">'+D.map(function(x,j){var q=Math.round(x[3]/x[2]*100);return '<a class="rung" href="#d-'+x[0]+'"'+(j==i?' style="background:var(--hover)"':'')+'><span class="d">'+x[0]+'</span><span class="bar"><i style="width:'+q+'%"></i><b>'+q+'%</b></span><span class="w">'+x[3]+' <em>/ '+x[2]+' W</em></span><span class="go">›</span></a>';}).join("")+'</div></section>';
+    return h;
+  }
+  function week(i){
+    var w=WK[i],m=wsum(w),h=nav("w-",i,WK.length);
+    h+='<header><span class="eyebrow">Week of '+fd(w[0],true)+'</span><h1>'+m.h.toFixed(1)+' h riding · '+m.mi.toFixed(0)+' mi</h1></header>';
+    h+='<div class="tiles"><div class="tile"><span class="eyebrow">Rides</span><span class="big num">'+m.r+'</span></div><div class="tile"><span class="eyebrow">Padel</span><span class="big num">'+m.pd+'</span></div><div class="tile"><span class="eyebrow">Relative effort</span><span class="big num">'+m.re+'</span><span class="sub">All activities</span></div></div>';
+    var z=wz(w);h+='<section class="panel"><h3>Zones this week · '+Math.round(z.tss)+' TSS</h3><div class="zrow"><span class="l">HR zones</span>'+stackHTML(z.hz)+'</div><div class="zrow"><span class="l">Power zones</span>'+stackHTML(z.pz)+'</div><div class="zkey">'+HZN.map(function(n,k){return '<span><i class="sw" style="background:var(--c'+(k+1)+')"></i>'+z.hz[k]+' / '+z.pz[k]+' min</span>';}).join("")+'</div><p class="hint">Minutes shown as HR / power for zones 1 to 7.</p></section>';
+    h+='<div class="tablewrap"><table class="narrow"><thead><tr><th>Day</th><th>Session</th><th class="n">Miles</th><th class="n">Min</th><th class="n">Climb ft</th><th class="n">TSS</th><th class="n">RE</th></tr></thead><tbody>';
+    w[1].forEach(function(a){h+='<tr><td class="mono">'+fd(a[3],true)+'</td><td><a href="'+(ACT[a[0]]?'#a-'+a[0]:SL+a[0])+'"'+(ACT[a[0]]?'':' target="_blank" rel="noopener"')+'>'+esc(a[1])+'</a><br><span class="eyebrow">'+(a[2]=="VirtualRide"?"Zwift":a[2])+'</span></td><td class="n">'+(a[4]?a[4].toFixed(1):"–")+'</td><td class="n">'+a[5]+'</td><td class="n">'+(a[6]||"–")+'</td><td class="n">'+(ACT[a[0]]&&ACT[a[0]].tss!=null?ACT[a[0]].tss:"–")+'</td><td class="n">'+(a[7]==null?"no HR":a[7])+'</td></tr>';});
+    h+='</tbody></table></div><p class="flag">RE is Strava relative effort, based on heart rate. Strava uses an age-based max HR, so RE is understated for you. Tap a session for its zones; hikes open in Strava.</p>';
+    return h;
+  }
+  function ftp(i){
+    var p=FP[i],h=nav("f-",i,FP.length);
+    h+='<header><span class="eyebrow">FTP history · '+p[0]+'</span><h1>'+(p[2]?"~":"")+p[1]+' W</h1><span class="mono" style="color:var(--muted)">'+(p[1]/KG).toFixed(2)+' W/kg at today’s weight</span></header>';
+    h+='<section class="panel"><p>'+esc(p[3])+'</p>'+(p[4]?'<a class="ext" href="'+SL+p[4]+'" target="_blank" rel="noopener">Open the source ride in Strava ↗</a>':'')+'</section>';
+    return h;
+  }
+  function eff(i){
+    var e=EF[i],v=e[3]/e[4],h=nav("h-",i,EF.length);
+    h+='<header><span class="eyebrow">Heart-rate efficiency · '+e[0]+'</span><h1>'+v.toFixed(2)+' W per beat</h1></header>';
+    h+='<div class="tiles"><div class="tile"><span class="eyebrow">Power</span><span class="big num">'+e[3]+'<small>W</small></span></div><div class="tile"><span class="eyebrow">Avg HR</span><span class="big num">'+Math.round(e[4])+'<small>bpm</small></span><span class="sub">'+Math.round(e[4]/174*100)+'% of threshold HR</span></div><div class="tile"><span class="eyebrow">Duration</span><span class="big num">'+e[2]+'<small>min</small></span></div></div>';
+    h+='<section class="panel"><h3>'+esc(e[1])+'</h3><p>'+esc(e[6])+'</p>'+(e[5]?'<a class="ext" href="'+SL+e[5]+'" target="_blank" rel="noopener">Open in Strava ↗</a>':'')+'<p class="flag">Today’s reference: 15 Oct 2026, 1.78 W per beat (matched by the 21 Oct SST Low). Higher means more power for the same heart rate.</p></section>';
+    return h;
+  }
+  function act(id){
+    var a=ACT[id],h='<div class="nav"><a class="back" href="#">‹ Dashboard</a><span style="display:flex;gap:8px"><a class="back" href="javascript:history.back()">‹ Back</a></span></div>';
+    h+='<header><span class="eyebrow">'+(a.type=="Zwift"?"Zwift ride":a.type)+' · '+fd(a.date,true)+'</span><h1>'+esc(NAME[id]||"Session")+'</h1></header>';
+    h+='<div class="tiles"><div class="tile"><span class="eyebrow">Duration</span><span class="big num">'+a.min+'<small>min</small></span></div><div class="tile"><span class="eyebrow">Avg / max HR</span><span class="big num">'+(a.ahr?Math.round(a.ahr):"–")+'<small>/ '+(a.mhr||"–")+'</small></span></div>'+(a.np?'<div class="tile"><span class="eyebrow">Normalised power</span><span class="big num">'+a.np+'<small>W</small></span><span class="sub">'+Math.round(a.np/297*100)+'% of FTP</span></div><div class="tile"><span class="eyebrow">TSS</span><span class="big num">'+a.tss+'</span></div>':'')+'</div>';
+    h+='<section class="panel"><h3>Time in zone</h3><div class="zrow"><span class="l">HR zones</span>'+stackHTML(a.hz)+'</div>'+(a.pz?'<div class="zrow"><span class="l">Power zones</span>'+stackHTML(a.pz)+'</div>':'')+'<div class="tablewrap"><table class="narrow"><thead><tr><th>Zone</th><th class="n">HR min</th>'+(a.pz?'<th>Power zone</th><th class="n">Min</th>':'')+'</tr></thead><tbody>'+HZN.map(function(n,k){return '<tr><td><i class="sw" style="background:var(--c'+(k+1)+')"></i> '+n+'</td><td class="n">'+a.hz[k]+'</td>'+(a.pz?'<td>'+PZN[k]+'</td><td class="n">'+a.pz[k]+'</td>':'')+'</tr>';}).join("")+'</tbody></table></div></section>';
+    if(a.dc)h+='<section class="panel"><h3>Heart-rate drift · '+a.dc.pct.toFixed(1)+'%</h3><div class="tablewrap"><table class="narrow"><thead><tr><th>Half</th><th class="n">Avg W</th><th class="n">Avg HR</th><th class="n">W per beat</th></tr></thead><tbody><tr><td>First</td><td class="n">'+Math.round(a.dc.w1)+'</td><td class="n">'+Math.round(a.dc.hr1)+'</td><td class="n">'+(a.dc.w1/a.dc.hr1).toFixed(2)+'</td></tr><tr><td>Second</td><td class="n">'+Math.round(a.dc.w2)+'</td><td class="n">'+Math.round(a.dc.hr2)+'</td><td class="n">'+(a.dc.w2/a.dc.hr2).toFixed(2)+'</td></tr></tbody></table></div><p class="hint">First 10 minutes dropped. Under 5% is good.</p></section>';
+    if(!a.ahr||a.hz.reduce(function(x,y){return x+y;},0)<a.min*.5)h+='<p class="flag">Heart rate is missing or dropped out for most of this session, so HR zones are incomplete.</p>';
+    return h+'<a class="ext" href="'+SL+id+'" target="_blank" rel="noopener">Open in Strava ↗</a>';
+  }
+  function padel(i){
+    var m=PM[i],h=nav("p-",i,PM.length),mins=m[1].reduce(function(a,x){return a+x[2];},0);
+    h+='<header><span class="eyebrow">Padel · '+MN[+m[0].slice(5)-1]+' 2026</span><h1>'+m[1].length+' sessions · '+(mins/60).toFixed(1)+' h</h1></header>';
+    if(!m[1].length)return h+'<section class="panel"><p>No padel logged this month.</p></section>';
+    h+='<div class="tablewrap"><table class="narrow"><thead><tr><th>Day</th><th class="n">Min</th><th class="n">Relative effort</th></tr></thead><tbody>'+m[1].map(function(x){return '<tr><td><a href="'+(ACT[x[0]]?'#a-'+x[0]:SL+x[0])+'"'+(ACT[x[0]]?'':' target="_blank" rel="noopener"')+'>'+fd(x[1],true)+'</a></td><td class="n">'+x[2]+'</td><td class="n">'+(x[3]==null?"manual":x[3])+'</td></tr>';}).join("")+'</tbody></table></div>';
+    return h;
+  }
+  function route(){
+    var hsh=decodeURIComponent(location.hash.slice(1)),m=hsh.match(/^([dwfhapy])-(.+)$/),html=null;
+    if(m){
+      if(m[1]=="d"){for(var i=0;i<D.length;i++)if(D[i][0]==m[2])html=dur(i);}
+      else if(m[1]=="a"){if(ACT[m[2]])html=act(m[2]);}
+      else if(m[1]=="y"){html=yearPage(+m[2]);}
+      else{var k=+m[2],arr={w:WK,f:FP,h:EF,p:PM}[m[1]];if(arr&&arr[k])html={w:week,f:ftp,h:eff,p:padel}[m[1]](k);}
+    }
+    if(html){det.innerHTML=html;main.hidden=true;det.hidden=false;window.scrollTo(0,0);}
+    else{det.hidden=true;main.hidden=false;}
+  }
+
+  // ---------- Alpe challenge ----------
+  (function(){
+    var AZ=[["2020-05-19","3478899007",3987,244,175,"Tour for All Stage 4 (race)"],["2020-05-23","3500532667",4266,229,142,"SST (Med) workout"],["2020-06-06","3572613676",4066,242,142,"SST (Long) workout"],["2020-06-29","3689724533",3478,280,160,"AdZ 57:57, full effort"],["2020-10-05","4153135040",3751,267,150,"Monday Morning Alpe"],["2022-01-20","6554784553",3762,264,154,"Watopia"],["2024-01-23","10614476085",4095,250,162,"Alpe du Zwift"],["2024-02-15","10769410351",3833,261,168,"Meetup on Road to Sky"],["2026-02-02","17265059632",4144,244,142,"Tour de Zwift Stage 5 (group ride)"]];
+    var AH=[["2022-06-23","7355662927",4646,257,151,"Day 1: A summery Alpe d'Huez"],["2022-06-24","7361817259",4419,272,172,"Day 2, after Col d'Ornon"]];
+    var EX=[["2021-01-23","4666446779","Alpe d'Huez (Wattbike sim)","Wattbike official crono course, 8.4 mi (not plotted)",3316,null,null],["2022-06-25","7366952157","Alpe d'Huez","Day 3 via Croix de Fer, Glandon and the balcony road; summit reached, not the 21 bends (not plotted)",null,null,null]];
+    var ZI=[[2,90],[2.5,75],[3,62],[3.5,55],[4,49],[4.5,44],[5,40],[5.5,37],[6,35],[6.5,32]],K=1.058;
+    var PRE={now:[297,91.2],tr:[306,88]};
+    function tz(w){if(w<=2)return 90*2/w;for(var i=1;i<ZI.length;i++)if(w<=ZI[i][0]){var a=ZI[i-1],b=ZI[i];return a[1]+(b[1]-a[1])*(w-a[0])/(b[0]-a[0]);}return 32;}
+    function pAt(f,t){return f*Math.pow(t/60,-0.07);}
+    function zw(f,kg){var t=60;for(var i=0;i<20;i++)t=tz(pAt(f,t)/kg);return t;}
+    function vs(P,m){var a=m*9.81*(0.0871+0.005),c=0.24,v=3;for(var i=0;i<50;i++)v-=(a*v+c*v*v*v-P)/(a+3*c*v*v);return v;}
+    function ah(f,kg){var t=65;for(var i=0;i<20;i++)t=12025/vs(pAt(f,t)*0.97,kg+10)/60*K;return t;}
+    function fm(m){var s=Math.round(m*60),h=Math.floor(s/3600),mi=Math.floor(s%3600/60),se=s%60;return (h?h+":"+(mi<10?"0":""):"")+mi+":"+(se<10?"0":"")+se;}
+    function chart(id,data,now,tr,pb){
+      var W=420,H=190,L=46,Rr=12,T=14,B=26,box=document.getElementById(id);box.innerHTML="";
+      var svg=el("svg",{viewBox:"0 0 "+W+" "+H});
+      var ts=data.map(function(d){return +new Date(d[0]);}),x0=+new Date("2020-01-01"),x1=+new Date("2027-09-01");
+      var ys=data.map(function(d){return d[2]/60;}).concat([now,tr]),y0=Math.floor(Math.min.apply(null,ys)/5)*5-2,y1=Math.ceil(Math.max.apply(null,ys)/5)*5+2;
+      function X(t){return L+(t-x0)/(x1-x0)*(W-L-Rr);} function Y(m){return T+(m-y0)/(y1-y0)*(H-T-B);}
+      for(var m=Math.ceil(y0/5)*5;m<=y1;m+=5){svg.appendChild(el("line",{x1:L,x2:W-Rr,y1:Y(m),y2:Y(m),stroke:"var(--line)"}));svg.appendChild(el("text",{x:L-6,y:Y(m)+4,"text-anchor":"end"},(m<60?m:Math.floor(m/60)+":"+("0"+m%60).slice(-2))));}
+      [2020,2022,2024,2026].forEach(function(yr){svg.appendChild(el("text",{x:X(+new Date(yr+"-01-01")),y:H-6,"text-anchor":"middle"},yr));});
+      svg.appendChild(el("text",{x:X(+new Date("2027-07-01")),y:H-6,"text-anchor":"middle",style:"fill:var(--good)"},"Jul 27"));
+      var xn=X(+new Date("2026-10-24")),xt=X(+new Date("2027-07-01"));
+      svg.appendChild(el("line",{x1:L,x2:W-Rr,y1:Y(pb),y2:Y(pb),stroke:"var(--best)","stroke-dasharray":"2 3"}));
+      svg.appendChild(el("text",{x:L+4,y:Y(pb)-4,style:"fill:var(--best)"},"PB "+fm(pb)));
+      svg.appendChild(el("line",{x1:L,x2:W-Rr,y1:Y(now),y2:Y(now),stroke:"var(--now)","stroke-width":1.5,"stroke-dasharray":"6 4"}));
+      svg.appendChild(el("circle",{cx:xn,cy:Y(now),r:6,fill:"var(--now)"}));
+      svg.appendChild(el("text",{x:xn-8,y:Y(now)+(now>pb?14:-6),"text-anchor":"end",style:"fill:var(--now)","font-weight":"600"},"Today "+fm(now)));
+      svg.appendChild(el("line",{x1:xn,x2:xt,y1:Y(now),y2:Y(tr),stroke:"var(--good)","stroke-width":1.5,"stroke-dasharray":"2 3"}));
+      svg.appendChild(el("circle",{cx:xt,cy:Y(tr),r:6,fill:"var(--good)"}));
+      svg.appendChild(el("text",{x:xt,y:Y(tr)+(tr>pb?16:-9),"text-anchor":"middle",style:"fill:var(--good)","font-weight":"600"},fm(tr)));
+      data.forEach(function(d,i){var g=el("g",{});g.appendChild(el("circle",{"class":"dot",cx:X(ts[i]),cy:Y(d[2]/60),r:4.5,fill:"var(--surface)",stroke:"var(--best)","stroke-width":2}));
+        g.appendChild(el("title",{},d[0]+" · "+fm(d[2]/60)+" · "+d[3]+" W"));g.setAttribute("class","hit");g.setAttribute("tabindex","0");g.setAttribute("role","link");
+        g.addEventListener("click",function(){window.open(SL+d[1],"_blank","noopener");});svg.appendChild(g);});
+      box.appendChild(svg);
+    }
+    var fI=document.getElementById("al-ftp"),kI=document.getElementById("al-kg");
+    function upd(){
+      var f=+fI.value,kg=+kI.value;document.getElementById("al-ftp-v").textContent=f+" W";document.getElementById("al-kg-v").textContent=kg.toFixed(1)+" kg";
+      var zn=zw(PRE.now[0],PRE.now[1]),hn=ah(PRE.now[0],PRE.now[1]),zt=zw(f,kg),ht=ah(f,kg),isNow=(f==PRE.now[0]&&Math.abs(kg-PRE.now[1])<.05);
+      var zr=zw.apply(null,PRE.tr),hr=ah.apply(null,PRE.tr);
+      var zs=isNow?zr:zt,hs=isNow?hr:ht;
+      document.getElementById("az-now").textContent=fm(zn);document.getElementById("az-now-d").textContent="297 W, 91.2 kg · "+(zn<57.97?"new PB":"+"+fm(zn-57.967).replace(/^0:/,"")+" s vs PB").replace(/s s/,"s");
+      document.getElementById("ah-now").textContent=fm(hn);document.getElementById("ah-now-d").textContent="297 W, 91.2 kg · "+fm(73.65-hn)+" faster than PB";
+      document.getElementById("az-tr").textContent=fm(zs);document.getElementById("az-tr-d").textContent=(isNow?"306 W, 88 kg":f+" W, "+kg.toFixed(1)+" kg")+" · "+(zs<57.97?fm(57.967-zs)+" under PB":"+"+fm(zs-57.967)+" vs PB");
+      document.getElementById("ah-tr").textContent=fm(hs);document.getElementById("ah-tr-d").textContent=(isNow?"306 W, 88 kg":f+" W, "+kg.toFixed(1)+" kg")+" · "+fm(73.65-hs)+" faster than PB";
+      var lab=isNow?"July 2027 trend":"Your settings";document.querySelectorAll("#s-alpe .alpe-nums>div:nth-child(3) .eyebrow").forEach(function(e){e.textContent=lab;});
+      document.getElementById("al-what").textContent=(f/kg).toFixed(2)+" W/kg at FTP";
+      chart("az-chart",AZ,zn,zs,57.967);chart("ah-chart",AH,hn,hs,73.65);
+    }
+    function preset(k){fI.value=PRE[k][0];kI.value=PRE[k][1];document.querySelectorAll("[data-al]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.al==k?"true":"false");});upd();}
+    document.querySelectorAll("[data-al]").forEach(function(b){b.addEventListener("click",function(){preset(b.dataset.al);});});
+    [fI,kI].forEach(function(i){i.addEventListener("input",function(){document.querySelectorAll("[data-al]").forEach(function(b){b.setAttribute("aria-pressed","false");});upd();});});
+    preset("now");
+    var rows=AZ.map(function(d){return [d[0],d[1],"Alpe du Zwift",d[5],d[2],d[3],d[4]];}).concat(AH.map(function(d){return [d[0],d[1],"Alpe d'Huez",d[5],d[2],d[3],d[4]];})).concat(EX.map(function(d){return [d[0],d[1],d[2],d[3],d[4],d[5],d[6]];}));
+    rows.sort(function(a,b){return a[0]<b[0]?1:-1;});
+    var best={"Alpe du Zwift":3478,"Alpe d'Huez":4419};
+    var at=document.getElementById("alpe-t");if(at)at.innerHTML=rows.map(function(r){var dt=new Date(r[0]).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});var pb=best[r[2]]===r[4];
+      return '<tr><td style="white-space:nowrap">'+dt+'</td><td>'+esc(r[2])+(pb?' <span class="chip gd">PB</span>':'')+'</td><td><a href="'+SL+r[1]+'" target="_blank" rel="noopener">'+esc(r[3])+'</a></td><td class="n">'+(r[4]?fm(r[4]/60):'–')+'</td><td class="n">'+(r[5]?r[5]+' W':'–')+'</td><td class="n">'+(r[6]||'–')+'</td></tr>';}).join("");
+  })();
+  document.querySelectorAll(".jump button").forEach(function(b){b.addEventListener("click",function(){var t=document.getElementById(b.dataset.to);if(t)t.scrollIntoView({behavior:"smooth",block:"start"});});});
+  window.addEventListener("hashchange",route);route();
+})();
+</script>
+
+</body></html>
