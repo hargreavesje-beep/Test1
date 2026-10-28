@@ -155,25 +155,73 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
 .alpe-ctl input[type=range]{width:140px;accent-color:var(--now)}
 .alpe-ctl b{font-family:var(--f-mono);font-size:13px;min-width:56px}
 @media (max-width:600px){.alpe-nums .big{font-size:24px}.alpe-ctl input[type=range]{width:120px}}
+.coachcard{border-left:4px solid var(--good)}
+#wk-body{display:flex;flex-direction:column;gap:12px}
+.coachcard .head{font-family:var(--f-display);font-size:24px;font-weight:600;line-height:1.15;text-wrap:balance}
+.stbadge{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12.5px;padding:4px 10px;border-radius:999px;border:1px solid currentColor;width:fit-content}
+.stbadge::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.stbadge.fresh{color:var(--good)} .stbadge.neutral{color:var(--warn)} .stbadge.tired{color:var(--bad)}
+.todo{background:var(--hover);border-radius:8px;padding:12px 14px;font-size:15px}
+.todo>b{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px;font-weight:500}
+.stream{white-space:pre-wrap;font-size:14px;color:var(--muted)}
+.pick,.ci input{font:inherit;font-family:var(--f-mono);font-size:13px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.ci{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end}
+.ci label{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ci input{width:100%;font-size:16px}
+.go-btn{background:var(--ink);color:var(--bg);border-color:var(--ink);height:38px;width:100%}
+.go-btn:hover{background:var(--ink);opacity:.9}
+.newbest{color:var(--good);font-weight:600}
+.statbox{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:2px;background:var(--surface)}
+.statbox .big{font-family:var(--f-display);font-size:28px;font-weight:700;line-height:1}
+.statbox .sub{font-size:12px;color:var(--muted)}
 </style>
 
 <div class="wrap" id="main">
 
 <header>
-  <span class="eyebrow">Coaching baseline · updated 25 October 2026 (monthly review) · Strava, all-time</span>
+  <div class="row-head"><span class="eyebrow" id="live-status">Coaching baseline · loading Strava…</span><button type="button" class="back" id="live-refresh" hidden>Refresh</button></div>
   <h1>Where you are vs where you were</h1>
-  <span class="verdict">October: progressing on quality, flat on riding volume</span>
-  <ul class="tl">
-    <li><b>6 Oct</b><span>Won Tour of Watopia Stage 1. <b>301 W for 30 min</b> (within 4 W of your all-time best) and <b>311 W for 20 min</b>.</span></li>
-    <li><b>15 Oct</b><span><b>297 W for 24.5 min at 167 bpm</b>: the most power per heartbeat since 2020.</span></li>
-    <li><b>21 Oct</b><span><b>60 min of sweet spot</b> with under 1% heart-rate drift.</span></li>
-    <li><b>24 Oct</b><span><b>2nd</b> in Tour of Watopia Stage 3.</span></li>
-  </ul>
-  <p class="flag"><b>Main limiters:</b> volume (about 2.1 hours a week) and the 45 to 60 minute end of the curve. Your all-time 10 to 60 minute bests come from the summer 2020 lockdown racing season.</p>
   <span class="hint">Tap any duration, week, FTP point or heart-rate point to open the detail.</span>
 </header>
 
-<nav class="jump" aria-label="Jump to section"><button type="button" data-to="s-alpe">Alpe</button><button type="button" data-to="s-week">This week</button><button type="button" data-to="s-month">Month</button><button type="button" data-to="s-plan">Plan</button><button type="button" data-to="pmc-panel">Fitness</button><button type="button" data-to="s-load">Load</button><button type="button" data-to="s-power">Power</button><button type="button" data-to="s-fixed">HR at power</button><button type="button" data-to="s-races">Races</button><button type="button" data-to="s-drift">Drift</button><button type="button" data-to="s-padel">Padel & weight</button><button type="button" data-to="s-vo2">VO2 & resting HR</button><button type="button" data-to="s-hr">HR zones</button><button type="button" data-to="s-ftp">FTP</button><button type="button" data-to="s-tests">Tests</button><button type="button" data-to="history">History</button></nav>
+<section class="panel coachcard" id="s-today">
+  <div class="row-head"><h2>Where am I today</h2><span class="hint" id="today-when"></span></div>
+  <div id="today-body"><p class="hint">Your coach reads today's numbers once Strava has loaded.</p></div>
+  <div class="row-head"><span class="hint" id="today-note"></span><span style="display:flex;gap:8px"><button type="button" class="back" id="today-stop" hidden>Stop</button><button type="button" class="back" id="today-ask" hidden>Ask again</button></span></div>
+</section>
+
+<nav class="jump" aria-label="Jump to section"><button type="button" data-to="s-today">Today</button><button type="button" data-to="s-week">Week</button><button type="button" data-to="s-checkin">Check-in</button><button type="button" data-to="s-alpe">Alpe</button><button type="button" data-to="s-month">Month</button><button type="button" data-to="s-plan">Plan</button><button type="button" data-to="pmc-panel">Fitness</button><button type="button" data-to="s-load">Load</button><button type="button" data-to="s-power">Power</button><button type="button" data-to="s-fixed">HR at power</button><button type="button" data-to="s-races">Races</button><button type="button" data-to="s-drift">Drift</button><button type="button" data-to="s-padel">Padel & weight</button><button type="button" data-to="s-vo2">VO2 & resting HR</button><button type="button" data-to="s-hr">HR zones</button><button type="button" data-to="s-ftp">FTP</button><button type="button" data-to="s-tests">Tests</button><button type="button" data-to="history">History</button></nav>
+
+<section id="s-tiles">
+  <div class="tiles" id="tiles">
+    <div class="tile"><span class="eyebrow">FTP</span><span class="big num">297<small>W</small></span><span class="delta up">+6 W on 6 Oct</span><span class="sub">Auto-set by Zwift from the race. 2020 data implies about 302 W then</span></div>
+    <div class="tile"><span class="eyebrow">Watts per kilo</span><span class="big num">3.26<small>W/kg</small></span><span class="delta down">−0.18 vs ~3.44 recalled 2022 peak</span><span class="sub">At 91.2 kg (14 st 5 lb, 7 Oct)</span></div>
+    <div class="tile"><span class="eyebrow">Best 20 min, 8 weeks</span><span class="big num">311<small>W</small></span><span class="delta up">98% of all-time 318 W (Sep 2020)</span><span class="sub">6 Oct race</span></div>
+    <div class="tile"><span class="eyebrow">Riding volume, 8 weeks</span><span class="big num">2.1<small>h/wk</small></span><span class="sub">Waiting for Strava</span></div>
+  </div>
+</section>
+
+<section id="s-week" class="panel" style="border-left:4px solid var(--now)">
+  <div class="row-head"><h2 id="wk-title">Weekly summary</h2>
+    <label class="hint" style="display:flex;gap:8px;align-items:center">Week <select id="wk-pick" class="pick"></select></label></div>
+  <div class="stat" id="wk-stats"></div>
+  <div id="wk-body"><p class="hint">Loading…</p></div>
+  <div class="row-head"><span class="hint" id="wk-note"></span><span style="display:flex;gap:8px"><button type="button" class="back" id="wk-stop" hidden>Stop</button><button type="button" class="back" id="wk-gen" hidden>Write this week's summary</button></span></div>
+</section>
+
+<section id="s-checkin" class="panel">
+  <div class="row-head"><h2>Weekly check-in</h2><span class="hint" id="ci-last"></span></div>
+  <p style="font-size:14px;color:var(--muted)">Monday weigh-in (morning, before food) and your Garmin 7-day resting heart rate. Change FTP only when Zwift or a test raises it. Saved privately to this page and used by the charts and the coach.</p>
+  <form id="ci-form" class="ci">
+    <label><span class="eyebrow">Date</span><input type="date" id="ci-date" required></label>
+    <label><span class="eyebrow">Weight kg</span><input type="number" id="ci-kg" step="0.1" min="60" max="120" inputmode="decimal" placeholder="91.2"></label>
+    <label><span class="eyebrow">7-day resting HR</span><input type="number" id="ci-rhr" step="1" min="35" max="90" inputmode="numeric" placeholder="54"></label>
+    <label><span class="eyebrow">FTP W</span><input type="number" id="ci-ftp" step="1" min="150" max="450" inputmode="numeric"></label>
+    <button type="submit" class="back go-btn" id="ci-save">Save</button>
+  </form>
+  <span class="hint" id="ci-msg"></span>
+  <div class="tablewrap"><table class="narrow"><thead><tr><th>Date</th><th class="n">Weight</th><th class="n">W/kg</th><th class="n">Resting HR</th><th class="n">FTP</th></tr></thead><tbody id="ci-table"></tbody></table></div>
+</section>
 
 <section class="panel" id="s-alpe" style="border-left:4px solid var(--best)">
   <div class="row-head"><h2>The Alpe challenge</h2><span class="hint">Every ascent on Strava vs what today's legs would do</span></div>
@@ -207,37 +255,6 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     <li><span class="chip gd">Target</span><span><b>Alpe du Zwift: today's legs are about 20 s off your 2020 PB.</b> At 297 W and 91.2 kg the model gives 58:19 against 57:58. A new PB needs about 3.3 W/kg for the hour, for example 300 W at 91 kg or 297 W at 90 kg.</span></li>
     <li><span class="chip gd">Target</span><span><b>Alpe d'Huez: today's fitness is about 4 minutes faster than your 2022 best,</b> if you rode it fresh and paced it evenly. The 2022 times came on holiday, on consecutive mountain days, at 257 to 272 W.</span></li>
     <li><span class="chip lo">Trend</span><span>The July 2027 line assumes +1 W of FTP and −0.35 kg a month from here: about 306 W and 88 kg. That is slower than Block 1's pace, so it is a realistic line, not a best case. Drag the sliders to try your own.</span></li>
-  </ul>
-</section>
-
-<section id="s-tiles">
-  <div class="tiles">
-    <div class="tile"><span class="eyebrow">FTP</span><span class="big num">297<small>W</small></span><span class="delta up">+6 W on 6 Oct</span><span class="sub">Auto-set by Zwift from the race. 2020 data implies about 302 W then</span></div>
-    <div class="tile"><span class="eyebrow">Watts per kilo</span><span class="big num">3.26<small>W/kg</small></span><span class="delta down">−0.18 vs ~3.44 recalled 2022 peak</span><span class="sub">At 91.2 kg (14 st 5 lb, 7 Oct)</span></div>
-    <div class="tile"><span class="eyebrow">Best 20 min, 8 weeks</span><span class="big num">311<small>W</small></span><span class="delta up">98% of all-time 318 W (Sep 2020)</span><span class="sub">6 Oct race; 303 W in the 15 Oct group ride and the 24 Oct race</span></div>
-    <div class="tile"><span class="eyebrow">Riding volume, 8 weeks</span><span class="big num">2.1<small>h/wk</small></span><span class="delta up">3.2 h this week, 215 TSS</span><span class="sub">18 rides, 16.6 h since 31 Aug. Average 152 TSS a week</span></div>
-  </div>
-</section>
-
-<section id="s-week" class="panel" style="border-left:4px solid var(--now)">
-  <div class="row-head"><h2>This week · 19 to 25 Oct</h2><span class="hint">Weekly review (Sat 24 Oct) · Sunday check: nothing new recorded · Block 1, week 3</span></div>
-  <p><b>The best week of the block: 60 minutes of sweet spot with no heart-rate drift, then 2nd in Stage 3.</b> Foundation, 3x20min SST Low and the Stage 3 race: 3 rides, 3.2 h, 48.3 mi, <b>215 TSS</b> (just under the 220 to 280 build target, and the highest since August). Padel twice (Mon, Thu), legs on Saturday. 7-day resting HR 54, back on baseline.</p>
-  <h3>Wins this week</h3>
-  <ul class="clean">
-    <li><span class="chip gd">Durability</span><span><b>60 min of sweet spot at 265 W with 0.9% heart-rate drift</b> (21 Oct): blocks at 149, 151 and 148 bpm. The previous sweet spot session (14 Oct) drifted 5.5% over 40 min. The limiter is moving.</span></li>
-    <li><span class="chip gd">Matched</span><span><b>30 min 301 W</b> in the Stage 3 race equals the 8-week best (6 Oct win), with 15 min 309 and 20 min 303.</span></li>
-    <li><span class="chip gd">Race</span><span><b>Tour of Watopia Stage 3: 2nd.</b> In the four-rider break, 10 s behind a rider at about 69 kg. Final Mayan Mountainside 4:10 at 356 W, 12 s faster than the first ascent. 14 Strava segment PRs, gold on Itza KOM (314 W) and Mayan Mountainside.</span></li>
-    <li><span class="chip gd">Efficiency</span><span>1.77 W per beat over the 24 min Coastal Crown loop (300 W at 169 bpm), and 1.78 across the SST blocks: two more points at the top of the 2020 band.</span></li>
-    <li><span class="chip gd">Cadence</span><span>84 to 85 rpm through the SST blocks on a 10% virtual gradient (70 to 75 last week); 89 to 91 on every race climb.</span></li>
-    <li><span class="chip gd">Recovery</span><span>7-day resting HR 54, down from 58 and 55 over the previous two weeks while load went up.</span></li>
-  </ul>
-  <p class="hint">No new all-time bests this week.</p>
-  <ul class="clean">
-    <li><span class="chip md">Watch</span><span>Volume is still the limiter: 3.2 h this week, 2.1 h a week over 8 weeks. The block ends at the right time; Block 2 should add one more riding hour a week.</span></li>
-    <li><span class="chip lo">Window</span><span>The 8-week 60 minute best drops from 247 W to 237 W: the 27 Aug 2x20 has rolled out of the window. Not a loss of fitness; a full 60 minute effort is still missing from this block.</span></li>
-    <li><span class="chip lo">Context</span><span>The Stage 3 winner rode 3.6 W/kg at 249 W. Following his 0.7 mile attack would have needed about 560 to 600 W for 2 minutes. W/kg on climbs is where weight matters most.</span></li>
-    <li><span class="chip lo">Window</span><span>Next Sunday the 8-week window moves to 7 Sep: the 5 Sep Half Hour of Power (5 s 1,529 W, 15 s 1,162 W) drops out, so those two 8-week values will fall unless you sprint this week. Not a fitness change.</span></li>
-    <li><span class="chip lo">Next</span><span>Week 4 (26 Oct to 1 Nov) is the absorb week: 10/8/4min Threshold at 297 W to check heart-rate response, 60 min Z2, and an optional Stage 4 race or 45 min easy. Legs once, away from padel; upper body twice.</span></li>
   </ul>
 </section>
 
@@ -296,6 +313,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   </div>
   <div id="pmc" role="img" aria-label="Fitness, fatigue and form since July"></div>
   <div class="legend"><span><i class="sw" style="background:var(--best)"></i>Fitness</span><span><i class="sw" style="background:var(--now)"></i>Fatigue</span><span><i class="sw" style="background:var(--good)"></i>Form (fitness minus fatigue)</span><span><i class="sw" style="background:var(--c1)"></i>Ride load</span><span><i class="sw" style="background:var(--warn)"></i>Padel load</span></div>
+  <p class="hint">Coach notes from the 25 Oct review. The chart above is live; the weekly summary carries the current read.</p>
   <ul class="clean">
     <li><span class="chip md">Watch</span><span><b>Fitness fell from about 50 to 27 over the August break</b> and stayed flat at 26 to 28 through September: enough riding to hold, not to build.</span></li>
     <li><span class="chip gd">Good</span><span><b>Block 1 is building it:</b> 26.6 on 12 Oct to 33.5 on 25 Oct. The last 7 days added +2.5, just under the safe 3 to 5 a week. Ride-only fitness is 20.4 (18.4 on 30 Sep): most of October's rise is padel.</span></li>
@@ -310,6 +328,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   <div id="weeks" role="img" aria-label="Weekly training chart with padel sessions"></div>
   <div class="zkey" id="wkey"></div>
   <div class="stat" id="zstat"></div>
+  <p class="hint">Coach notes from the 25 Oct review. The chart above is live; the weekly summary carries the current read.</p>
   <ul class="clean">
     <li><span class="chip md">Watch</span><span><b>Sweet spot is rising, slowly.</b> In 8 weeks you spent 86 minutes at sweet spot and 111 at threshold, against 80 minutes above 357 W. This week alone added 20 minutes of sweet spot and 26 of threshold. The 45 to 60 minute gap is built here, so Block 1 keeps shifting time to it.</span></li>
     <li><span class="chip gd">Good</span><span><b>Easy really is easy by heart rate.</b> About 74% of tracked time sits in HR zone 1, padel included.</span></li>
@@ -345,7 +364,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
 </section>
 
 <section id="s-races" class="panel">
-  <div class="row-head"><h2>Race log</h2><span class="hint">Block 1 races</span></div>
+  <div class="row-head"><h2>Race log</h2><span class="hint">Block 1 races · curated in reviews</span></div>
   <div class="tablewrap"><table><thead><tr><th>Date</th><th>Race</th><th>Finish</th><th>Result</th><th>Deciding moment</th><th>Your power</th><th>Lesson</th></tr></thead><tbody id="racelog"></tbody></table></div>
   <ul class="clean">
     <li><span class="chip gd">Pattern</span><span><b>You win or podium when the finish is flat or a gentle drag and you are in the group.</b> You lose places when a lighter rider attacks on a steeper climb, which is a W/kg limit, not tactics.</span></li>
@@ -356,6 +375,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
 <section id="s-drift" class="panel">
   <div class="row-head"><h3>Durability: heart-rate drift on longer rides</h3><span class="hint">Tap a bar</span></div>
   <div id="drift" role="img" aria-label="Aerobic decoupling percentage for rides of 45 minutes or more"></div>
+  <p class="hint">Coach notes from the 25 Oct review. The chart above is live; the weekly summary carries the current read.</p>
   <ul class="clean">
     <li><span class="chip gd">Good</span><span>The long outdoor rides (2 h 10 to 2 h 25) drifted only 0.3 to 4.6%. Under 5% means your aerobic base holds at endurance pace for well over two hours.</span></li>
     <li><span class="chip md">Watch</span><span>At sweet spot and threshold the drift appears sooner: 4.5% on the 2×20, 7.4% in Sweet Spot Anchor (57 min) and 10.6% in SST (Short) on 14 Oct. That last figure includes the cool-down in the second half; the 40 minute work block alone drifted 5.5% as cadence fell to 70 to 75 rpm. This is the 45 to 60 minute gap again, seen through heart rate.</span></li>
@@ -376,7 +396,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     <h3>Weight and W/kg</h3>
     <div id="weight" role="img" aria-label="Body weight and watts per kilo over time"></div>
     <div class="tablewrap"><table class="narrow"><thead><tr><th>Weight</th><th class="n">W/kg at 297 W</th><th class="n">W/kg at 306 W</th></tr></thead><tbody id="wkgt"></tbody></table></div>
-    <p class="flag">Two points so far: the InBody scan (15 Apr) and your weigh-in (7 Oct). Monday weigh-ins sent in the Sunday review are added here.</p>
+    <p class="flag">InBody scan (15 Apr), weigh-in (7 Oct), then every weekly check-in you save.</p>
   </div>
 </section>
 
@@ -396,13 +416,13 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     <li><span class="chip md">Lever</span><span><b>Superior (54+) is reachable</b> at about 385 W for 5 minutes at 88 kg, or 370 W at 85 kg. You have held 385 W before. The 5 and 6 × 3 min at 350 W sessions in Block 1 are the direct VO2 work; weight is the second lever.</span></li>
     <li><span class="chip lo">Method</span><span>ACSM cycling equation: VO2 = 10.8 × watts ÷ kg + 7, using your best 5 minute power, which is close to power at VO2max. It is an estimate, not a lab test, and assumes a typical efficiency. The trend is more reliable than the absolute number.</span></li>
   </ul>
-  <div class="row-head"><h3>Resting heart rate, last 12 months</h3><span class="hint">Garmin weekly averages, read from your screenshot (±1 bpm)</span></div>
+  <div class="row-head"><h3>Resting heart rate, last 12 months</h3><span class="hint">Garmin averages from your screenshot, then weekly check-ins</span></div>
   <div id="rhr" role="img" aria-label="Resting heart rate by month"></div>
   <ul class="clean">
     <li><span class="chip gd">Good</span><span>Year average 54 bpm. Lowest (about 50) in February, during Tour de Zwift and the build to the March race win: fitness shows up here.</span></li>
     <li><span class="chip gd">Good</span><span>Week of 19 Oct averaged <b>54 bpm</b>, back on baseline (daily 49 to 56) despite the 60 min sweet spot session and a big padel game. Week of 12 Oct averaged <b>55 bpm</b>, down from 58. Daily readings: about 49 on Monday (fresh after six days off the bike), rising to about 60 by Thursday after the race, legs, SST and the race-pace group ride, then settling to 53 to 55 by the weekend. That is a normal load-and-recover pattern, so week 3 runs as planned.</span></li>
   </ul>
-  <p class="flag">Rule of thumb: a 7-day resting HR 5 bpm or more above your 54 baseline means ease off. Send the 7-day figure with your Monday weight.</p>
+  <p class="flag">Rule of thumb: a 7-day resting HR 5 bpm or more above your 54 baseline means ease off. Log the 7-day figure with your Monday weight in the check-in.</p>
 </section>
 
 <section id="s-hr" class="panel">
@@ -452,7 +472,6 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     <li><span class="chip md">Med</span><span>Set HR zones in Strava and Zwift to max 196 and threshold 174.</span></li>
     <li><span class="chip md">Med</span><span>Strength sessions on Strava (padel is already complete), so weekly load includes the gym. None logged in weeks 1 or 2.</span></li>
     <li><span class="chip lo">Low</span><span>A formal FTP test. 297 W comes from a race; a test is optional.</span></li>
-    <li><span class="chip md">Med</span><span>Weight: last weigh-in 91.2 kg on 7 Oct; none for 18 days, so the W/kg trend is unknown. Resting HR is up to date (54, week of 19 Oct).</span></li>
     
   </ul>
 </section>
@@ -510,7 +529,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   function go(h){location.hash=h;}
   function hit(g,h,label){g.setAttribute("class","hit");g.setAttribute("tabindex","0");g.setAttribute("role","link");g.setAttribute("aria-label",label);
     g.addEventListener("click",function(){go(h);});g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go(h);}});}
-  var KG=91.2, SL="https://www.strava.com/activities/";
+  var KG=91.2, FTP=297, SL="https://www.strava.com/activities/";
 
   // ---------- Ride library ----------
   var RIDES={
@@ -554,6 +573,8 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   ];
 
   // ---------- Radar ----------
+  function renderPower(){
+  document.getElementById("radar").innerHTML="";document.getElementById("ladder").innerHTML="";
   var S=420,C=S/2,R=140,svg=el("svg",{viewBox:"0 0 "+S+" "+S});
   [25,50,75,100].forEach(function(p){svg.appendChild(el("circle",{cx:C,cy:C,r:R*p/100,fill:"none",stroke:"var(--line)","stroke-width":1}));});
   [50,75].forEach(function(p){svg.appendChild(el("text",{x:C+4,y:C-R*p/100-3,"font-size":10},p+"%"));});
@@ -583,6 +604,8 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     r.innerHTML='<span class="d">'+d[0]+'</span><span class="bar"><i style="width:'+p+'%"></i><b>'+p+'%</b></span><span class="w">'+d[3]+' <em>/ '+d[2]+' W</em></span><span class="go">›</span>';
     L.appendChild(r);
   });
+  }
+  renderPower();
 
   // ---------- FTP history ----------
   var FP=[
@@ -663,9 +686,11 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   })();
 
   // ---------- Resting HR ----------
-  (function(){
-    var M=[["Oct",55],["Nov",57],["Dec",57],["Jan",53],["Feb",50],["Mar",51],["Apr",53],["May",54],["Jun",57],["Jul",55],["Aug",56],["Sep",54],["5/10",58],["12/10",55],["19/10",54]];
-    var W=560,H=170,pl=32,pr=10,pt=16,pb=28,y0=46,y1=62,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+  var RHRM=[["Oct",55],["Nov",57],["Dec",57],["Jan",53],["Feb",50],["Mar",51],["Apr",53],["May",54],["Jun",57],["Jul",55],["Aug",56],["Sep",54],["5/10",58],["12/10",55],["19/10",54]],RHRX=[];
+  function renderRHR(){
+    document.getElementById("rhr").innerHTML="";
+    var M=RHRM.concat(RHRX).slice(-16),ys=M.map(function(m){return m[1];});
+    var W=560,H=170,pl=32,pr=10,pt=16,pb=28,y0=Math.min(46,Math.min.apply(null,ys)-2),y1=Math.max(62,Math.max.apply(null,ys)+2),s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function X(i){return pl+i*(W-pl-pr)/(M.length-1);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
     [48,52,56,60].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
     s.appendChild(el("rect",{x:pl,y:Y(59),width:W-pl-pr,height:Y(54)-Y(59),fill:"var(--now-soft)",opacity:.25}));
@@ -678,7 +703,8 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       s.appendChild(el("text",{x:X(i),y:H-pb+16,"text-anchor":"middle","font-size":10},m[0]));
       if(last||m[1]==50){var l=el("text",{x:X(i)+(last?-8:0),y:Y(m[1])-8,"text-anchor":last?"end":"middle","font-size":10},m[1]+(last?" last week":""));l.style.fill="var(--ink)";s.appendChild(l);}});
     document.getElementById("rhr").appendChild(s);
-  })();
+  }
+  renderRHR();
 
   // ---------- History ----------
   var YR=[[2014, 64, 1502, 92.9, 74088, 0, 0, 64, 92.9, 100.4, ["194377215", "2014-09-14", "First century ride - Shakespeare 100!"], 0, 3, 1200, 73.6, 57, 34], [2015, 141, 2285, 145.1, 92253, 0, 0, 141, 145.1, 80.8, ["245945347", "2015-01-25", "The Cotswolds are hilly (with Rew)"], 0, 1, 1661, 104.5, 90, 39], [2016, 92, 1870, 120.5, 77825, 0, 0, 92, 120.5, 135.4, ["643023393", "2016-07-16", "M25!"], 0, 0, 1597, 103.1, 75, 30], [2017, 110, 1907, 121.6, 80759, 0, 0, 110, 121.6, 99.9, ["1200019468", "2017-09-24", "Velo Birmingham"], 0, 2, 1414, 89.1, 73, 35], [2018, 205, 3872, 245.7, 162613, 0, 0, 205, 245.7, 78.7, ["1655496153", "2018-06-22", "Magical Mystery Tour of the Cotswolds"], 0, 5, 3154, 199.9, 165, 47], [2019, 155, 3361, 212.5, 156301, 0, 0, 155, 212.5, 111.0, ["2272406223", "2019-04-07", "Sunday Funday"], 0, 1, 2699, 171.8, 115, 49], [2020, 178, 3127, 183.3, 143190, 76, 52.0, 102, 131.3, 63.1, ["3643664268", "2020-06-20", "Ride out to see Dan Everesting "], 0, 0, 2772, 164.7, 158, 45], [2021, 106, 2071, 123.4, 104908, 44, 35.7, 62, 87.7, 61.3, ["5691956294", "2021-07-26", "Magic Monday with Dan"], 0, 11, 1604, 96.3, 84, 46], [2022, 114, 3134, 200.6, 166247, 29, 24.9, 85, 175.7, 85.0, ["7003518718", "2022-04-18", "Back home via the Malverns"], 0, 3, 2688, 166.6, 96, 47], [2023, 95, 1997, 137.0, 86340, 31, 17.6, 64, 119.4, 56.8, ["9030193699", "2023-05-06", "Bikepacking the Warwickshire Ring - Part 1"], 0, 5, 1764, 123.6, 79, 46], [2024, 87, 1325, 88.2, 64634, 49, 29.7, 38, 58.5, 54.0, ["12340525024", "2024-09-06", "Morning Ride"], 0, 4, 1068, 74.9, 66, 42], [2025, 72, 1079, 61.3, 38633, 48, 26.5, 24, 34.8, 50.3, ["15056235975", "2025-07-09", "Morning Ride"], 0, 42, 753, 45.1, 48, 36], [2026, 80, 1415, 76.4, 59072, 57, 37.6, 23, 38.8, 50.2, ["19021311450", "2026-06-22", "Morning Ride"], 47, 33, 1372, 74.5, 77, 37]],MON={"2013": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5], "2014": [32, 25, 97, 144, 10, 262, 150, 227, 193, 163, 46, 153], "2015": [175, 113, 145, 158, 39, 295, 37, 325, 327, 329, 226, 114], "2016": [118, 71, 281, 145, 106, 210, 396, 167, 105, 118, 88, 67], "2017": [202, 166, 91, 101, 142, 56, 130, 158, 343, 232, 165, 121], "2018": [72, 366, 223, 339, 418, 598, 334, 500, 221, 255, 359, 189], "2019": [262, 137, 186, 393, 465, 271, 312, 227, 333, 480, 170, 124], "2020": [250, 201, 272, 57, 416, 457, 342, 280, 438, 362, 0, 52], "2021": [123, 186, 172, 0, 72, 199, 234, 248, 321, 178, 187, 149], "2022": [240, 210, 266, 370, 374, 465, 192, 308, 187, 219, 152, 152], "2023": [229, 163, 195, 135, 332, 267, 122, 191, 119, 72, 120, 53], "2024": [96, 85, 40, 150, 157, 148, 78, 82, 179, 159, 90, 62], "2025": [67, 45, 34, 57, 98, 172, 71, 23, 173, 94, 109, 137], "2026": [164, 110, 182, 127, 100, 163, 196, 120, 173, 81, 0, 0]},YC={"2020": {"5 sec": [1434, "4110038965", "2020-09-25"], "15 sec": [1172, "4110038965", "2020-09-25"], "30 sec": [819, "3584552311", "2020-06-08"], "1 min": [539, "4134256051", "2020-09-30"], "2 min": [417, "3584552311", "2020-06-08"], "3 min": [402, "3584552311", "2020-06-08"], "5 min": [362, "3584552311", "2020-06-08"], "10 min": [335, "3719027841", "2020-07-05"], "20 min": [318, "4134256051", "2020-09-30"], "30 min": [305, "4134256051", "2020-09-30"], "45 min": [296, "3719027841", "2020-07-05"], "1 hr": [289, "3760181003", "2020-07-14"]}, "2021": {"5 sec": [1200, "5028036831", "2021-03-28"], "15 sec": [911, "6179939042", "2021-10-28"], "30 sec": [745, "5560484863", "2021-07-01"], "1 min": [548, "5724956546", "2021-08-02"], "2 min": [452, "6021711349", "2021-09-26"], "3 min": [378, "5691956294", "2021-07-26"], "5 min": [347, "6127114216", "2021-10-17"], "10 min": [300, "4876968088", "2021-03-02"], "20 min": [293, "5932446729", "2021-09-09"], "30 min": [283, "4930970713", "2021-03-11"], "45 min": [272, "4769975329", "2021-02-11"], "1 hr": [243, "6240215494", "2021-11-10"]}, "2022": {"5 sec": [1200, "6554784553", "2022-01-20"], "15 sec": [909, "6644046094", "2022-02-07"], "30 sec": [795, "6644046094", "2022-02-07"], "1 min": [596, "7056785585", "2022-04-28"], "2 min": [490, "7056785585", "2022-04-28"], "3 min": [420, "7171229902", "2022-05-19"], "5 min": [385, "7132594857", "2022-05-12"], "10 min": [328, "7132594857", "2022-05-12"], "20 min": [303, "6562595236", "2022-01-22"], "30 min": [284, "7361817259", "2022-06-24"], "45 min": [276, "7361817259", "2022-06-24"], "1 hr": [270, "7361817259", "2022-06-24"]}, "2023": {"5 sec": [1492, "9704382569", "2023-08-23"], "15 sec": [1211, "9704382569", "2023-08-23"], "30 sec": [744, "9860459638", "2023-09-16"], "1 min": [525, "9490247499", "2023-07-20"], "2 min": [429, "9316376157", "2023-06-22"], "3 min": [374, "9490247499", "2023-07-20"], "5 min": [330, "9691289291", "2023-08-21"], "10 min": [293, "8692657050", "2023-03-10"], "20 min": [271, "9761370897", "2023-09-01"], "30 min": [265, "8718653270", "2023-03-15"], "45 min": [258, "8718653270", "2023-03-15"], "1 hr": [216, "9171654780", "2023-05-30"]}, "2024": {"5 sec": [1263, "12623680146", "2024-10-10"], "15 sec": [1149, "12623680146", "2024-10-10"], "30 sec": [935, "12623680146", "2024-10-10"], "1 min": [549, "12623680146", "2024-10-10"], "2 min": [453, "12453436841", "2024-09-19"], "3 min": [422, "12453436841", "2024-09-19"], "5 min": [339, "12453436841", "2024-09-19"], "10 min": [300, "10769410351", "2024-02-15"], "20 min": [292, "10723610083", "2024-02-08"], "30 min": [284, "10723610083", "2024-02-08"], "45 min": [283, "10723610083", "2024-02-08"], "1 hr": [259, "10769410351", "2024-02-15"]}, "2025": {"5 sec": [1074, "15809728938", "2025-09-14"], "15 sec": [782, "15809728938", "2025-09-14"], "30 sec": [647, "15809728938", "2025-09-14"], "1 min": [489, "16147822047", "2025-10-15"], "2 min": [388, "16147822047", "2025-10-15"], "3 min": [346, "14420411474", "2025-05-08"], "5 min": [319, "16826139219", "2025-12-24"], "10 min": [302, "14321699693", "2025-04-29"], "20 min": [290, "14321699693", "2025-04-29"], "30 min": [263, "16826139219", "2025-12-24"], "45 min": [253, "15856319960", "2025-09-18"], "1 hr": [208, "14763701603", "2025-06-11"]}, "2026": {"5 sec": [1529, "20042084240", "2026-09-05"], "15 sec": [1162, "20042084240", "2026-09-05"], "30 sec": [999, "18538425636", "2026-05-17"], "1 min": [604, "18538425636", "2026-05-17"], "2 min": [471, "17752033307", "2026-03-17"], "3 min": [419, "17752033307", "2026-03-17"], "5 min": [350, "20450456035", "2026-10-04"], "10 min": [325, "20479666897", "2026-10-06"], "20 min": [311, "20479666897", "2026-10-06"], "30 min": [301, "20479666897", "2026-10-06"], "45 min": [293, "17697152085", "2026-03-12"], "1 hr": [259, "17120266733", "2026-01-20"]}};
@@ -750,24 +776,26 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     ["21 Oct 2026","3x20min SST Low, three 20 min blocks",60,264.9,149.2,"20672678058","Sweet spot, not threshold: 265 W (89% of FTP) for 60 min. Blocks 1.78, 1.76 and 1.79 W per beat; work-block drift 0.9%, against 5.5% on 14 Oct."],
     ["24 Oct 2026","Tour of Watopia Stage 3 race (2nd), Coastal Crown loop",24,300,169.5,"20708266675","300 W for 24 min at 169 bpm in a race, then 356 W up the final Mayan Mountainside."]
   ];
-  (function(){
-    var W=560,H=240,pl=40,pr=16,pt=16,pb=34,y0=1.5,y1=1.95,x0=2020.3,x1=2026.95,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+  function renderEff(){
+    document.getElementById("eff").innerHTML="";
+    var W=560,H=240,pl=40,pr=16,pt=16,pb=34,y0=1.5,y1=1.95,x0=2020.3,x1=Math.max(2026.95,new Date().getFullYear()+(new Date().getMonth()+1.5)/12),s=el("svg",{viewBox:"0 0 "+W+" "+H});
     var MO={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
     function yr(d){var p=d.split(" ");return +p[2]+(MO[p[1]]+(+p[0])/31)/12;}
     function X(v){return pl+(v-x0)/(x1-x0)*(W-pl-pr);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
     [1.5,1.6,1.7,1.8,1.9].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v.toFixed(1)));});
-    [2021,2022,2023,2024,2025,2026].forEach(function(v){s.appendChild(el("text",{x:X(v),y:H-pb+16,"text-anchor":"middle","font-size":10},v));});
+    for(var yv0=2021;yv0<=Math.floor(x1);yv0++)s.appendChild(el("text",{x:X(yv0),y:H-pb+16,"text-anchor":"middle","font-size":10},yv0));
     s.appendChild(el("rect",{x:X(2020.4),y:Y(1.81),width:X(2020.8)-X(2020.4),height:Y(1.70)-Y(1.81),fill:"var(--best-soft)"}));
     s.appendChild(el("text",{x:X(2020.9),y:Y(1.83),"font-size":10},"2020 peak band"));
     EF.forEach(function(e,i){
-      var v=e[3]/e[4],last=i==EF.length-1,g=el("g",{});
+      var v=Math.max(y0,Math.min(y1,e[3]/e[4])),last=i==EF.length-1,g=el("g",{});
       g.appendChild(el("circle",{cx:X(yr(e[0])),cy:Y(v),r:14,fill:"transparent"}));
       g.appendChild(el("circle",{"class":"dot",cx:X(yr(e[0])),cy:Y(v),r:last?6:4.5,fill:last?"var(--now)":"var(--best)",stroke:"var(--surface)","stroke-width":1.5}));
       if(last||i==8||i==6)g.appendChild(el("text",{x:X(yr(e[0]))+(last?-8:8),y:Y(v)+(i==6?14:-8),"text-anchor":last?"end":"start","font-size":10,style:"fill:var(--ink)"},v.toFixed(2)));
       hit(g,"#h-"+i,e[1]+" "+e[0]);s.appendChild(g);
     });
     document.getElementById("eff").appendChild(s);
-  })();
+  }
+  renderEff();
 
   // ---------- Weeks ----------
   var WK=[["2026-08-31",[["20002866642","Zwift: Resilience Ride","VirtualRide","2026-09-02",9.7,28,177,12],["20042084240","Zwift: Half Hour of Power","VirtualRide","2026-09-05",13.0,36,108,35],["20061476964","Zwift: Resilience Ride","VirtualRide","2026-09-06",9.6,28,249,26]]],["2026-09-07",[["20090063077","Morning Hike","Hike","2026-09-08",5.5,94,223,12],["20100312674","Morning Ride","Ride","2026-09-09",37.0,131,1841,74],["20127434726","Morning Ride","Ride","2026-09-11",15.4,49,486,78]]],["2026-09-14",[["20182138802","Zwift: Sweet Spot Anchor","VirtualRide","2026-09-15",13.9,57,1663,66],["20196883491","Morning Ride","Ride","2026-09-16",21.5,78,623,22],["20216494693","Zwift: Elevate and Escalate","VirtualRide","2026-09-17",12.6,35,341,28],["20236722993","Morning Padel","Padel","2026-09-19",0,83,0,27]]],["2026-09-21",[["20279566174","Morning Ride","Ride","2026-09-22",40.0,145,1408,90],["20293370210","Morning Hike","Hike","2026-09-23",4.8,83,299,12],["20332487102","Morning Padel","Padel","2026-09-26",0,86,0,14]]],["2026-09-28",[["20405080870","Zwift: Lactate Shuttle Short","VirtualRide","2026-10-01",11.6,31,95,48],["20450456035","Zwift: Alpha","VirtualRide","2026-10-04",11.1,38,1040,27]]],["2026-10-05",[["20479666897","Zwift Race: Tour of Watopia Stage 1 (1st)","VirtualRide","2026-10-06",15.0,36,594,117],["20498977530","Morning Padel","Padel","2026-10-08",0,95,0,12],["20523550272","Morning Padel","Padel","2026-10-10",0,84,0,12]]],["2026-10-12",[["20559048199","Zwift Race: Tour of Watopia Stage 2 (5th)","VirtualRide","2026-10-12",12.7,34,909,76],["20579546415","Zwift: SST (Short)","VirtualRide","2026-10-14",17.6,51,705,129],["20591969082","Morning Padel","Padel","2026-10-15",0,89,0,31],["20598720337","Zwift Group Ride: Tour of Watopia Stage 2 (race pace)","VirtualRide","2026-10-15",12.4,29,194,88],["20612039423","Evening Padel","Padel","2026-10-16",0,81,0,22],["20612273424","Evening Padel (second recording)","Padel","2026-10-16",0,27,0,6],["20617641035","Morning Padel","Padel","2026-10-17",0,121,0,23]]],["2026-10-19",[["20651760840","Evening Padel","Padel","2026-10-19",0,93,0,16],["20658874430","Zwift: Foundation","VirtualRide","2026-10-20",15.9,49,623,15],["20672678058","Zwift: 3x20min SST Low","VirtualRide","2026-10-21",17.5,103,3934,101],["20687001786","Morning Padel","Padel","2026-10-22",0,88,0,23],["20708266675","Zwift Race: Tour of Watopia Stage 3 (2nd)","VirtualRide","2026-10-24",14.9,40,899,115]]]];
@@ -783,6 +811,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   function drawWeeks(){
     var box=document.getElementById("weeks");box.innerHTML="";
     var zone=metric=="hz"||metric=="pz",max={h:5,tss:300,hz:450,pz:300}[metric],step={h:1,tss:50,hz:75,pz:50}[metric];
+    WK.forEach(function(w){var m=wsum(w),z=wz(w),v=metric=="h"?m.h:metric=="tss"?z.tss:(metric=="hz"?z.hz:z.pz).reduce(function(a,b){return a+b;},0);while(v>max)max+=step;});
     var W=560,H=210,pl=36,pr=8,pt=22,pb=42,s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function Y(v){return pt+(max-Math.min(v,max))/max*(H-pt-pb);}
     for(var v=0;v<=max;v+=step){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},metric=="h"?v+"h":(zone?v+"m":v)));}
@@ -798,7 +827,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       hit(g,"#w-"+i,"Week of "+fd(w[0])+" detail");s.appendChild(g);
     });
     var t=el("text",{x:W-pr,y:12,"text-anchor":"end","font-size":10},"● padel session");t.style.fill="var(--warn)";s.appendChild(t);
-    var cap={h:"Riding hours",tss:"Training Stress Score (rides, FTP 297)",hz:"Minutes in HR zone, rides and padel",pz:"Minutes in power zone, rides"}[metric];
+    var cap={h:"Riding hours",tss:"Training Stress Score (rides, FTP "+FTP+")",hz:"Minutes in HR zone, rides and padel",pz:"Minutes in power zone, rides"}[metric];
     s.appendChild(el("text",{x:pl,y:12,"font-size":10},cap));
     box.appendChild(s);
     var key=document.getElementById("wkey"),st=document.getElementById("zstat");key.innerHTML="";st.innerHTML="";
@@ -811,8 +840,9 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
 
   // ---------- Drift ----------
   var NAME={};WK.forEach(function(w){w[1].forEach(function(a){NAME[a[0]]=a[1];});});
-  (function(){
-    var L=Object.keys(ACT).map(function(k){return ACT[k];}).filter(function(a){return a.dc;}).sort(function(a,b){return a.date<b.date?-1:1;});
+  function renderDrift(){
+    document.getElementById("drift").innerHTML="";
+    var L=Object.keys(ACT).map(function(k){return ACT[k];}).filter(function(a){return a.dc&&a.min>=45;}).sort(function(a,b){return a.date<b.date?-1:1;}).slice(-14);
     var W=560,H=220,pl=36,pr=8,pt=18,pb=46,y0=-4,y1=16,s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
     [-4,0,4,8,12,16].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v+"%"));});
@@ -827,14 +857,20 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       g.appendChild(el("text",{x:x+bw*.3,y:H-pb+29,"text-anchor":"middle","font-size":9.5},(a.type=="Zwift"?"Zwift ":"Out ")+a.min+"m"));
       hit(g,"#a-"+a.id,"Ride "+fd(a.date)+" detail");s.appendChild(g);});
     document.getElementById("drift").appendChild(s);
-  })();
+  }
+  renderDrift();
 
   // ---------- Padel ----------
-  var PM=[];["2026-02","2026-03","2026-04","2026-05","2026-06","2026-07","2026-08","2026-09","2026-10"].forEach(function(k){PM.push([k,PH.filter(function(x){return x[1].slice(0,7)==k;})]);});
-  (function(){
-    var W=420,H=200,pl=30,pr=8,pt=16,pb=30,max=12,s=el("svg",{viewBox:"0 0 "+W+" "+H});
+  var PM=[];
+  function buildPM(){PM.length=0;var last=PH.reduce(function(m,x){return x[1].slice(0,7)>m?x[1].slice(0,7):m;},"2026-10"),y=2026,mo=2;
+    while(true){var k=y+"-"+("0"+mo).slice(-2);PM.push([k,PH.filter(function(x){return x[1].slice(0,7)==k;})]);if(k>=last)break;mo++;if(mo>12){mo=1;y++;}}
+    if(PM.length>12)PM.splice(0,PM.length-12);}
+  buildPM();
+  function renderPadel(){
+    document.getElementById("padel").innerHTML="";
+    var W=420,H=200,pl=30,pr=8,pt=16,pb=30,max=Math.max(12,Math.ceil(Math.max.apply(null,PM.map(function(m){return m[1].length;}))/4)*4),s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function Y(v){return pt+(max-v)/max*(H-pt-pb);}
-    [0,4,8,12].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
+    [0,max/3,max*2/3,max].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
     var bw=(W-pl-pr)/PM.length;
     PM.forEach(function(m,i){var n=m[1].length,x=pl+i*bw+bw*.2,g=el("g",{});
       g.appendChild(el("rect",{x:pl+i*bw,y:pt,width:bw,height:H-pt-pb+20,fill:"transparent"}));
@@ -843,34 +879,42 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       g.appendChild(el("text",{x:x+bw*.3,y:H-pb+15,"text-anchor":"middle","font-size":10},MN[+m[0].slice(5)-1]));
       hit(g,"#p-"+i,"Padel "+m[0]);s.appendChild(g);});
     document.getElementById("padel").appendChild(s);
-  })();
+  }
+  renderPadel();
 
   // ---------- Weight ----------
   var WT=[["2026-04-15",95.8,291,"InBody scan"],["2026-10-07",91.2,297,"Weigh-in, 14 st 5 lb"]];
-  (function(){
-    var W=420,H=190,pl=36,pr=40,pt=20,pb=30,y0=86,y1=98,t0=new Date("2026-04-01").getTime(),t1=new Date("2026-12-31").getTime(),s=el("svg",{viewBox:"0 0 "+W+" "+H});
+  function renderWeight(){
+    document.getElementById("weight").innerHTML="";
+    var lastT=new Date(WT[WT.length-1][0]).getTime(),kgs=WT.map(function(w){return w[1];});
+    var W=420,H=190,pl=36,pr=40,pt=20,pb=30,y0=Math.min(86,Math.floor(Math.min.apply(null,kgs)/2)*2-2),y1=Math.max(98,Math.ceil(Math.max.apply(null,kgs)/2)*2+2),t0=new Date("2026-04-01").getTime(),t1=Math.max(new Date("2026-12-31").getTime(),lastT+30*864e5),s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function X(d){return pl+(new Date(d).getTime()-t0)/(t1-t0)*(W-pl-pr);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
-    [86,90,94,98].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
-    ["2026-04-01","2026-06-01","2026-08-01","2026-10-01","2026-12-01"].forEach(function(d){s.appendChild(el("text",{x:X(d),y:H-pb+16,"text-anchor":"middle","font-size":10},MN[+d.slice(5,7)-1]));});
+    for(var gv=y0;gv<=y1;gv+=4){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(gv),y2:Y(gv),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(gv)+4,"text-anchor":"end"},gv));}
+    for(var md=new Date(t0);md.getTime()<=t1;md.setMonth(md.getMonth()+2)){var di=md.toISOString().slice(0,10);s.appendChild(el("text",{x:X(di),y:H-pb+16,"text-anchor":"middle","font-size":10},MN[md.getMonth()]));}
     var d="";WT.forEach(function(w,i){d+=(i?"L":"M")+X(w[0])+" "+Y(w[1]);});
     s.appendChild(el("path",{d:d,fill:"none",stroke:"var(--best)","stroke-width":2}));
     WT.forEach(function(w,i){var last=i==WT.length-1;s.appendChild(el("circle",{cx:X(w[0]),cy:Y(w[1]),r:last?5.5:4.5,fill:last?"var(--now)":"var(--best)"}));
-      var tx=el("text",{x:X(w[0]),y:last?Y(w[1])+18:Y(w[1])-10,"text-anchor":last?"middle":"start","font-size":10.5},w[1]+" kg · "+(w[2]/w[1]).toFixed(2)+" W/kg");tx.style.fill="var(--ink)";s.appendChild(tx);});
+      if(!last&&i>1)return;var tx=el("text",{x:X(w[0]),y:last?Y(w[1])+18:Y(w[1])-10,"text-anchor":last?"middle":"start","font-size":10.5},w[1]+" kg · "+(w[2]/w[1]).toFixed(2)+" W/kg");tx.style.fill="var(--ink)";s.appendChild(tx);});
     s.appendChild(el("text",{x:pl,y:12,"font-size":10},"kg · W/kg uses the FTP at the time"));
     document.getElementById("weight").appendChild(s);
-    document.getElementById("wkgt").innerHTML=[91.2,89,87,85].map(function(k){return '<tr><td>'+k+' kg'+(k==91.2?' (now)':'')+'</td><td class="n">'+(297/k).toFixed(2)+'</td><td class="n">'+(306/k).toFixed(2)+'</td></tr>';}).join("");
-  })();
+    var ks=[KG].concat([89,87,85].filter(function(k){return k<KG-0.5;}));
+    document.querySelector("#wkgt").closest("table").querySelector("thead").innerHTML='<tr><th>Weight</th><th class="n">W/kg at '+FTP+' W</th><th class="n">W/kg at '+(FTP+10)+' W</th></tr>';
+    document.getElementById("wkgt").innerHTML=ks.map(function(k){return '<tr><td>'+k+' kg'+(k==KG?' (now)':'')+'</td><td class="n">'+(FTP/k).toFixed(2)+'</td><td class="n">'+((FTP+10)/k).toFixed(2)+'</td></tr>';}).join("");
+  }
+  renderWeight();
 
 
   // ---------- Fitness, fatigue, form ----------
-  var PMC=[["2026-07-01", 0, 105, 45.8, 48.3, 5.5, 18.8], ["2026-07-02", 142, 49, 49.2, 68.6, -2.5, 21.7], ["2026-07-03", 0, 0, 48.1, 58.8, -19.4, 21.2], ["2026-07-04", 0, 0, 46.9, 50.4, -10.8, 20.7], ["2026-07-05", 65, 0, 47.4, 52.6, -3.5, 21.8], ["2026-07-06", 0, 78, 48.1, 56.2, -5.2, 21.3], ["2026-07-07", 156, 0, 50.7, 70.6, -8.2, 24.5], ["2026-07-08", 21, 0, 50.0, 63.5, -19.9, 24.4], ["2026-07-09", 92, 0, 51.0, 67.6, -13.5, 26.0], ["2026-07-10", 0, 80, 51.7, 69.4, -16.6, 25.4], ["2026-07-11", 0, 0, 50.4, 59.5, -17.7, 24.8], ["2026-07-12", 0, 88, 51.3, 63.6, -9.0, 24.2], ["2026-07-13", 0, 0, 50.1, 54.5, -12.2, 23.6], ["2026-07-14", 0, 0, 48.9, 46.7, -4.4, 23.1], ["2026-07-15", 0, 0, 47.8, 40.0, 2.2, 22.5], ["2026-07-16", 76, 48, 49.6, 52.0, 7.7, 23.8], ["2026-07-17", 0, 67, 50.0, 54.1, -2.5, 23.2], ["2026-07-18", 0, 0, 48.8, 46.4, -4.1, 22.7], ["2026-07-19", 0, 0, 47.6, 39.8, 2.4, 22.1], ["2026-07-20", 58, 0, 47.9, 42.4, 7.9, 23.0], ["2026-07-21", 0, 0, 46.7, 36.3, 5.5, 22.4], ["2026-07-22", 0, 0, 45.6, 31.1, 10.4, 21.9], ["2026-07-23", 178, 0, 48.8, 52.1, 14.5, 25.6], ["2026-07-24", 0, 59, 49.0, 53.1, -3.3, 25.0], ["2026-07-25", 0, 95, 50.1, 59.1, -4.1, 24.4], ["2026-07-26", 0, 0, 48.9, 50.6, -9.0, 23.8], ["2026-07-27", 0, 0, 47.7, 43.4, -1.7, 23.2], ["2026-07-28", 0, 0, 46.6, 37.2, 4.3, 22.7], ["2026-07-29", 0, 0, 45.5, 31.9, 9.4, 22.2], ["2026-07-30", 0, 0, 44.4, 27.3, 13.6, 21.6], ["2026-07-31", 0, 0, 43.4, 23.4, 17.1, 21.1], ["2026-08-01", 0, 0, 42.3, 20.1, 19.9, 20.6], ["2026-08-02", 0, 0, 41.3, 17.2, 22.2, 20.1], ["2026-08-03", 0, 0, 40.3, 14.8, 24.1, 19.6], ["2026-08-04", 0, 0, 39.4, 12.6, 25.6, 19.2], ["2026-08-05", 0, 0, 38.4, 10.8, 26.7, 18.7], ["2026-08-06", 0, 0, 37.5, 9.3, 27.6, 18.3], ["2026-08-07", 0, 0, 36.6, 8.0, 28.2, 17.8], ["2026-08-08", 0, 0, 35.8, 6.8, 28.7, 17.4], ["2026-08-09", 0, 0, 34.9, 5.9, 28.9, 17.0], ["2026-08-10", 0, 0, 34.1, 5.0, 29.1, 16.6], ["2026-08-11", 0, 0, 33.3, 4.3, 29.1, 16.2], ["2026-08-12", 0, 0, 32.5, 3.7, 29.0, 15.8], ["2026-08-13", 0, 0, 31.7, 3.2, 28.8, 15.4], ["2026-08-14", 0, 0, 30.9, 2.7, 28.5, 15.1], ["2026-08-15", 0, 0, 30.2, 2.3, 28.2, 14.7], ["2026-08-16", 0, 0, 29.5, 2.0, 27.9, 14.4], ["2026-08-17", 0, 0, 28.8, 1.7, 27.5, 14.0], ["2026-08-18", 0, 0, 28.1, 1.5, 27.1, 13.7], ["2026-08-19", 0, 0, 27.4, 1.3, 26.6, 13.4], ["2026-08-20", 0, 66, 28.3, 10.5, 26.2, 13.0], ["2026-08-21", 0, 0, 27.7, 9.0, 17.9, 12.7], ["2026-08-22", 0, 0, 27.0, 7.7, 18.7, 12.4], ["2026-08-23", 0, 0, 26.4, 6.6, 19.3, 12.1], ["2026-08-24", 157, 0, 29.5, 28.1, 19.8, 15.6], ["2026-08-25", 0, 0, 28.8, 24.1, 1.4, 15.2], ["2026-08-26", 0, 46, 29.2, 27.2, 4.7, 14.8], ["2026-08-27", 94, 0, 30.7, 36.7, 2.0, 16.7], ["2026-08-28", 0, 0, 30.0, 31.5, -6.0, 16.3], ["2026-08-29", 40, 0, 30.2, 32.7, -1.5, 16.9], ["2026-08-30", 0, 0, 29.5, 28.0, -2.5, 16.5], ["2026-08-31", 0, 0, 28.8, 24.0, 1.5, 16.1], ["2026-09-01", 0, 0, 28.1, 20.6, 4.8, 15.7], ["2026-09-02", 25, 0, 28.0, 21.2, 7.5, 15.9], ["2026-09-03", 0, 0, 27.4, 18.2, 6.8, 15.6], ["2026-09-04", 0, 0, 26.7, 15.6, 9.2, 15.2], ["2026-09-05", 54, 0, 27.4, 21.1, 11.1, 16.1], ["2026-09-06", 28, 0, 27.4, 22.1, 6.3, 16.4], ["2026-09-07", 0, 0, 26.7, 18.9, 5.3, 16.0], ["2026-09-08", 0, 0, 26.1, 16.2, 7.8, 15.6], ["2026-09-09", 155, 0, 29.2, 36.0, 9.9, 18.9], ["2026-09-10", 0, 0, 28.5, 30.9, -6.9, 18.5], ["2026-09-11", 74, 0, 29.6, 37.0, -2.4, 19.8], ["2026-09-12", 0, 0, 28.9, 31.8, -7.5, 19.3], ["2026-09-13", 0, 0, 28.2, 27.2, -2.9, 18.9], ["2026-09-14", 0, 0, 27.5, 23.3, 1.0, 18.4], ["2026-09-15", 60, 0, 28.3, 28.6, 4.2, 19.4], ["2026-09-16", 74, 0, 29.4, 35.1, -0.3, 20.7], ["2026-09-17", 34, 0, 29.5, 34.9, -5.7, 21.0], ["2026-09-18", 0, 0, 28.8, 29.9, -5.4, 20.5], ["2026-09-19", 0, 68, 29.7, 35.4, -1.2, 20.0], ["2026-09-20", 0, 0, 29.0, 30.4, -5.7, 19.6], ["2026-09-21", 0, 0, 28.3, 26.0, -1.4, 19.1], ["2026-09-22", 154, 0, 31.3, 44.3, 2.3, 22.3], ["2026-09-23", 0, 0, 30.6, 38.0, -13.0, 21.8], ["2026-09-24", 0, 0, 29.8, 32.6, -7.4, 21.3], ["2026-09-25", 0, 0, 29.1, 27.9, -2.7, 20.8], ["2026-09-26", 0, 47, 29.6, 30.7, 1.2, 20.3], ["2026-09-27", 0, 0, 28.9, 26.3, -1.1, 19.8], ["2026-09-28", 0, 0, 28.2, 22.6, 2.5, 19.3], ["2026-09-29", 0, 0, 27.5, 19.3, 5.6, 18.9], ["2026-09-30", 0, 0, 26.8, 16.6, 8.2, 18.4], ["2026-10-01", 42, 0, 27.2, 20.2, 10.3, 19.0], ["2026-10-02", 0, 0, 26.6, 17.3, 7.0, 18.5], ["2026-10-03", 0, 0, 25.9, 14.8, 9.2, 18.1], ["2026-10-04", 47, 0, 26.4, 19.4, 11.1, 18.8], ["2026-10-05", 0, 0, 25.8, 16.7, 7.0, 18.3], ["2026-10-06", 69, 0, 26.8, 24.1, 9.1, 19.5], ["2026-10-07", 0, 0, 26.2, 20.7, 2.7, 19.1], ["2026-10-08", 0, 41, 26.5, 23.5, 5.5, 18.6], ["2026-10-09", 0, 0, 25.9, 20.2, 3.0, 18.2], ["2026-10-10", 0, 44, 26.3, 23.5, 5.7, 17.7], ["2026-10-11", 0, 0, 25.7, 20.2, 2.8, 17.3], ["2026-10-12", 63, 0, 26.6, 26.3, 5.5, 18.4], ["2026-10-13", 0, 0, 26.0, 22.5, 0.3, 18.0], ["2026-10-14", 67, 0, 26.9, 28.9, 3.4, 19.1], ["2026-10-15", 54, 75, 29.4, 43.2, -2.0, 20.0], ["2026-10-16", 0, 83, 30.6, 48.9, -13.8, 19.5], ["2026-10-17", 0, 77, 31.7, 52.9, -18.2, 19.0], ["2026-10-18", 0, 0, 31.0, 45.4, -21.2, 18.6], ["2026-10-19", 0, 54, 31.5, 46.6, -14.4, 18.1], ["2026-10-20", 35, 0, 31.6, 44.9, -15.0, 18.5], ["2026-10-21", 109, 0, 33.5, 54.1, -13.3, 20.7], ["2026-10-22", 0, 66, 34.2, 55.7, -20.6, 20.2], ["2026-10-23", 0, 0, 33.4, 47.8, -21.5, 19.7], ["2026-10-24", 71, 0, 34.3, 51.1, -14.4, 20.9], ["2026-10-25", 0, 0, 33.5, 43.8, -16.8, 20.4]];
-  (function(){
+  var PMCA=[["2026-07-01", 0, 105, 45.8, 48.3, 5.5, 18.8], ["2026-07-02", 142, 49, 49.2, 68.6, -2.5, 21.7], ["2026-07-03", 0, 0, 48.1, 58.8, -19.4, 21.2], ["2026-07-04", 0, 0, 46.9, 50.4, -10.8, 20.7], ["2026-07-05", 65, 0, 47.4, 52.6, -3.5, 21.8], ["2026-07-06", 0, 78, 48.1, 56.2, -5.2, 21.3], ["2026-07-07", 156, 0, 50.7, 70.6, -8.2, 24.5], ["2026-07-08", 21, 0, 50.0, 63.5, -19.9, 24.4], ["2026-07-09", 92, 0, 51.0, 67.6, -13.5, 26.0], ["2026-07-10", 0, 80, 51.7, 69.4, -16.6, 25.4], ["2026-07-11", 0, 0, 50.4, 59.5, -17.7, 24.8], ["2026-07-12", 0, 88, 51.3, 63.6, -9.0, 24.2], ["2026-07-13", 0, 0, 50.1, 54.5, -12.2, 23.6], ["2026-07-14", 0, 0, 48.9, 46.7, -4.4, 23.1], ["2026-07-15", 0, 0, 47.8, 40.0, 2.2, 22.5], ["2026-07-16", 76, 48, 49.6, 52.0, 7.7, 23.8], ["2026-07-17", 0, 67, 50.0, 54.1, -2.5, 23.2], ["2026-07-18", 0, 0, 48.8, 46.4, -4.1, 22.7], ["2026-07-19", 0, 0, 47.6, 39.8, 2.4, 22.1], ["2026-07-20", 58, 0, 47.9, 42.4, 7.9, 23.0], ["2026-07-21", 0, 0, 46.7, 36.3, 5.5, 22.4], ["2026-07-22", 0, 0, 45.6, 31.1, 10.4, 21.9], ["2026-07-23", 178, 0, 48.8, 52.1, 14.5, 25.6], ["2026-07-24", 0, 59, 49.0, 53.1, -3.3, 25.0], ["2026-07-25", 0, 95, 50.1, 59.1, -4.1, 24.4], ["2026-07-26", 0, 0, 48.9, 50.6, -9.0, 23.8], ["2026-07-27", 0, 0, 47.7, 43.4, -1.7, 23.2], ["2026-07-28", 0, 0, 46.6, 37.2, 4.3, 22.7], ["2026-07-29", 0, 0, 45.5, 31.9, 9.4, 22.2], ["2026-07-30", 0, 0, 44.4, 27.3, 13.6, 21.6], ["2026-07-31", 0, 0, 43.4, 23.4, 17.1, 21.1], ["2026-08-01", 0, 0, 42.3, 20.1, 19.9, 20.6], ["2026-08-02", 0, 0, 41.3, 17.2, 22.2, 20.1], ["2026-08-03", 0, 0, 40.3, 14.8, 24.1, 19.6], ["2026-08-04", 0, 0, 39.4, 12.6, 25.6, 19.2], ["2026-08-05", 0, 0, 38.4, 10.8, 26.7, 18.7], ["2026-08-06", 0, 0, 37.5, 9.3, 27.6, 18.3], ["2026-08-07", 0, 0, 36.6, 8.0, 28.2, 17.8], ["2026-08-08", 0, 0, 35.8, 6.8, 28.7, 17.4], ["2026-08-09", 0, 0, 34.9, 5.9, 28.9, 17.0], ["2026-08-10", 0, 0, 34.1, 5.0, 29.1, 16.6], ["2026-08-11", 0, 0, 33.3, 4.3, 29.1, 16.2], ["2026-08-12", 0, 0, 32.5, 3.7, 29.0, 15.8], ["2026-08-13", 0, 0, 31.7, 3.2, 28.8, 15.4], ["2026-08-14", 0, 0, 30.9, 2.7, 28.5, 15.1], ["2026-08-15", 0, 0, 30.2, 2.3, 28.2, 14.7], ["2026-08-16", 0, 0, 29.5, 2.0, 27.9, 14.4], ["2026-08-17", 0, 0, 28.8, 1.7, 27.5, 14.0], ["2026-08-18", 0, 0, 28.1, 1.5, 27.1, 13.7], ["2026-08-19", 0, 0, 27.4, 1.3, 26.6, 13.4], ["2026-08-20", 0, 66, 28.3, 10.5, 26.2, 13.0], ["2026-08-21", 0, 0, 27.7, 9.0, 17.9, 12.7], ["2026-08-22", 0, 0, 27.0, 7.7, 18.7, 12.4], ["2026-08-23", 0, 0, 26.4, 6.6, 19.3, 12.1], ["2026-08-24", 157, 0, 29.5, 28.1, 19.8, 15.6], ["2026-08-25", 0, 0, 28.8, 24.1, 1.4, 15.2], ["2026-08-26", 0, 46, 29.2, 27.2, 4.7, 14.8], ["2026-08-27", 94, 0, 30.7, 36.7, 2.0, 16.7], ["2026-08-28", 0, 0, 30.0, 31.5, -6.0, 16.3], ["2026-08-29", 40, 0, 30.2, 32.7, -1.5, 16.9], ["2026-08-30", 0, 0, 29.5, 28.0, -2.5, 16.5], ["2026-08-31", 0, 0, 28.8, 24.0, 1.5, 16.1], ["2026-09-01", 0, 0, 28.1, 20.6, 4.8, 15.7], ["2026-09-02", 25, 0, 28.0, 21.2, 7.5, 15.9], ["2026-09-03", 0, 0, 27.4, 18.2, 6.8, 15.6], ["2026-09-04", 0, 0, 26.7, 15.6, 9.2, 15.2], ["2026-09-05", 54, 0, 27.4, 21.1, 11.1, 16.1], ["2026-09-06", 28, 0, 27.4, 22.1, 6.3, 16.4], ["2026-09-07", 0, 0, 26.7, 18.9, 5.3, 16.0], ["2026-09-08", 0, 0, 26.1, 16.2, 7.8, 15.6], ["2026-09-09", 155, 0, 29.2, 36.0, 9.9, 18.9], ["2026-09-10", 0, 0, 28.5, 30.9, -6.9, 18.5], ["2026-09-11", 74, 0, 29.6, 37.0, -2.4, 19.8], ["2026-09-12", 0, 0, 28.9, 31.8, -7.5, 19.3], ["2026-09-13", 0, 0, 28.2, 27.2, -2.9, 18.9], ["2026-09-14", 0, 0, 27.5, 23.3, 1.0, 18.4], ["2026-09-15", 60, 0, 28.3, 28.6, 4.2, 19.4], ["2026-09-16", 74, 0, 29.4, 35.1, -0.3, 20.7], ["2026-09-17", 34, 0, 29.5, 34.9, -5.7, 21.0], ["2026-09-18", 0, 0, 28.8, 29.9, -5.4, 20.5], ["2026-09-19", 0, 68, 29.7, 35.4, -1.2, 20.0], ["2026-09-20", 0, 0, 29.0, 30.4, -5.7, 19.6], ["2026-09-21", 0, 0, 28.3, 26.0, -1.4, 19.1], ["2026-09-22", 154, 0, 31.3, 44.3, 2.3, 22.3], ["2026-09-23", 0, 0, 30.6, 38.0, -13.0, 21.8], ["2026-09-24", 0, 0, 29.8, 32.6, -7.4, 21.3], ["2026-09-25", 0, 0, 29.1, 27.9, -2.7, 20.8], ["2026-09-26", 0, 47, 29.6, 30.7, 1.2, 20.3], ["2026-09-27", 0, 0, 28.9, 26.3, -1.1, 19.8], ["2026-09-28", 0, 0, 28.2, 22.6, 2.5, 19.3], ["2026-09-29", 0, 0, 27.5, 19.3, 5.6, 18.9], ["2026-09-30", 0, 0, 26.8, 16.6, 8.2, 18.4], ["2026-10-01", 42, 0, 27.2, 20.2, 10.3, 19.0], ["2026-10-02", 0, 0, 26.6, 17.3, 7.0, 18.5], ["2026-10-03", 0, 0, 25.9, 14.8, 9.2, 18.1], ["2026-10-04", 47, 0, 26.4, 19.4, 11.1, 18.8], ["2026-10-05", 0, 0, 25.8, 16.7, 7.0, 18.3], ["2026-10-06", 69, 0, 26.8, 24.1, 9.1, 19.5], ["2026-10-07", 0, 0, 26.2, 20.7, 2.7, 19.1], ["2026-10-08", 0, 41, 26.5, 23.5, 5.5, 18.6], ["2026-10-09", 0, 0, 25.9, 20.2, 3.0, 18.2], ["2026-10-10", 0, 44, 26.3, 23.5, 5.7, 17.7], ["2026-10-11", 0, 0, 25.7, 20.2, 2.8, 17.3], ["2026-10-12", 63, 0, 26.6, 26.3, 5.5, 18.4], ["2026-10-13", 0, 0, 26.0, 22.5, 0.3, 18.0], ["2026-10-14", 67, 0, 26.9, 28.9, 3.4, 19.1], ["2026-10-15", 54, 75, 29.4, 43.2, -2.0, 20.0], ["2026-10-16", 0, 83, 30.6, 48.9, -13.8, 19.5], ["2026-10-17", 0, 77, 31.7, 52.9, -18.2, 19.0], ["2026-10-18", 0, 0, 31.0, 45.4, -21.2, 18.6], ["2026-10-19", 0, 54, 31.5, 46.6, -14.4, 18.1], ["2026-10-20", 35, 0, 31.6, 44.9, -15.0, 18.5], ["2026-10-21", 109, 0, 33.5, 54.1, -13.3, 20.7], ["2026-10-22", 0, 66, 34.2, 55.7, -20.6, 20.2], ["2026-10-23", 0, 0, 33.4, 47.8, -21.5, 19.7], ["2026-10-24", 71, 0, 34.3, 51.1, -14.4, 20.9], ["2026-10-25", 0, 0, 33.5, 43.8, -16.8, 20.4]];
+  function renderPMC(){
+    document.getElementById("pmc").innerHTML="";
+    var PMC=PMCA.slice(-120);
     var last=PMC[PMC.length-1],wk=PMC[PMC.length-8];
     document.getElementById("pmc-ctl").textContent=last[3].toFixed(0);
     document.getElementById("pmc-atl").textContent=last[4].toFixed(0);
     document.getElementById("pmc-tsb").textContent=(last[5]>0?"+":"")+last[5].toFixed(0);
     var r=last[3]-wk[3];document.getElementById("pmc-ramp").textContent=(r>=0?"+":"")+r.toFixed(1)+" in the last 7 days";
-    document.getElementById("pmc-tsb-note").textContent=last[5]<-10?"Tired: building. Absorb week next":last[5]<5?"Neutral":"Fresh: good to race";
+    document.getElementById("pmc-tsb-note").textContent=last[5]<-10?"Tired: building":last[5]<5?"Neutral":"Fresh: good to race";
     var W=560,H=240,pl=34,pr=10,pt=14,pb=28,y0=-30,y1=70,s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function X(i){return pl+i*(W-pl-pr)/(PMC.length-1);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
     [-20,0,20,40,60].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:v==0?"var(--muted)":"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
@@ -883,33 +927,38 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       if(p[0].slice(8)=="01")s.appendChild(el("text",{x:X(i),y:H-pb+16,"text-anchor":"start","font-size":10},MN[+p[0].slice(5,7)-1]));});
     [[3,"var(--best)"],[4,"var(--now)"]].forEach(function(c){var d="";PMC.forEach(function(p,i){d+=(i?"L":"M")+X(i)+" "+Y(p[c[0]]);});s.appendChild(el("path",{d:d,fill:"none",stroke:c[1],"stroke-width":2.2}));});
     var t=el("text",{x:W-pr,y:Y(last[3])-6,"text-anchor":"end","font-size":10.5},"Fitness "+last[3].toFixed(0));t.style.fill="var(--best)";s.appendChild(t);
-    var gi=PMC.findIndex(function(p){return p[0]=="2026-08-10";});var g=el("text",{x:X(gi),y:Y(60),"text-anchor":"middle","font-size":10},"August break");g.style.fill="var(--muted)";s.appendChild(g);
-    var bi=PMC.findIndex(function(p){return p[0]=="2026-10-06";});s.appendChild(el("line",{x1:X(bi),x2:X(bi),y1:pt,y2:Y(-30),stroke:"var(--muted)","stroke-dasharray":"3 3"}));
-    var b=el("text",{x:X(bi)+4,y:pt+10,"font-size":10},"Block 1");b.style.fill="var(--muted)";s.appendChild(b);
+    var gi=PMC.findIndex(function(p){return p[0]=="2026-08-10";});if(gi>=0){var g=el("text",{x:X(gi),y:Y(60),"text-anchor":"middle","font-size":10},"August break");g.style.fill="var(--muted)";s.appendChild(g);}
+    var bi=PMC.findIndex(function(p){return p[0]=="2026-10-06";});if(bi>=0){s.appendChild(el("line",{x1:X(bi),x2:X(bi),y1:pt,y2:Y(-30),stroke:"var(--muted)","stroke-dasharray":"3 3"}));
+    var b=el("text",{x:X(bi)+4,y:pt+10,"font-size":10},"Block 1");b.style.fill="var(--muted)";s.appendChild(b);}
     document.getElementById("pmc").appendChild(s);
-  })();
+  }
+  renderPMC();
 
   // ---------- Fixed-power HR ----------
   var HR265=[["2026-09-06","Resilience Ride",151.4,8,"20061476964"],["2026-09-15","Sweet Spot Anchor",157.4,22,"20182138802"],["2026-09-17","Elevate and Escalate",152.1,5,"20216494693"],["2026-10-14","SST (Short), alternating 264/285 W",166.4,20,"20579546415"],["2026-10-21","3x20min SST Low",149.8,58,"20672678058"]];
   var HR215=[["2026-10-20","Zwift: Foundation (indoor)",126.7,23,"20658874430"],["2026-08-24","Outdoor ride",141.1,16,"19876670308"],["2026-09-09","Outdoor ride",131.2,14,"20100312674"],["2026-09-16","Outdoor ride (easy)",115.5,7,"20196883491"],["2026-09-22","Outdoor ride",133.4,11,"20279566174"]];
-  (function(){
-    var W=420,H=190,pl=34,pr=14,pt=16,pb=30,y0=140,y1=172,t0=new Date("2026-09-01").getTime(),t1=new Date("2026-11-15").getTime(),s=el("svg",{viewBox:"0 0 "+W+" "+H});
+  function renderFixed(){
+    document.getElementById("hr265").innerHTML="";
+    var dts=HR265.map(function(h){return new Date(h[0]).getTime();});
+    var W=420,H=190,pl=34,pr=14,pt=16,pb=30,y0=140,y1=172,t0=Math.min.apply(null,dts)-10*864e5,t1=Math.max.apply(null,dts)+21*864e5,s=el("svg",{viewBox:"0 0 "+W+" "+H});
     function X(d){return pl+(new Date(d).getTime()-t0)/(t1-t0)*(W-pl-pr);} function Y(v){return pt+(y1-v)/(y1-y0)*(H-pt-pb);}
     [145,155,165].forEach(function(v){s.appendChild(el("line",{x1:pl,x2:W-pr,y1:Y(v),y2:Y(v),stroke:"var(--line)"}));s.appendChild(el("text",{x:pl-6,y:Y(v)+4,"text-anchor":"end"},v));});
-    ["2026-09-01","2026-10-01","2026-11-01"].forEach(function(d){s.appendChild(el("text",{x:X(d),y:H-pb+16,"text-anchor":"middle","font-size":10},MN[+d.slice(5,7)-1]));});
+    for(var md=new Date(t0);md.getTime()<=t1;md.setMonth(md.getMonth()+1)){md.setDate(1);if(md.getTime()<t0)continue;var di=md.toISOString().slice(0,10);s.appendChild(el("text",{x:X(di),y:H-pb+16,"text-anchor":"middle","font-size":10},MN[md.getMonth()]));}
     s.appendChild(el("text",{x:pl,y:10,"font-size":10},"Avg HR at 265 W (bpm)"));
-    HR265.forEach(function(h,i){var last=i==HR265.length-1,g=el("g",{}),infl=h[0]=="2026-10-14";
+    HR265.sort(function(a,b){return a[0]<b[0]?-1:1;});HR265.forEach(function(h,i){var last=i==HR265.length-1,g=el("g",{}),infl=h[0]=="2026-10-14";
       g.appendChild(el("circle",{cx:X(h[0]),cy:Y(h[2]),r:14,fill:"transparent"}));
       g.appendChild(el("circle",{"class":"dot",cx:X(h[0]),cy:Y(h[2]),r:last?6:4.5,fill:infl?"var(--surface)":last?"var(--now)":"var(--best)",stroke:last?"var(--now)":"var(--best)","stroke-width":1.5}));
       var t=el("text",{x:X(h[0])+(last?-8:7),y:Y(h[2])+(last?4:-6),"text-anchor":last?"end":"start","font-size":10},Math.round(h[2]));t.style.fill="var(--ink)";g.appendChild(t);
       hit(g,"#a-"+h[4],h[1]+" "+h[0]);s.appendChild(g);});
     document.getElementById("hr265").appendChild(s);
-    document.getElementById("hr215t").innerHTML=HR215.map(function(h){return '<tr><td><a href="'+(ACT[h[4]]?'#a-'+h[4]:SL+h[4])+'">'+fd(h[0])+'</a> · '+esc(h[1])+'</td><td class="n">'+h[2]+'</td><td class="n">'+h[3]+'</td></tr>';}).join("");
-  })();
+    document.getElementById("hr215t").innerHTML=HR215.slice().sort(function(a,b){return a[0]<b[0]?1:-1;}).slice(0,8).map(function(h){return '<tr><td><a href="'+(ACT[h[4]]?'#a-'+h[4]:SL+h[4])+'">'+fd(h[0])+'</a> · '+esc(h[1])+'</td><td class="n">'+(+h[2]).toFixed(1)+'</td><td class="n">'+h[3]+'</td></tr>';}).join("");
+  }
+  renderFixed();
 
   // ---------- Fatigue resistance ----------
   var FR=[["19876670308", "2026-08-24", "Outdoor, 2 h 21", 1716, 245, 275], ["20100312674", "2026-09-09", "Outdoor, 2 h 12", 1626, 261, 290], ["20279566174", "2026-09-22", "Outdoor, 2 h 26", 1611, 236, 326], ["20672678058", "2026-10-21", "3x20min SST Low (workout-capped)", 1331, 265, 266]];
-  document.getElementById("frt").innerHTML=FR.map(function(f){return '<tr><td><a href="#a-'+f[0]+'">'+fd(f[1])+'</a> · '+f[2]+'</td><td class="n">'+f[3].toLocaleString("en-GB")+'</td><td class="n">'+f[4]+' W</td><td class="n">'+Math.round(f[4]/f[5]*100)+'%</td></tr>';}).join("");
+  function renderFR(){FR.sort(function(a,b){return a[1]<b[1]?1:-1;});document.getElementById("frt").innerHTML=FR.slice(0,6).map(function(f){return '<tr><td><a href="#a-'+f[0]+'">'+fd(f[1])+'</a> · '+f[2]+'</td><td class="n">'+f[3].toLocaleString("en-GB")+'</td><td class="n">'+f[4]+' W</td><td class="n">'+Math.round(f[4]/f[5]*100)+'%</td></tr>';}).join("");}
+  renderFR();
 
   // ---------- Race log ----------
   var RL=[
@@ -922,10 +971,11 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   document.getElementById("racelog").innerHTML=RL.slice().reverse().map(function(r){return '<tr><td class="mono" style="white-space:nowrap">'+r[0]+'</td><td><a class="ext" href="'+SL+r[7]+'" target="_blank" rel="noopener">'+r[1]+' ↗</a></td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td><td class="mono" style="font-size:12.5px">'+r[5]+'</td><td>'+r[6]+'</td></tr>';}).join("");
 
   // ---------- Power zones ----------
-  var F=297,Z=[["Z1 Recovery",0,.55],["Z2 Endurance",.56,.75],["Z3 Tempo",.76,.87],["Sweet spot",.88,.93],["Z4 Threshold",.94,1.05],["Z5 VO2",1.06,1.2],["Z6 Anaerobic",1.21,1.5]];
-  var zc=document.getElementById("zones");
+  function renderZones(){var F=FTP,Z=[["Z1 Recovery",0,.55],["Z2 Endurance",.56,.75],["Z3 Tempo",.76,.87],["Sweet spot",.88,.93],["Z4 Threshold",.94,1.05],["Z5 VO2",1.06,1.2],["Z6 Anaerobic",1.21,1.5]];
+  var zc=document.getElementById("zones");zc.innerHTML="";
   Z.forEach(function(z){var d=document.createElement("div");d.className="zone";d.style.borderLeftColor="var(--best)";
-    d.innerHTML='<div class="n">'+z[0]+'</div><div class="r">'+(z[1]?Math.round(F*z[1]):0)+'–'+Math.round(F*z[2])+' W</div>';zc.appendChild(d);});
+    d.innerHTML='<div class="n">'+z[0]+'</div><div class="r">'+(z[1]?Math.round(F*z[1]):0)+'–'+Math.round(F*z[2])+' W</div>';zc.appendChild(d);});}
+  renderZones();
 
   // ---------- Detail views ----------
   var main=document.getElementById("main"),det=document.getElementById("detail");
@@ -973,13 +1023,13 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     var e=EF[i],v=e[3]/e[4],h=nav("h-",i,EF.length);
     h+='<header><span class="eyebrow">Heart-rate efficiency · '+e[0]+'</span><h1>'+v.toFixed(2)+' W per beat</h1></header>';
     h+='<div class="tiles"><div class="tile"><span class="eyebrow">Power</span><span class="big num">'+e[3]+'<small>W</small></span></div><div class="tile"><span class="eyebrow">Avg HR</span><span class="big num">'+Math.round(e[4])+'<small>bpm</small></span><span class="sub">'+Math.round(e[4]/174*100)+'% of threshold HR</span></div><div class="tile"><span class="eyebrow">Duration</span><span class="big num">'+e[2]+'<small>min</small></span></div></div>';
-    h+='<section class="panel"><h3>'+esc(e[1])+'</h3><p>'+esc(e[6])+'</p>'+(e[5]?'<a class="ext" href="'+SL+e[5]+'" target="_blank" rel="noopener">Open in Strava ↗</a>':'')+'<p class="flag">Today’s reference: 15 Oct 2026, 1.78 W per beat (matched by the 21 Oct SST Low). Higher means more power for the same heart rate.</p></section>';
+    h+='<section class="panel"><h3>'+esc(e[1])+'</h3><p>'+esc(e[6])+'</p>'+(e[5]?'<a class="ext" href="'+SL+e[5]+'" target="_blank" rel="noopener">Open in Strava ↗</a>':'')+'<p class="flag">Reference: 15 Oct 2026, 1.78 W per beat (matched by the 21 Oct SST Low). Higher means more power for the same heart rate.</p></section>';
     return h;
   }
   function act(id){
     var a=ACT[id],h='<div class="nav"><a class="back" href="#">‹ Dashboard</a><span style="display:flex;gap:8px"><a class="back" href="javascript:history.back()">‹ Back</a></span></div>';
     h+='<header><span class="eyebrow">'+(a.type=="Zwift"?"Zwift ride":a.type)+' · '+fd(a.date,true)+'</span><h1>'+esc(NAME[id]||"Session")+'</h1></header>';
-    h+='<div class="tiles"><div class="tile"><span class="eyebrow">Duration</span><span class="big num">'+a.min+'<small>min</small></span></div><div class="tile"><span class="eyebrow">Avg / max HR</span><span class="big num">'+(a.ahr?Math.round(a.ahr):"–")+'<small>/ '+(a.mhr||"–")+'</small></span></div>'+(a.np?'<div class="tile"><span class="eyebrow">Normalised power</span><span class="big num">'+a.np+'<small>W</small></span><span class="sub">'+Math.round(a.np/297*100)+'% of FTP</span></div><div class="tile"><span class="eyebrow">TSS</span><span class="big num">'+a.tss+'</span></div>':'')+'</div>';
+    h+='<div class="tiles"><div class="tile"><span class="eyebrow">Duration</span><span class="big num">'+a.min+'<small>min</small></span></div><div class="tile"><span class="eyebrow">Avg / max HR</span><span class="big num">'+(a.ahr?Math.round(a.ahr):"–")+'<small>/ '+(a.mhr||"–")+'</small></span></div>'+(a.np?'<div class="tile"><span class="eyebrow">Normalised power</span><span class="big num">'+a.np+'<small>W</small></span><span class="sub">'+Math.round(a.np/FTP*100)+'% of FTP</span></div><div class="tile"><span class="eyebrow">TSS</span><span class="big num">'+a.tss+'</span></div>':'')+'</div>';
     h+='<section class="panel"><h3>Time in zone</h3><div class="zrow"><span class="l">HR zones</span>'+stackHTML(a.hz)+'</div>'+(a.pz?'<div class="zrow"><span class="l">Power zones</span>'+stackHTML(a.pz)+'</div>':'')+'<div class="tablewrap"><table class="narrow"><thead><tr><th>Zone</th><th class="n">HR min</th>'+(a.pz?'<th>Power zone</th><th class="n">Min</th>':'')+'</tr></thead><tbody>'+HZN.map(function(n,k){return '<tr><td><i class="sw" style="background:var(--c'+(k+1)+')"></i> '+n+'</td><td class="n">'+a.hz[k]+'</td>'+(a.pz?'<td>'+PZN[k]+'</td><td class="n">'+a.pz[k]+'</td>':'')+'</tr>';}).join("")+'</tbody></table></div></section>';
     if(a.dc)h+='<section class="panel"><h3>Heart-rate drift · '+a.dc.pct.toFixed(1)+'%</h3><div class="tablewrap"><table class="narrow"><thead><tr><th>Half</th><th class="n">Avg W</th><th class="n">Avg HR</th><th class="n">W per beat</th></tr></thead><tbody><tr><td>First</td><td class="n">'+Math.round(a.dc.w1)+'</td><td class="n">'+Math.round(a.dc.hr1)+'</td><td class="n">'+(a.dc.w1/a.dc.hr1).toFixed(2)+'</td></tr><tr><td>Second</td><td class="n">'+Math.round(a.dc.w2)+'</td><td class="n">'+Math.round(a.dc.hr2)+'</td><td class="n">'+(a.dc.w2/a.dc.hr2).toFixed(2)+'</td></tr></tbody></table></div><p class="hint">First 10 minutes dropped. Under 5% is good.</p></section>';
     if(!a.ahr||a.hz.reduce(function(x,y){return x+y;},0)<a.min*.5)h+='<p class="flag">Heart rate is missing or dropped out for most of this session, so HR zones are incomplete.</p>';
@@ -1005,12 +1055,14 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
   }
 
   // ---------- Alpe challenge ----------
+  var alpeNow=function(){};
   (function(){
     var AZ=[["2020-05-19","3478899007",3987,244,175,"Tour for All Stage 4 (race)"],["2020-05-23","3500532667",4266,229,142,"SST (Med) workout"],["2020-06-06","3572613676",4066,242,142,"SST (Long) workout"],["2020-06-29","3689724533",3478,280,160,"AdZ 57:57, full effort"],["2020-10-05","4153135040",3751,267,150,"Monday Morning Alpe"],["2022-01-20","6554784553",3762,264,154,"Watopia"],["2024-01-23","10614476085",4095,250,162,"Alpe du Zwift"],["2024-02-15","10769410351",3833,261,168,"Meetup on Road to Sky"],["2026-02-02","17265059632",4144,244,142,"Tour de Zwift Stage 5 (group ride)"]];
     var AH=[["2022-06-23","7355662927",4646,257,151,"Day 1: A summery Alpe d'Huez"],["2022-06-24","7361817259",4419,272,172,"Day 2, after Col d'Ornon"]];
     var EX=[["2021-01-23","4666446779","Alpe d'Huez (Wattbike sim)","Wattbike official crono course, 8.4 mi (not plotted)",3316,null,null],["2022-06-25","7366952157","Alpe d'Huez","Day 3 via Croix de Fer, Glandon and the balcony road; summit reached, not the 21 bends (not plotted)",null,null,null]];
     var ZI=[[2,90],[2.5,75],[3,62],[3.5,55],[4,49],[4.5,44],[5,40],[5.5,37],[6,35],[6.5,32]],K=1.058;
     var PRE={now:[297,91.2],tr:[306,88]};
+    alpeNow=function(f,kg){var m=Math.max(0,(new Date("2027-07-01")-new Date())/(30.44*864e5));PRE.now=[f,kg];PRE.tr=[Math.round(f+m),Math.round((kg-0.35*m)*10)/10];preset("now");};
     function tz(w){if(w<=2)return 90*2/w;for(var i=1;i<ZI.length;i++)if(w<=ZI[i][0]){var a=ZI[i-1],b=ZI[i];return a[1]+(b[1]-a[1])*(w-a[0])/(b[0]-a[0]);}return 32;}
     function pAt(f,t){return f*Math.pow(t/60,-0.07);}
     function zw(f,kg){var t=60;for(var i=0;i<20;i++)t=tz(pAt(f,t)/kg);return t;}
@@ -1026,7 +1078,7 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       for(var m=Math.ceil(y0/5)*5;m<=y1;m+=5){svg.appendChild(el("line",{x1:L,x2:W-Rr,y1:Y(m),y2:Y(m),stroke:"var(--line)"}));svg.appendChild(el("text",{x:L-6,y:Y(m)+4,"text-anchor":"end"},(m<60?m:Math.floor(m/60)+":"+("0"+m%60).slice(-2))));}
       [2020,2022,2024,2026].forEach(function(yr){svg.appendChild(el("text",{x:X(+new Date(yr+"-01-01")),y:H-6,"text-anchor":"middle"},yr));});
       svg.appendChild(el("text",{x:X(+new Date("2027-07-01")),y:H-6,"text-anchor":"middle",style:"fill:var(--good)"},"Jul 27"));
-      var xn=X(+new Date("2026-10-24")),xt=X(+new Date("2027-07-01"));
+      var xn=X(Date.now()),xt=X(+new Date("2027-07-01"));
       svg.appendChild(el("line",{x1:L,x2:W-Rr,y1:Y(pb),y2:Y(pb),stroke:"var(--best)","stroke-dasharray":"2 3"}));
       svg.appendChild(el("text",{x:L+4,y:Y(pb)-4,style:"fill:var(--best)"},"PB "+fm(pb)));
       svg.appendChild(el("line",{x1:L,x2:W-Rr,y1:Y(now),y2:Y(now),stroke:"var(--now)","stroke-width":1.5,"stroke-dasharray":"6 4"}));
@@ -1046,10 +1098,10 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
       var zn=zw(PRE.now[0],PRE.now[1]),hn=ah(PRE.now[0],PRE.now[1]),zt=zw(f,kg),ht=ah(f,kg),isNow=(f==PRE.now[0]&&Math.abs(kg-PRE.now[1])<.05);
       var zr=zw.apply(null,PRE.tr),hr=ah.apply(null,PRE.tr);
       var zs=isNow?zr:zt,hs=isNow?hr:ht;
-      document.getElementById("az-now").textContent=fm(zn);document.getElementById("az-now-d").textContent="297 W, 91.2 kg · "+(zn<57.97?"new PB":"+"+fm(zn-57.967).replace(/^0:/,"")+" s vs PB").replace(/s s/,"s");
-      document.getElementById("ah-now").textContent=fm(hn);document.getElementById("ah-now-d").textContent="297 W, 91.2 kg · "+fm(73.65-hn)+" faster than PB";
-      document.getElementById("az-tr").textContent=fm(zs);document.getElementById("az-tr-d").textContent=(isNow?"306 W, 88 kg":f+" W, "+kg.toFixed(1)+" kg")+" · "+(zs<57.97?fm(57.967-zs)+" under PB":"+"+fm(zs-57.967)+" vs PB");
-      document.getElementById("ah-tr").textContent=fm(hs);document.getElementById("ah-tr-d").textContent=(isNow?"306 W, 88 kg":f+" W, "+kg.toFixed(1)+" kg")+" · "+fm(73.65-hs)+" faster than PB";
+      document.getElementById("az-now").textContent=fm(zn);document.getElementById("az-now-d").textContent=PRE.now[0]+" W, "+PRE.now[1]+" kg · "+(zn<57.97?"new PB":"+"+fm(zn-57.967).replace(/^0:/,"")+" s vs PB").replace(/s s/,"s");
+      document.getElementById("ah-now").textContent=fm(hn);document.getElementById("ah-now-d").textContent=PRE.now[0]+" W, "+PRE.now[1]+" kg · "+fm(73.65-hn)+" faster than PB";
+      document.getElementById("az-tr").textContent=fm(zs);document.getElementById("az-tr-d").textContent=(isNow?PRE.tr[0]+" W, "+PRE.tr[1]+" kg":f+" W, "+kg.toFixed(1)+" kg")+" · "+(zs<57.97?fm(57.967-zs)+" under PB":"+"+fm(zs-57.967)+" vs PB");
+      document.getElementById("ah-tr").textContent=fm(hs);document.getElementById("ah-tr-d").textContent=(isNow?PRE.tr[0]+" W, "+PRE.tr[1]+" kg":f+" W, "+kg.toFixed(1)+" kg")+" · "+fm(73.65-hs)+" faster than PB";
       var lab=isNow?"July 2027 trend":"Your settings";document.querySelectorAll("#s-alpe .alpe-nums>div:nth-child(3) .eyebrow").forEach(function(e){e.textContent=lab;});
       document.getElementById("al-what").textContent=(f/kg).toFixed(2)+" W/kg at FTP";
       chart("az-chart",AZ,zn,zs,57.967);chart("ah-chart",AH,hn,hs,73.65);
@@ -1064,6 +1116,371 @@ ul.tl li>b:first-child{font-family:var(--f-mono);font-size:13px;color:var(--now)
     var at=document.getElementById("alpe-t");if(at)at.innerHTML=rows.map(function(r){var dt=new Date(r[0]).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});var pb=best[r[2]]===r[4];
       return '<tr><td style="white-space:nowrap">'+dt+'</td><td>'+esc(r[2])+(pb?' <span class="chip gd">PB</span>':'')+'</td><td><a href="'+SL+r[1]+'" target="_blank" rel="noopener">'+esc(r[3])+'</a></td><td class="n">'+(r[4]?fm(r[4]/60):'–')+'</td><td class="n">'+(r[5]?r[5]+' W':'–')+'</td><td class="n">'+(r[6]||'–')+'</td></tr>';}).join("");
   })();
+  // ---------- Live: Strava sync, check-ins and coach ----------
+  // Embedded data above is the 25 Oct baseline. When the viewer runs, recent activities
+  // come from Strava, derived metrics are cached in the page database (acts/<id>),
+  // check-ins live in logs/<date>, coach answers in weeks/<monday> and meta/today.
+  var CUTOFF="2026-10-25",PROC_V=1,STRAVA="Strava";
+  var HZB=[141,156,163,173,178,185],PZF=[.55,.75,.87,.93,1.05,1.2];
+  var DUR=[["5s",5],["15s",15],["30s",30],["1m",60],["2m",120],["3m",180],["5m",300],["10m",600],["15m",900],["20m",1200],["30m",1800],["45m",2700],["60m",3600]];
+  var D0={};D.forEach(function(d){D0[d[0]]=[d[3],d[5],d[7]];});
+  var LV={db:null,mcp:null,sample:null,acts:{},logs:[],weeks:{},today:null,list:[],ok:false,ftp0:297};
+  var PLAN="Block 1 (6 Oct to 1 Nov): mostly Zwift, 45 to 60 min weekday sessions, one 75 to 105 min weekend ride, padel 2 to 3 times a week. W4 (26 Oct to 1 Nov) is the absorb week: Thu 10/8/4min Threshold at FTP to check HR response (vs 174 bpm on 6 Oct), Sat ToW Stage 4 race or Foundation if legs are heavy, optional Wed Z2 at 200 to 215 W, padel Mon PM and Wed AM, upper body Wed and Fri, rest Sun. Block 2 starts early November: add one riding hour a week, keep sweet spot and threshold work, optional FTP test at the start. Longer outdoor endurance rides build from February for the July 2027 mountains.";
+  var RULES="Padel counts as a hard day: never a quality ride the morning after padel. Strength twice a week after a quality ride or on an easy day, never the day before a quality ride. Build weeks target 220 to 280 TSS. Race on form +5 to +15, build at -10 to -30. 7-day resting HR 5+ bpm above the 54 baseline means ease off. Threshold HR 174, max HR 196.";
+  var GOALS="James, late 30s, about 91 kg, UK. Goal: the July 2027 mountains (Alpe d'Huez PB 1:13:39 in 2022; Alpe du Zwift PB 57:58 in 2020). Main limiters: riding volume (about 2 h a week) and the 45 to 60 min end of the power curve. All-time 10 to 60 min bests are from summer 2020. Zwift races in Tour of Watopia; wins on flat or drag finishes, loses places to lighter riders on steeper climbs.";
+  var STYLE="Write in UK English as a direct, expert cycling coach. Use the numbers. No dashes as punctuation: use commas. Write 'history' in lower case. No emojis. Short sentences. You may wrap the key phrase of a sentence in **double asterisks** for bold.";
+
+  function iso(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+  function addD(s,n){var d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return iso(d);}
+  function monday(s){var d=new Date(s+"T12:00:00");d.setDate(d.getDate()-(d.getDay()+6)%7);return iso(d);}
+  function fdy(s){var d=new Date(s+"T12:00:00");return d.getDate()+" "+MN[d.getMonth()]+" "+d.getFullYear();}
+  function today(){return iso(new Date());}
+  function rich(t){return esc(String(t||"").replace(/\s[–—]\s/g,", ").replace(/[–—]/g,", ")).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");}
+  function setStatus(t){document.getElementById("live-status").textContent=t;}
+
+  // ---- stream maths ----
+  function perSecond(st){
+    var t=st.time||[],n=t.length?t[t.length-1]+1:0,w=st.watts,h=st.heart_rate,W=w?new Float64Array(n):null,H=h?new Float64Array(n):null;
+    for(var i=0;i<t.length;i++){var a=t[i],b=i+1<t.length?t[i+1]:a+1;if(b-a>30)b=a+1;
+      for(var k=a;k<b&&k<n;k++){if(W)W[k]=w[i]||0;if(H)H[k]=h[i]||0;}}
+    return {W:W,H:H,n:n};
+  }
+  function prefix(a){var p=new Float64Array(a.length+1);for(var i=0;i<a.length;i++)p[i+1]=p[i]+a[i];return p;}
+  function bestWin(p,lo,hi,win){var bv=-1,bi=-1;for(var i=lo+win;i<=hi;i++){var v=p[i]-p[i-win];if(v>bv){bv=v;bi=i;}}return bi<0?null:{w:bv/win,end:bi};}
+  function hrAvg(H,a,b){var s=0,c=0;for(var i=a;i<b;i++)if(H[i]>40){s+=H[i];c++;}return c?{hr:s/c,n:c}:null;}
+  function analyse(st,ftp){
+    var o={},S=perSecond(st),n=S.n,W=S.W,H=S.H;o.secs=n;
+    if(H){var hs=hrAvg(H,0,n);o.ahr=hs?Math.round(hs.hr*10)/10:null;o.mhr=0;for(var i=0;i<n;i++)if(H[i]>o.mhr)o.mhr=H[i];
+      o.hz=[0,0,0,0,0,0,0];for(i=0;i<n;i++)if(H[i]>40){var z=0;while(z<6&&H[i]>=HZB[z])z++;o.hz[z]++;}o.hz=o.hz.map(function(v){return Math.round(v/60);});}
+    if(!W||!n)return o;
+    var p=prefix(W),s4=0,c=0;
+    for(i=30;i<=n;i++){var v=(p[i]-p[i-30])/30;s4+=v*v*v*v;c++;}
+    o.np=c?Math.round(Math.pow(s4/c,.25)):0;o.aw=Math.round(p[n]/n);o.kj=Math.round(p[n]/1000);
+    o.tss=Math.round(n*o.np*(o.np/ftp)/(ftp*3600)*100);
+    o.pz=[0,0,0,0,0,0,0];for(i=0;i<n;i++){z=0;while(z<6&&W[i]>ftp*PZF[z])z++;o.pz[z]++;}o.pz=o.pz.map(function(v){return Math.round(v/60);});
+    o.best={};DUR.forEach(function(d){var b=bestWin(p,0,n,d[1]);if(b)o.best[d[0]]=Math.round(b.w);});
+    if(H){
+      // HR at fixed power: 30 s power within 10 W of target, after 10 min, at least 5 min qualifying
+      [265,215].forEach(function(tg){var s=0,q=0;for(var i=Math.max(600,30);i<n;i++){var v=(p[i]-p[i-30])/30;if(Math.abs(v-tg)<=10&&H[i]>40){s+=H[i];q++;}}
+        if(q>=300)o["hr"+tg]=[Math.round(s/q*10)/10,Math.round(q/60)];});
+      // drift: drop first 10 min, compare watts per beat of the two halves
+      if(n>=2700){var m=Math.floor((600+n)/2),h1=hrAvg(H,600,m),h2=hrAvg(H,m,n);
+        if(h1&&h2){var w1=(p[m]-p[600])/(m-600),w2=(p[n]-p[m])/(n-m),e1=w1/h1.hr,e2=w2/h2.hr;
+          if(w1>100&&w2>100)o.dc={pct:Math.round((e1-e2)/e1*1000)/10,w1:Math.round(w1*10)/10,hr1:Math.round(h1.hr*10)/10,w2:Math.round(w2*10)/10,hr2:Math.round(h2.hr*10)/10};}}
+      // fatigue resistance: best 5 min after 1,000 kJ vs before it
+      if(p[n]>1e6){var k=0;while(k<n&&p[k]<1e6)k++;if(n-k>=300&&k>=300){var late=bestWin(p,k,n,300),fresh=bestWin(p,0,k,300);
+        if(late&&fresh)o.fr=[Math.round(p[n]/1000),Math.round(late.w),Math.round(fresh.w)];}}
+      // efficiency on a hard 20 min
+      var b20=bestWin(p,0,n,1200);if(b20&&b20.w>=0.88*ftp){var hh=hrAvg(H,b20.end-1200,b20.end);if(hh&&hh.n>900)o.ef=[Math.round(b20.w),Math.round(hh.hr*10)/10];}
+    }
+    return o;
+  }
+
+  // ---- connector helpers ----
+  function mcpCopy(e){var c=e&&e.code;
+    if(c=="needs_reauth")return "Strava needs reconnecting: claude.ai Settings, Connectors.";
+    if(c=="server_not_connected"||c=="server_not_found")return "Add the Strava connector in claude.ai Settings, Connectors.";
+    if(c=="selection_required")return "Choose which Strava connector this page should use.";
+    if(c=="not_in_manifest"||c=="approval_required"||c=="consent_required")return "Strava access for this page was not allowed. Allow it from the page's Permissions menu, then refresh.";
+    if(c=="blocked_by_policy")return "Your organisation blocks Strava here.";
+    if(c=="tool_error")return "Strava refused the request: "+String(e.message||"").slice(0,160);
+    if(c=="not_granted"||c=="capability_disabled"||c=="capability_removed")return "Live Strava is not available in this view.";
+    return "Strava did not answer just now. Showing saved data.";}
+  function call(tool,input,cache){return LV.mcp.callTool(STRAVA,tool,input,{cache:cache||false}).then(function(r){return r.payload;});}
+  function retryOnce(f){return f().catch(function(e){if(e&&e.retryable)return new Promise(function(r){setTimeout(r,Math.min(e.retryAfterMs||1500+Math.random()*1500,8000));}).then(f);throw e;});}
+  function pool(items,n,fn){var i=0,out=[];function next(){if(i>=items.length)return Promise.resolve();var k=i++;return fn(items[k]).then(function(r){out[k]=r;},function(e){out[k]={err:e};}).then(next);}
+    var ws=[];for(var j=0;j<Math.min(n,items.length);j++)ws.push(next());return Promise.all(ws).then(function(){return out;});}
+
+  // ---- database helpers ----
+  function dbAll(col){return LV.db.collection(col).get().then(function(q){return q.docs.map(function(d){return d.data();});}).catch(function(){return [];});}
+  function dbSet(path,data){if(!LV.db)return Promise.resolve();return LV.db.doc(path).set(data).catch(function(e){console.warn("db write",path,e&&e.code);});}
+
+  // ---- sync ----
+  function kindOf(sp){return /Ride$/.test(sp)?"ride":sp=="Padel"?"padel":"other";}
+  function listSince(start){
+    var acc=[];function page(cur){var inp={range_start:start+"T00:00:00",first:100,ordering:"StartDateLocalAsc"};if(cur)inp.after=cur;
+      return retryOnce(function(){return call("list_activities",inp,{staleTime:60000,gcTime:300000});}).then(function(r){acc=acc.concat(r.activities||[]);return r.has_next_page&&r.end_cursor&&acc.length<600?page(r.end_cursor):acc;});}
+    return page(null);
+  }
+  function processAct(a){
+    var sp=a.sport_type,kind=kindOf(sp),sm=a.summary||{},date=a.start_local.slice(0,10);
+    var base={v:PROC_V,id:a.id,date:date,start:a.start_local,name:a.name,sport:sp,kind:kind,min:Math.round((sm.moving_time||sm.elapsed_time||0)/60),
+      mi:Math.round((sm.distance||0)/1609.34*10)/10,ft:Math.round((sm.elevation_gain||0)*3.28084),re:sm.relative_effort==null?null:sm.relative_effort,ftp:FTP};
+    if(kind=="other")return Promise.resolve(base);
+    if(kind=="padel")return retryOnce(function(){return call("get_activity_performance",{activity_id:a.id},{staleTime:6048e5,gcTime:6048e5});}).then(function(r){
+      base.ahr=r.average_heartrate?Math.round(r.average_heartrate*10)/10:null;base.mhr=r.max_heartrate||null;
+      base.load=base.ahr?Math.round(base.min/60*Math.pow(base.ahr/174,2)*100):0;base.hz=[base.min,0,0,0,0,0,0];return base;});
+    return retryOnce(function(){return call("get_activity_streams",{activity_id:a.id,streams:["time","watts","heart_rate"]},{staleTime:6048e5,gcTime:6048e5});}).then(function(st){
+      var o=analyse(st||{},FTP);for(var k in o)base[k]=o[k];
+      if(!base.np&&base.ahr)base.tss=Math.round(base.min/60*Math.pow(base.ahr/174,2)*100);
+      base.load=base.tss||0;var E=ACT[a.id];if(E&&E.dc)base.dc=E.dc; // keep curated work-block drift
+      return base;});
+  }
+  function dropDupes(list){
+    var v=list.filter(function(a){return a.sport_type=="VirtualRide";}).map(function(a){return [new Date(a.start_local).getTime(),(a.summary||{}).moving_time||0];});
+    return list.filter(function(a){if(a.sport_type!="Ride")return true;var t=new Date(a.start_local).getTime(),m=(a.summary||{}).moving_time||0;
+      return !v.some(function(x){return Math.abs(x[0]-t)<15*60000&&Math.abs(x[1]-m)<=Math.max(x[1],m)*0.25;});});
+  }
+  function sync(){
+    var t0=today(),pm=LV.pmcMeta,fixedUntil=pm&&pm.until||CUTOFF,start=addD(t0,-63);if(addD(fixedUntil,1)<start)start=addD(fixedUntil,1);LV.listStart=start;
+    setStatus("Live · reading Strava…");
+    return listSince(start).then(function(list){
+      list=dropDupes(list);LV.list=list;
+      var todo=list.filter(function(a){var c=LV.acts[a.id];return !c||c.v!=PROC_V;});
+      var done=0;if(todo.length)setStatus("Live · analysing "+todo.length+" new "+(todo.length==1?"activity":"activities")+"…");
+      return pool(todo,3,function(a){return processAct(a).then(function(r){LV.acts[a.id]=r;done++;setStatus("Live · analysed "+done+" of "+todo.length+"…");return dbSet("acts/"+a.id,r);});}).then(function(res){
+        var fails=res.filter(function(r){return r&&r.err;});if(fails.length)LV.partial=fails.length;});
+    });
+  }
+
+  // ---- rebuild page data from live ----
+  function latestLog(f){for(var i=LV.logs.length-1;i>=0;i--)if(LV.logs[i][f]!=null&&LV.logs[i][f]!=="")return LV.logs[i];return null;}
+  function applyLogs(){
+    LV.logs.sort(function(a,b){return a.date<b.date?-1:1;});
+    var lf=latestLog("ftp");FTP=lf?+lf.ftp:297;
+    var lk=latestLog("kg");KG=lk?+lk.kg:91.2;
+    WT.length=2;LV.logs.forEach(function(l){if(l.kg&&l.date>"2026-10-07")WT.push([l.date,+l.kg,l.ftp?+l.ftp:FTP,"Check-in"]);});
+    RHRX.length=0;LV.logs.forEach(function(l){if(l.rhr&&l.date>CUTOFF){var d=new Date(l.date+"T12:00:00");RHRX.push([d.getDate()+"/"+(d.getMonth()+1),+l.rhr]);}});
+  }
+  function liveActs(){return LV.list.map(function(a){return LV.acts[a.id];}).filter(Boolean);}
+  function rebuild(){
+    var L=liveActs(),t0=today(),from56=addD(t0,-55);
+    // ACT and names
+    L.forEach(function(a){if(a.kind=="other")return;
+      ACT[a.id]={id:a.id,date:a.date,type:a.kind=="padel"?"Padel":a.sport=="VirtualRide"?"Zwift":"Ride",min:a.min,ahr:a.ahr||null,mhr:a.mhr||null,hz:a.hz||[0,0,0,0,0,0,0],pz:a.pz||null,np:a.np||null,tss:a.kind=="ride"?a.tss:null,dc:a.dc||null};
+      NAME[a.id]=a.name;});
+    // weeks: last 8 Mon to Sun
+    var m0=monday(t0);WK.length=0;
+    for(var k=7;k>=0;k--){var ws=addD(m0,-7*k),we=addD(ws,6);
+      WK.push([ws,L.filter(function(a){return a.date>=ws&&a.date<=we;}).map(function(a){return [a.id,a.name,a.sport,a.date,a.mi,a.min,a.ft,a.re];})]);}
+    WK.forEach(function(w){w[1].forEach(function(a){NAME[a[0]]=a[1];});});
+    // padel history
+    var seen={};PH.forEach(function(x){seen[x[0]]=1;});
+    Object.keys(LV.acts).forEach(function(id){var a=LV.acts[id];if(a.kind=="padel"&&!seen[id]){PH.push([id,a.date,a.min,a.re]);seen[id]=1;}});
+    PH.sort(function(a,b){return a[1]<b[1]?-1:1;});buildPM();
+    // 8-week power bests, and any new all-time best
+    var rides=L.filter(function(a){return a.kind=="ride"&&a.best&&a.date>=from56;});
+    LV.newAT=[];
+    D.forEach(function(d){var bv=0,bid=null;rides.forEach(function(a){var v=a.best[d[0]];if(v>bv){bv=v;bid=a.id;}});
+      d[3]=bv;d[5]=bid;
+      if(bv>d[2]){d[2]=bv;d[4]=bid;LV.newAT.push(d[0]);}
+      var o=D0[d[0]],pct=d[2]?Math.round(bv/d[2]*100):0,r=bid&&LV.acts[bid];
+      if(o&&o[0]==bv&&o[1]==bid)d[7]=o[2];
+      else d[7]=(LV.newAT.indexOf(d[0])>-1?"New all-time best: ":pct+"% of your all-time best. ")+(r?"The 8-week best is "+bv+" W from "+r.name+" on "+fdy(r.date)+".":"No ride with power in the last 8 weeks.");
+      if(r&&!RIDES[bid])RIDES[bid]={n:r.name,d:fdy(r.date),t:r.min+" min · "+r.mi+" mi"+(r.np?" · NP "+r.np+" W":""),hr:r.ahr?Math.round(r.ahr)+" avg · "+r.mhr+" max":null,b:DUR.filter(function(x){return r.best&&r.best[x[0]];}).map(function(x){return x[0]+" "+r.best[x[0]].toLocaleString("en-GB");}).join(" · ")};
+    });
+    // live additions after the baseline
+    var post=L.filter(function(a){return a.kind=="ride"&&a.date>CUTOFF;});
+    function addOnce(arr,idIdx,row){if(!arr.some(function(x){return x[idIdx]==row[idIdx];}))arr.push(row);}
+    post.forEach(function(a){var lab=(a.sport=="VirtualRide"?"Zwift: ":"")+a.name.replace(/^Zwift\s*[-:]\s*/,"");
+      if(a.hr265)addOnce(HR265,4,[a.date,lab,a.hr265[0],a.hr265[1],a.id]);
+      if(a.hr215)addOnce(HR215,4,[a.date,lab+(a.sport=="VirtualRide"?" (indoor)":" (outdoor)"),a.hr215[0],a.hr215[1],a.id]);
+      if(a.fr)addOnce(FR,0,[a.id,a.date,(a.sport=="VirtualRide"?"Zwift, ":"Outdoor, ")+Math.floor(a.min/60)+" h "+("0"+a.min%60).slice(-2),a.fr[0],a.fr[1],a.fr[2]]);
+      if(a.ef)addOnce(EF,5,[fdy(a.date),a.name+", best 20 min",20,a.ef[0],a.ef[1],a.id,"Best 20 minutes inside this ride, found automatically. Compare like for like: races and threshold sessions run higher than sweet spot."]);
+    });
+    // fitness, fatigue, form
+    var base=PMCA.filter(function(r){return r[0]<=CUTOFF;});
+    var stored=(LV.pmcMeta&&LV.pmcMeta.rows||[]).filter(function(r){return r[0]>CUTOFF&&r[0]<=(LV.pmcMeta.until||CUTOFF);});
+    var rows=base.concat(stored),lr=rows[rows.length-1],ctl=lr[3],atl=lr[4],rctl=lr[6];
+    var loads={};L.forEach(function(a){if(a.kind=="other")return;var k=loads[a.date]||(loads[a.date]=[0,0]);if(a.kind=="ride")k[0]+=a.load||0;else k[1]+=a.load||0;});
+    for(var d=addD(lr[0],1);d<=t0;d=addD(d,1)){var ld=loads[d]||[0,0],tsb=ctl-atl;
+      ctl+=(ld[0]+ld[1]-ctl)/42;atl+=(ld[0]+ld[1]-atl)/7;rctl+=(ld[0]-rctl)/42;
+      rows.push([d,ld[0],ld[1],Math.round(ctl*10)/10,Math.round(atl*10)/10,Math.round(tsb*10)/10,Math.round(rctl*10)/10]);}
+    PMCA.length=0;rows.forEach(function(r){PMCA.push(r);});
+    // freeze rows older than the listing window so later visits list less
+    var until=addD(t0,-63);if(until>(LV.pmcMeta&&LV.pmcMeta.until||CUTOFF)){var keep=rows.filter(function(r){return r[0]>CUTOFF&&r[0]<=until;});LV.pmcMeta={until:until,rows:keep};dbSet("meta/pmc",LV.pmcMeta);}
+  }
+
+  // ---- tiles ----
+  function renderTiles(){
+    if(!LV.ok)return;
+    var L=liveActs(),t0=today(),from56=addD(t0,-55),r56=L.filter(function(a){return a.kind=="ride"&&a.date>=from56;});
+    var h=r56.reduce(function(s,a){return s+a.min;},0)/60,wk=WK[WK.length-1],wm=wsum(wk),wt=wz(wk);
+    var prevF=null;for(var i=LV.logs.length-1;i>=0;i--){if(LV.logs[i].ftp&&+LV.logs[i].ftp!=FTP){prevF=+LV.logs[i].ftp;break;}}if(prevF==null&&FTP!=297)prevF=297;
+    var d20=D.filter(function(d){return d[0]=="20m";})[0],r20=d20[5]&&LV.acts[d20[5]];
+    var lk=latestLog("kg"),kgDate=lk?fd(lk.date):"7 Oct";
+    var x='<div class="tile"><span class="eyebrow">FTP</span><span class="big num">'+FTP+'<small>W</small></span>'+(prevF?'<span class="delta '+(FTP>prevF?"up":"down")+'">'+(FTP>prevF?"+":"−")+Math.abs(FTP-prevF)+' W vs '+prevF+'</span>':'<span class="delta flat">Set 6 Oct by Zwift</span>')+'<span class="sub">Update it in the weekly check-in when it changes</span></div>';
+    x+='<div class="tile"><span class="eyebrow">Watts per kilo</span><span class="big num">'+(FTP/KG).toFixed(2)+'<small>W/kg</small></span><span class="delta '+(FTP/KG>=3.44?"up":"down")+'">'+((FTP/KG-3.44)>=0?"+":"−")+Math.abs(FTP/KG-3.44).toFixed(2)+' vs ~3.44 recalled 2022 peak</span><span class="sub">At '+KG+' kg ('+kgDate+')</span></div>';
+    x+='<div class="tile"><span class="eyebrow">Best 20 min, 8 weeks</span><span class="big num">'+(d20[3]||"–")+'<small>W</small></span><span class="delta '+(d20[3]>=d20[2]*.95?"up":"flat")+'">'+Math.round(d20[3]/d20[2]*100)+'% of all-time '+d20[2]+' W</span><span class="sub">'+(r20?esc(r20.name)+', '+fd(r20.date):"No 20 min effort in the window")+'</span></div>';
+    x+='<div class="tile"><span class="eyebrow">Riding volume, 8 weeks</span><span class="big num">'+(h/8).toFixed(1)+'<small>h/wk</small></span><span class="delta '+(wm.h>=h/8?"up":"flat")+'">'+wm.h.toFixed(1)+' h this week, '+Math.round(wt.tss)+' TSS</span><span class="sub">'+r56.length+' rides, '+h.toFixed(1)+' h since '+fd(from56)+'</span></div>';
+    document.getElementById("tiles").innerHTML=x;
+  }
+
+  // ---- check-in ----
+  function renderCheckin(){
+    var tb=document.getElementById("ci-table"),rows=LV.logs.slice().reverse().slice(0,10);
+    tb.innerHTML=rows.length?rows.map(function(l){return '<tr><td style="white-space:nowrap">'+fd(l.date,true)+'</td><td class="n">'+(l.kg?(+l.kg).toFixed(1)+' kg':'–')+'</td><td class="n">'+(l.kg?((l.ftp||FTP)/l.kg).toFixed(2):'–')+'</td><td class="n">'+(l.rhr?l.rhr+' bpm':'–')+'</td><td class="n">'+(l.ftp?l.ftp+' W':'–')+'</td></tr>';}).join("")
+      :'<tr><td colspan="5" class="hint">No check-ins yet. Baseline: 91.2 kg on 7 Oct, resting HR 54 (week of 19 Oct), FTP 297 W.</td></tr>';
+    var lk=latestLog("kg"),lr=latestLog("rhr");
+    document.getElementById("ci-last").textContent="Last weigh-in "+(lk?fd(lk.date):"7 Oct")+" · last resting HR "+(lr?fd(lr.date):"19 Oct week");
+    document.getElementById("ci-ftp").placeholder=FTP;
+  }
+  function initCheckin(){
+    var f=document.getElementById("ci-form"),msg=document.getElementById("ci-msg");
+    document.getElementById("ci-date").value=today();
+    if(!LV.db){f.querySelectorAll("input,button").forEach(function(x){x.disabled=true;});msg.textContent="Saving needs the page database, which is not available in this view.";return;}
+    f.addEventListener("submit",function(ev){ev.preventDefault();
+      var d=document.getElementById("ci-date").value,kg=document.getElementById("ci-kg").value,rhr=document.getElementById("ci-rhr").value,ftp=document.getElementById("ci-ftp").value;
+      if(!d||(!kg&&!rhr&&!ftp)){msg.textContent="Enter at least one value.";return;}
+      var cur=LV.logs.filter(function(l){return l.date==d;})[0]||{date:d},doc={date:d};
+      ["kg","rhr","ftp"].forEach(function(k){if(cur[k]!=null)doc[k]=cur[k];});
+      if(kg)doc.kg=Math.round(+kg*10)/10;if(rhr)doc.rhr=Math.round(+rhr);if(ftp)doc.ftp=Math.round(+ftp);
+      var btn=document.getElementById("ci-save");btn.disabled=true;msg.textContent="Saving…";
+      LV.db.doc("logs/"+d).set(doc).then(function(){
+        LV.logs=LV.logs.filter(function(l){return l.date!=d;}).concat([doc]);applyLogs();
+        ["ci-kg","ci-rhr","ci-ftp"].forEach(function(id){document.getElementById(id).value="";});
+        msg.textContent="Saved for "+fd(d,true)+".";renderAll();
+      }).catch(function(e){msg.textContent=e&&e.code=="quota_exceeded"?"The page database is full.":"Could not save just now. Try again.";}).then(function(){btn.disabled=false;});
+    });
+  }
+
+  // ---- coach context ----
+  function actLine(a){var x={date:a.date,day:DN[new Date(a.date+"T12:00:00").getDay()],name:a.name,sport:a.sport,min:a.min};
+    if(a.kind=="ride"){x.mi=a.mi;x.tss=a.tss;if(a.np)x.np=a.np;if(a.aw)x.avg_w=a.aw;if(a.ahr)x.avg_hr=Math.round(a.ahr);
+      if(a.best){x.best_w={};["1m","5m","20m","30m","60m"].forEach(function(k){if(a.best[k])x.best_w[k]=a.best[k];});}
+      if(a.dc)x.hr_drift_pct=a.dc.pct;if(a.hr265)x.hr_at_265w=a.hr265[0];}
+    else if(a.kind=="padel"){x.avg_hr=a.ahr?Math.round(a.ahr):null;x.load=a.load;}
+    return x;}
+  function pmcAt(d){var r=null;PMCA.forEach(function(x){if(x[0]<=d)r=x;});return r?{date:r[0],fitness:r[3],fatigue:r[4],form:r[5],ride_only_fitness:r[6]}:null;}
+  function weekStats(ws){var we=addD(ws,6),L=liveActs().filter(function(a){return a.date>=ws&&a.date<=we;}),r=L.filter(function(a){return a.kind=="ride";});
+    return {acts:L,rides:r.length,hours:Math.round(r.reduce(function(s,a){return s+a.min;},0)/6)/10,miles:Math.round(r.reduce(function(s,a){return s+a.mi;},0)),
+      tss:r.reduce(function(s,a){return s+(a.tss||0);},0),padel:L.filter(function(a){return a.kind=="padel";}).length,other:L.filter(function(a){return a.kind=="other";}).map(function(a){return a.sport;})};}
+  function powerSummary(){var o={};D.forEach(function(d){o[d[0]]={last_8_weeks:d[3],all_time:d[2]};});return o;}
+  function logsSummary(){return LV.logs.slice(-6).map(function(l){return {date:l.date,kg:l.kg||null,resting_hr_7day:l.rhr||null,ftp:l.ftp||null};});}
+
+  // ---- coach: daily ----
+  var tctl=null;
+  function sampleCopy(e){var c=e&&e.code;
+    if(c=="not_granted")return "Asking Claude was not allowed for this page. Allow it from the page's Permissions menu.";
+    if(c=="rate_limited")return "Too many requests just now. Try again in a minute.";
+    if(c=="session_expired")return "Sign in to Claude again, then reopen the page.";
+    if(c=="sampling_disabled"||c=="not_declared")return "Asking Claude is not available for this account or page.";
+    if(c=="invalid_json"||c=="empty_completion"||c=="refused")return "The coach's reply could not be read. Ask again.";
+    return "The coach could not answer just now. Ask again.";}
+  function renderToday(t,whenTxt){
+    var b=document.getElementById("today-body");if(!t){return;}
+    var st=/fresh|neutral|tired/.test(t.status)?t.status:"neutral";
+    b.innerHTML='<div style="display:flex;flex-direction:column;gap:12px"><span class="stbadge '+st+'">'+{fresh:"Fresh",neutral:"Steady",tired:"Carrying fatigue"}[st]+'</span>'
+      +'<p class="head">'+rich(t.headline)+'</p>'
+      +(t.today?'<div class="todo"><b>Today</b><span><b>'+rich(t.today.title)+'</b> '+rich(t.today.detail)+'</span></div>':'')
+      +(t.points&&t.points.length?'<ul class="clean">'+t.points.slice(0,4).map(function(p){var tag=(p.tag||"Note").slice(0,14),cls=/watch|risk|warn/i.test(tag)?"md":/good|win|progress/i.test(tag)?"gd":"lo";return '<li><span class="chip '+cls+'">'+esc(tag)+'</span><span>'+rich(p.text)+'</span></li>';}).join("")+'</ul>':'')
+      +'</div>';
+    document.getElementById("today-when").textContent=whenTxt||"";
+  }
+  function askToday(){
+    if(!LV.sample)return;
+    var t0=today(),L=liveActs().filter(function(a){return a.date>=addD(t0,-13);}),ws=monday(t0),now=new Date();
+    var ctx={now:t0+" "+("0"+now.getHours()).slice(-2)+":"+("0"+now.getMinutes()).slice(-2)+" ("+DN[now.getDay()]+")",ftp:FTP,weight_kg:KG,
+      fitness_today:pmcAt(t0),fitness_7_days_ago:pmcAt(addD(t0,-7)),last_14_days:L.map(actLine),this_week_so_far:(function(s){delete s.acts;return s;})(weekStats(ws)),
+      checkins:logsSummary(),power_curve_watts:powerSummary(),latest_weekly_summary:(function(){var k=Object.keys(LV.weeks).sort().pop();return k?{week:k,headline:LV.weeks[k].headline}:null;})()};
+    var prompt="You are James's cycling coach. He opens his training app and wants to know where he is today and what to do.\n\nGoals: "+GOALS+"\nPlan: "+PLAN+"\nRules: "+RULES+"\n\nData (JSON, from Strava and his check-ins; TSS uses his FTP; padel load is estimated from wrist HR):\n"+JSON.stringify(ctx)
+      +"\n\nReply with only JSON: {\"status\":\"fresh\"|\"neutral\"|\"tired\",\"headline\":string (one sentence on where he is, with a number),\"today\":{\"title\":string (the session, 3 to 6 words),\"detail\":string (targets in watts, duration, and why, 1 to 2 sentences)},\"points\":[{\"tag\":string (one word: Good, Watch, Load, Recovery, Weight, Next),\"text\":string}] (2 or 3 items)}. Account for what he has already done today and whether he padelled yesterday or today. If he has already trained hard today, the advice is recovery or tomorrow. "+STYLE;
+    var b=document.getElementById("today-body"),note=document.getElementById("today-note"),stop=document.getElementById("today-stop"),ask=document.getElementById("today-ask");
+    if(tctl)tctl.abort();tctl=new AbortController();var my=tctl;
+    if(!LV.today)b.innerHTML='<p class="stream">Thinking…</p>';note.textContent="Reading today's numbers…";stop.hidden=false;ask.hidden=true;
+    LV.sample.json(prompt,{signal:my.signal,modelTier:"default",cache:false}).then(function(t){
+      if(!t||typeof t!="object"||!t.headline)throw {code:"invalid_json"};
+      var at=new Date();LV.today={date:t0,at:at.toISOString(),data:t};renderToday(t,"Updated "+at.toTimeString().slice(0,5));note.textContent="";
+      dbSet("meta/today",LV.today);
+    }).catch(function(e){if(e&&e.code=="cancelled"){note.textContent="Stopped.";return;}note.textContent=sampleCopy(e);
+      if(!LV.today)b.innerHTML='<p class="hint">No read yet.</p>';}).then(function(){if(tctl===my){stop.hidden=true;ask.hidden=false;}});
+  }
+
+  // ---- coach: weekly ----
+  var wctl=null;
+  function targetWeek(){var n=new Date(),t0=today(),m=monday(t0);return (n.getDay()==0&&n.getHours()>=17)?m:addD(m,-7);}
+  function wkRange(ws){var we=addD(ws,6),a=new Date(ws+"T12:00:00"),b=new Date(we+"T12:00:00");return a.getDate()+(a.getMonth()!=b.getMonth()?" "+MN[a.getMonth()]:"")+" to "+b.getDate()+" "+MN[b.getMonth()];}
+  function fillPicker(sel){
+    var p=document.getElementById("wk-pick"),cur=monday(today()),tw=targetWeek(),ks={};ks[cur]=1;ks[tw]=1;Object.keys(LV.weeks).forEach(function(k){ks[k]=1;});
+    var keys=Object.keys(ks).sort().reverse();
+    p.innerHTML=keys.map(function(k){return '<option value="'+k+'"'+(k==sel?' selected':'')+'>'+wkRange(k)+(k==cur?" (this week)":"")+'</option>';}).join("");
+  }
+  function renderWeek(ws){
+    fillPicker(ws);var d=LV.weeks[ws],cur=monday(today()),inWin=LV.ok&&ws>=LV.listStart;
+    document.getElementById("wk-title").textContent="Week · "+wkRange(ws);
+    var st=inWin?weekStats(ws):null,ci=LV.logs.filter(function(l){return l.date>=ws&&l.date<=addD(ws,6);});
+    var boxes=st?[[st.rides,"rides"],[st.hours+'<small> h</small>',"riding"],[st.tss,"TSS · target 220 to 280"],[st.padel,"padel"]]:[];
+    if(ci.length){var c=ci[ci.length-1];if(c.kg)boxes.push([c.kg+'<small> kg</small>',"weigh-in"]);if(c.rhr)boxes.push([c.rhr+'<small> bpm</small>',"resting HR"]);}
+    document.getElementById("wk-stats").innerHTML=boxes.map(function(x){return '<div class="statbox"><span class="big num">'+x[0]+'</span><span class="sub">'+x[1]+'</span></div>';}).join("");
+    var body=document.getElementById("wk-body"),gen=document.getElementById("wk-gen"),note=document.getElementById("wk-note");
+    if(d){var sec=function(arr,cls){return arr&&arr.length?'<ul class="clean">'+arr.map(function(p){var tag=(p.tag||"").slice(0,14),c=cls||(/watch|risk/i.test(tag)?"md":/next|window|context|plan/i.test(tag)?"lo":"gd");return '<li><span class="chip '+c+'">'+esc(tag)+'</span><span>'+rich(p.text)+'</span></li>';}).join("")+'</ul>':"";};
+      body.innerHTML='<p><b>'+rich(d.headline)+'</b> '+rich(d.summary)+'</p>'+(d.wins&&d.wins.length?'<h3>Wins this week</h3>'+sec(d.wins,"gd"):'')+(d.newbests?'<p class="hint">'+rich(d.newbests)+'</p>':'')+sec(d.watch)+sec(d.next,"lo");
+      note.textContent=d.generatedAt?"Written "+fd(d.generatedAt.slice(0,10),true)+" "+d.generatedAt.slice(11,16)+(d.partial?" · week in progress":""):"From the 24 Oct review";
+      gen.textContent="Rewrite";gen.hidden=!LV.sample||!inWin;}
+    else{body.innerHTML=inWin?'<p class="hint">'+(ws==cur?"Week in progress. The summary writes itself from Sunday 5pm, or ask for one now.":"No summary yet for this week.")+'</p>':'<p class="hint">No summary stored for this week.</p>';
+      note.textContent="";gen.textContent=ws==cur?"Summarise the week so far":"Write this week's summary";gen.hidden=!LV.sample||!inWin;}
+  }
+  function writeWeek(ws){
+    if(!LV.sample)return;
+    var st=weekStats(ws),prev=weekStats(addD(ws,-7)),we=addD(ws,6),t0=today(),partial=we>=t0&&!(new Date().getDay()==0&&ws==monday(t0));
+    var r8=liveActs().filter(function(a){return a.kind=="ride"&&a.date>=addD(ws,-49)&&a.date<=we;}),wkTss=r8.reduce(function(s,a){return s+(a.tss||0);},0)/8;
+    var newb=[];st.acts.forEach(function(a){if(a.best)DUR.forEach(function(x){var k=x[0],dd=D.filter(function(z){return z[0]==k;})[0];if(dd&&a.best[k]&&a.best[k]>=dd[2])newb.push(k+" "+a.best[k]+" W ("+a.name+")");});});
+    var ctx={week:ws+" to "+we,in_progress:partial,activities:st.acts.map(actLine),totals:{rides:st.rides,riding_hours:st.hours,miles:st.miles,ride_tss:st.tss,padel_sessions:st.padel,other:st.other},
+      previous_week_totals:{rides:prev.rides,riding_hours:prev.hours,ride_tss:prev.tss,padel_sessions:prev.padel},avg_weekly_ride_tss_8wk:Math.round(wkTss),
+      fitness_start:pmcAt(addD(ws,-1)),fitness_end:pmcAt(we<t0?we:t0),checkins:logsSummary(),power_curve_watts:powerSummary(),all_time_bests_matched_this_week:newb,
+      previous_summary_headline:(LV.weeks[addD(ws,-7)]||{}).headline||null};
+    var prompt="You are James's cycling coach writing his weekly review"+(partial?" (the week is still in progress, say so)":"")+".\n\nGoals: "+GOALS+"\nPlan: "+PLAN+"\nRules: "+RULES+"\n\nData (JSON, from Strava and his check-ins):\n"+JSON.stringify(ctx)
+      +"\n\nReply with only JSON: {\"headline\":string (one sentence verdict),\"summary\":string (2 to 3 sentences: sessions, hours, TSS against the 220 to 280 target, padel, resting HR),\"wins\":[{\"tag\":string (one word),\"text\":string}] (2 to 5, specific numbers, compare with earlier weeks where you can),\"newbests\":string (one line, or \"No new all-time bests this week.\"),\"watch\":[{\"tag\":\"Watch\"|\"Risk\"|\"Window\"|\"Context\",\"text\":string}] (1 to 3),\"next\":[{\"tag\":\"Next\",\"text\":string}] (1: what next week should look like)}. "+STYLE;
+    var body=document.getElementById("wk-body"),note=document.getElementById("wk-note"),stop=document.getElementById("wk-stop"),gen=document.getElementById("wk-gen");
+    if(wctl)wctl.abort();wctl=new AbortController();var my=wctl;
+    gen.hidden=true;stop.hidden=false;note.textContent="Writing the weekly summary…";if(!LV.weeks[ws])body.innerHTML='<p class="stream">Thinking…</p>';
+    LV.sample.json(prompt,{signal:my.signal,modelTier:"default",cache:false}).then(function(w){
+      if(!w||typeof w!="object"||!w.headline)throw {code:"invalid_json"};
+      var gn=new Date();w.week=ws;w.generatedAt=iso(gn)+"T"+gn.toTimeString().slice(0,5);w.partial=partial;
+      LV.weeks[ws]=w;dbSet("weeks/"+ws,w);
+      if(document.getElementById("wk-pick").value==ws||!document.getElementById("wk-pick").value)renderWeek(ws);
+    }).catch(function(e){note.textContent=e&&e.code=="cancelled"?"Stopped.":sampleCopy(e);if(!LV.weeks[ws])body.innerHTML='<p class="hint">No summary yet.</p>';gen.hidden=false;})
+      .then(function(){if(wctl===my)stop.hidden=true;});
+  }
+  function initWeekUI(){
+    document.getElementById("wk-pick").addEventListener("change",function(e){renderWeek(e.target.value);});
+    document.getElementById("wk-gen").addEventListener("click",function(){writeWeek(document.getElementById("wk-pick").value);});
+    document.getElementById("wk-stop").addEventListener("click",function(){if(wctl)wctl.abort();});
+    document.getElementById("today-ask").addEventListener("click",askToday);
+    document.getElementById("today-stop").addEventListener("click",function(){if(tctl)tctl.abort();});
+    document.getElementById("live-refresh").addEventListener("click",function(){if(LV.mcp&&LV.mcp.invalidate)LV.mcp.invalidate(STRAVA,"list_activities").catch(function(){});start(true);});
+  }
+
+  // ---- render everything that depends on live data ----
+  function renderAll(){
+    renderTiles();renderPower();drawWeeks();renderDrift();renderPadel();renderWeight();renderPMC();renderFixed();renderFR();renderZones();renderRHR();renderEff();renderCheckin();
+    alpeNow(FTP,KG);if(location.hash.length>1)route();
+  }
+
+  // ---- boot ----
+  var busy=false;
+  function start(manual){
+    if(busy||!LV.mcp)return;busy=true;document.getElementById("live-refresh").hidden=true;
+    sync().then(function(){
+      rebuild();LV.ok=true;renderAll();
+      var n=liveActs().filter(function(a){return a.date>=addD(today(),-55);}).length,t=new Date();
+      setStatus("Live from Strava · "+t.toTimeString().slice(0,5)+" · "+n+" activities in 8 weeks"+(LV.partial?" · "+LV.partial+" could not be read":"")+(LV.newAT&&LV.newAT.length?" · new all-time best: "+LV.newAT.join(", "):""));
+      var ws=document.getElementById("wk-pick").value||targetWeek();renderWeek(ws);
+      if(!manual){var tw=targetWeek();if(LV.sample&&!LV.weeks[tw])writeWeek(tw);askToday();}
+    }).catch(function(e){setStatus(mcpCopy(e));renderWeek(document.getElementById("wk-pick").value||targetWeek());
+      if(LV.sample&&!manual)askToday();})
+      .then(function(){busy=false;document.getElementById("live-refresh").hidden=false;});
+  }
+  function boot(){
+    var C=window.claude;initWeekUI();
+    if(!C||!C.use){setStatus("Coaching baseline · 25 Oct review (live data needs the Claude viewer)");initCheckin();renderWeek(targetWeek());return;}
+    Promise.all([C.use("db"),C.use("mcp"),C.use("sample")]).then(function(r){
+      LV.db=r[0];LV.mcp=r[1];LV.sample=r[2];
+      var loads=LV.db?Promise.all([dbAll("acts"),dbAll("logs"),dbAll("weeks"),LV.db.doc("meta/today").get().catch(function(){return null;}),LV.db.doc("meta/pmc").get().catch(function(){return null;})]):Promise.resolve([[],[],[],null,null]);
+      return loads.then(function(x){
+        x[0].forEach(function(a){if(a&&a.id)LV.acts[a.id]=a;});LV.logs=x[1].filter(function(l){return l&&l.date;});
+        x[2].forEach(function(w){if(w&&w.week)LV.weeks[w.week]=w;});
+        if(x[3]&&x[3].exists){LV.today=x[3].data();var at=new Date(LV.today.at);renderToday(LV.today.data,"From "+(LV.today.date==today()?"today ":fd(LV.today.date)+" ")+at.toTimeString().slice(0,5)+", refreshing…");}
+        if(x[4]&&x[4].exists)LV.pmcMeta=x[4].data();
+        applyLogs();initCheckin();renderCheckin();renderAll();
+        if(!LV.sample){document.getElementById("today-body").innerHTML='<p class="hint">The coach needs Claude access, which this view does not have.</p>';}
+        if(!LV.mcp){setStatus("Coaching baseline · 25 Oct review · live Strava is not available in this view");renderWeek(targetWeek());if(LV.sample)askToday();return;}
+        LV.listStart=addD(today(),-63);renderWeek(targetWeek());start(false);
+      });
+    }).catch(function(e){console.warn(e);setStatus("Coaching baseline · 25 Oct review");});
+  }
+  boot();
+
   document.querySelectorAll(".jump button").forEach(function(b){b.addEventListener("click",function(){var t=document.getElementById(b.dataset.to);if(t)t.scrollIntoView({behavior:"smooth",block:"start"});});});
   window.addEventListener("hashchange",route);route();
 })();
